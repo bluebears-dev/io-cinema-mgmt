@@ -1,7 +1,6 @@
-version: '3.1'
+version: '2.1'
 
 services:
-
   postgres:
     image: postgres
     restart: always
@@ -13,6 +12,15 @@ services:
         - ${PORT}:5432
     volumes: 
         - pgdata:/var/lib/postgresql/data
-        
+  
+  django:
+    build: .
+    volumes:
+      - "/io/:/code/"
+    command: ["./wait.sh", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    ports:
+      - "80:8000"
+    depends_on: ["postgres"]
+      
 volumes:
   pgdata:
