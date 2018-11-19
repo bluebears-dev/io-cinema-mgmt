@@ -28,7 +28,7 @@ SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.99.100']
+ALLOWED_HOSTS = [CONFIGURATION['HOST']]
 
 
 # Application definition
