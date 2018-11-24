@@ -6,7 +6,17 @@ import Vuetify from 'vuetify'
 import router from './router'
 import store from './store'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  options: {
+    customProperties: true,
+  },
+  theme: {
+    gold: "#deb853",
+    charcoal: "#373737",
+    black: "#101010",
+    white: "#fffffe"
+  }
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

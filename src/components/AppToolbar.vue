@@ -14,6 +14,7 @@
         justify-end
       >
         <v-btn
+          :key="button"
           v-for="button in buttons"
           flat
           large
@@ -43,7 +44,7 @@
     <v-slide-y-transition>
       <menu v-if="dropdownMenu && !toggleOnBreakpoint" class="menu--mobile border--gold">
         <v-layout column>
-          <v-flex v-for="button in buttons">
+          <v-flex v-for="button in buttons" :key="button">
             <v-btn
               block
               flat

@@ -21,4 +21,8 @@
   @import '@mdi/font/css/materialdesignicons.min.css'
   @import 'vuetify/dist/vuetify.min.css'
   @import "assets/stylus/main.styl"
+
+  $gold = #f00
 </style>
+
+
