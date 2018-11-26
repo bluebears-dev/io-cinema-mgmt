@@ -19,18 +19,20 @@
                 row
                 wrap
               >
-                <v-flex sm10 md8>
+                <v-flex sm10 md8 lg7>
                   <v-select
                     outline
                     light
                     label="Kino"
                     color="gold"
                     background-color="gold"
+                    class="gold--text"
+                    :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
                   ></v-select>
                 </v-flex>
                 <v-flex xs12 class="text-xs-center button--padding">
                   <v-btn
-                    class="algreya--light text-capitalize"
+                    class="algreya--regular text-capitalize"
                     depressed
                     large
                     color="gold"
@@ -59,20 +61,17 @@
   @import '@mdi/font/css/materialdesignicons.min.css'
   @import 'vuetify/dist/vuetify.min.css'
   @import "assets/stylus/main.styl"
-  .cinema--form {
-    background-color var(--v-white-base)
-    padding 60px 20px
-  }
 
-  .form--text {
+  .cinema--form
+    background-color: var(--v-white-base)
+    padding: 60px 20px
+
+  .form--text
     color: var(--v-charcoal-base)
-    font-size 1.8rem
-    letter-spacing 2px !important
-    padding-bottom 30px
-  }
+    font-size: 1.8rem
+    letter-spacing: 2px !important
+    padding-bottom: 30px
 
-  .button--padding {
-    padding-top 10px
-  }
-
+  .button--padding
+    padding-top: 10px
 </style>
