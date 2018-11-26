@@ -5,17 +5,20 @@ import App from './App'
 import Vuetify from 'vuetify'
 import router from './router'
 import store from './store'
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Vuetify, {
   options: {
     customProperties: true,
+    iconfont: 'mdi'
   },
   theme: {
-    gold: "#deb853",
-    charcoal: "#373737",
-    black: "#101010",
-    white: "#fffffe"
-  }
+    gold: '#deb853',
+    charcoal: '#373737',
+    black: '#101010',
+    white: '#fffffe'
+  },
+  iconfont: 'mdi'
 })
 Vue.config.productionTip = false
 
