@@ -11,11 +11,12 @@ Vue.use(Vuetify, {
     customProperties: true,
   },
   theme: {
-    gold: "#deb853",
-    charcoal: "#373737",
-    black: "#101010",
-    white: "#fffffe"
-  }
+    gold: '#deb853',
+    charcoal: '#373737',
+    black: '#101010',
+    white: '#fffffe'
+  },
+  iconfont: 'mdi'
 })
 Vue.config.productionTip = false
 
@@ -24,6 +25,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })
