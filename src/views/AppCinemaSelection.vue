@@ -4,7 +4,10 @@
     align-center
   >
     <v-flex sm9 md7 lg5>
-      <form class="cinema--form">
+      <v-form form
+        class="cinema--form"
+        v-model="validCinemaForm"
+      >
         <div class="alegreya-sc--regular form--text text-xs-center">Wybierz Kino</div>
         <v-layout
           justify-center
@@ -19,8 +22,11 @@
               label="Kino"
               color="gold"
               background-color="gold"
-              class="gold--text"
+              class="gold--text pb-5"
               :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
+              :rules="[v => !!v]"
+              hide-details
+              v-model="cinema"
             ></v-select>
           </v-flex>
           <v-flex xs12 class="text-xs-center button--padding">
@@ -29,19 +35,33 @@
               depressed
               large
               color="gold"
-              active-class="button--active"
-            >Dalej
+              :disabled="!validCinemaForm"
+              @click="chooseCinema()"
+            >
+              Dalej
             </v-btn>
           </v-flex>
         </v-layout>
-      </form>
+      </v-form>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
   export default {
-    name: 'AppCinemaSelection'
+    name: 'AppCinemaSelection',
+    data () {
+      return {
+        validCinemaForm: false,
+        cinema: null
+      }
+    },
+    methods: {
+      chooseCinema () {
+        this.$cookie.set('cinema', this.cinema)
+        this.$router.push({ name: 'Movies', params: { cinema: this.cinema } })
+      }
+    }
   }
 </script>
 
@@ -60,8 +80,5 @@
     padding-top: 10px
 
   .button--font
-    font-size: 1.6rem
-
-  .button--active
-    color: var(--v-gold-base)
+    font-size 1.6rem
 </style>

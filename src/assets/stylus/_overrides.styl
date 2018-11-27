@@ -1,18 +1,25 @@
-// Set text on select to arbitrary color
 .v-select__slot
+  // v-select - selection text/value styling
   .v-select__selections
     letter-spacing: 1.8px
     font-size 1.3rem
     text-transform: capitalize
     @extends .alegreya-sc--regular
 
+  // v-select - label styling
   .theme--light
     color: inherit !important
     @extends .alegreya--bold
 
+// v-list - font styling
 .v-list
   .theme--light
     @extends .v-select__slot .v-select__selections
+
+.select__menu--black
+  .theme--light
+    color: var(--v-white-base)
+    background-color: var(--v-black-base)
 
 .select--cinema
   .v-select__slot

@@ -6,7 +6,9 @@
         fluid
         fill-height
       >
-        <AppMovieList/>
+        <v-fade-transition>
+          <router-view></router-view>
+        </v-fade-transition>
       </v-container>
     </v-content>
   </v-app>
@@ -14,11 +16,10 @@
 
 <script>
   import AppToolbar from './components/AppToolbar'
-  import AppMovieList from './views/AppMovieList'
 
   export default {
     name: 'App',
-    components: { AppMovieList, AppToolbar }
+    components: { AppToolbar }
   }
 </script>
 

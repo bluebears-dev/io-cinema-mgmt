@@ -14,13 +14,13 @@
         justify-end
       >
         <v-btn
-          :key="button"
+          :key="button.title"
           v-for="button in buttons"
           flat
           large
           class="mx-3 button--main alegreya-sc--light text-capitalize text-xs-center border__radius--none"
           color="gold"
-          :to="button.path"
+          :to="{ name: button.name }"
           active-class="v-btn--active button--active"
         >
           <span class="button__text">{{ button.title }}</span>
@@ -42,16 +42,22 @@
       ></v-toolbar-side-icon>
     </v-toolbar>
     <v-slide-y-transition>
-      <menu v-if="dropdownMenu && !toggleOnBreakpoint" class="menu--mobile border--gold">
+      <menu
+        v-if="dropdownMenu && !toggleOnBreakpoint"
+        class="menu--mobile border--gold"
+      >
         <v-layout column>
-          <v-flex v-for="button in buttons" :key="button">
+          <v-flex
+            v-for="button in buttons"
+            :key="button.title"
+          >
             <v-btn
               block
               flat
               large
               class="ma-0 button--main alegreya-sc--light"
               color="gold"
-              :to="button.path"
+              :to="{ name: button.name }"
               @click="dropdownMenu = !dropdownMenu"
               active-class="v-btn--active button--active"
             >
@@ -78,9 +84,9 @@
         dropdownMenu: false,
         title: 'KAPPA',
         buttons: [
-          {title: 'Repertuar', path: '/'},
-          {title: 'Cennik', path: 'a'},
-          {title: 'Kontakt', path: 'b'}
+          {title: 'Repertuar', name: 'Movies'},
+          {title: 'Cennik', name: 'Pricing'},
+          {title: 'Kontakt', name: 'Contact'}
         ]
       }
     }
@@ -111,8 +117,11 @@
     color: var(--v-white-base)
 
   .menu--mobile
-    position: relative
+    background-color: var(--v-black-base)
+    position: fixed
     top: 55px
+    width: 100%
+    z-index: 100
 
   .button--active
     background: var(--v-gold-base) !important
