@@ -6,7 +6,9 @@
         fluid
         fill-height
       >
-        <AppCinemaSelection/>
+        <v-fade-transition>
+          <router-view></router-view>
+        </v-fade-transition>
       </v-container>
     </v-content>
   </v-app>
@@ -18,7 +20,7 @@
 
   export default {
     name: 'App',
-    components: { AppCinemaSelection, AppToolbar }
+    components: {AppCinemaSelection, AppToolbar}
   }
 </script>
 

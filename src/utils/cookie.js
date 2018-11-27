@@ -2,7 +2,7 @@ let get = (key) => {
   let cookies = decodeURIComponent(document.cookie).split(';').map(v => v.trim().split('='))
   let selectedCookie = cookies.filter(v => v[0] === key)[0]
 
-  if (selectedCookie.length <= 0) {
+  if (selectedCookie == null || selectedCookie.length <= 0) {
     return {}
   } else {
     return {
