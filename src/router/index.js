@@ -29,14 +29,14 @@ const router = new Router({
     },
     {
       path: '/',
-      beforeEnter: ((to, from, next) => {
+      beforeEnter: (to, from, next) => {
         let cinemaCookie = cookie.get('cinema')
         if (to.name !== 'CinemaSelection' && cinemaCookie.value == null) {
           next({name: 'CinemaSelection'})
         } else {
           next({name: 'Movies'})
         }
-      })
+      }
     }
   ]
 })

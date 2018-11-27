@@ -117,8 +117,11 @@
     color: var(--v-white-base)
 
   .menu--mobile
-    position: relative
+    background-color: var(--v-black-base)
+    position: fixed
     top: 55px
+    width: 100%
+    z-index: 100
 
   .button--active
     background: var(--v-gold-base) !important
