@@ -1,9 +1,14 @@
 <template>
-  <v-app dark class="black">
+  <v-app class="black">
     <AppToolbar/>
     <v-content class="black">
-      <v-container fluid>
-
+      <v-container
+        fluid
+        fill-height
+      >
+        <v-fade-transition>
+          <router-view></router-view>
+        </v-fade-transition>
       </v-container>
     </v-content>
   </v-app>
@@ -11,9 +16,10 @@
 
 <script>
   import AppToolbar from './components/AppToolbar'
+
   export default {
     name: 'App',
-    components: {AppToolbar}
+    components: { AppToolbar }
   }
 </script>
 
@@ -21,8 +27,4 @@
   @import '@mdi/font/css/materialdesignicons.min.css'
   @import 'vuetify/dist/vuetify.min.css'
   @import "assets/stylus/main.styl"
-
-  $gold = #f00
 </style>
-
-
