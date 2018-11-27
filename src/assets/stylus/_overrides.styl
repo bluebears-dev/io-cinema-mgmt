@@ -1,4 +1,15 @@
 // Set text on select to arbitrary color
 .v-select__slot
+  .v-select__selections
+    letter-spacing: 2px
+    text-transform: capitalize
+    @extends .alegreya-sc--regular
+
   .theme--light
     color: inherit !important
+    @extends .v-select__slot .v-select__selections
+
+.v-list
+  .theme--light
+    @extends .v-select__slot .v-select__selections
+
