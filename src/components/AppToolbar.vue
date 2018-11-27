@@ -121,7 +121,7 @@
     position: fixed
     top: 55px
     width: 100%
-    z-index: 100
+    z-index: 1
 
   .button--active
     background: var(--v-gold-base) !important
