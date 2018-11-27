@@ -15,10 +15,12 @@ Vue.use(Vuetify, {
     iconfont: 'mdi'
   },
   theme: {
-    gold: '#deb853',
+    gold: '#DEB853',
+    sand: '#B9AC81',
     charcoal: '#373737',
     black: '#101010',
-    white: '#fffffe'
+    white: '#F4F4F4',
+    bronze: '#292518'
   },
   iconfont: 'mdi'
 })

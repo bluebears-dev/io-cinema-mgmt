@@ -11,7 +11,7 @@
         row wrap
         class="top__bar"
       >
-        <v-flex xs12 sm5 md4 lg3>
+        <v-flex xs12 sm12 md5 lg4>
           <v-select
             class="select--cinema"
             solo
@@ -23,9 +23,11 @@
             label="Kino"
             background-color="black"
             :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
+            :menu-props="{'content-class': 'select__menu--black elevation-0'}"
+            v-model="cinema"
           ></v-select>
         </v-flex>
-        <v-flex xs12 sm6 md8 lg8 class="text-xs-center text-sm-right">
+        <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
           <v-btn
             v-for="day in days" :key="day"
             icon
@@ -69,6 +71,11 @@
 <script>
   export default {
     name: 'AppMovieList',
+    props: {
+      cinema: {
+        type: String
+      }
+    },
     methods: {
       buttonDayColor (day) {
         if (day === this.selectedDay) {
