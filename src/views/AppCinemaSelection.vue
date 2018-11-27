@@ -29,6 +29,7 @@
               depressed
               large
               color="gold"
+              active-class="button--active"
             >Dalej
             </v-btn>
           </v-flex>
@@ -59,5 +60,8 @@
     padding-top: 10px
 
   .button--font
-    font-size 1.6rem
+    font-size: 1.6rem
+
+  .button--active
+    color: var(--v-gold-base)
 </style>

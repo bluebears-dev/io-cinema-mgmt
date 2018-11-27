@@ -6,7 +6,7 @@
         fluid
         fill-height
       >
-        <AppCinemaSelection/>
+        <AppMovieList/>
       </v-container>
     </v-content>
   </v-app>
@@ -14,11 +14,11 @@
 
 <script>
   import AppToolbar from './components/AppToolbar'
-  import AppCinemaSelection from './views/AppCinemaSelection'
+  import AppMovieList from './views/AppMovieList'
 
   export default {
     name: 'App',
-    components: { AppCinemaSelection, AppToolbar }
+    components: { AppMovieList, AppToolbar }
   }
 </script>
 
