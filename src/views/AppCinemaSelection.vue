@@ -5,8 +5,8 @@
   >
     <v-flex sm9 md7 lg5>
       <v-form form
-        class="cinema--form"
-        v-model="validCinemaForm"
+              class="cinema--form"
+              v-model="validCinemaForm"
       >
         <div class="alegreya-sc--regular form--text text-xs-center">Wybierz Kino</div>
         <v-layout
@@ -61,7 +61,7 @@
     methods: {
       chooseCinema () {
         this.setCinemaCookie()
-        this.$router.push({ name: 'Movies', params: { cinema: this.cinema } })
+        this.$router.push({name: 'Movies'})
       }
     }
   }

@@ -26,20 +26,13 @@
 
 
 .select--cinema
+  // MovieList select - change arrow color
   .v-select__slot
     color: var(--v-gold-base) !important
 
+    // MovieList select - change font and color of selected value
     .v-select__selections
       color: var(--v-gold-base) !important
       letter-spacing: 3.5px
       font-size: 1.8rem
-      text-transform: capitalize
       @extends .alegreya-sc--light
-
-    .theme--light
-      color: inherit !important
-      @extends .alegreya--bold
-
-  .v-list
-    .theme--light
-      @extends .v-select__slot .v-select__selections
