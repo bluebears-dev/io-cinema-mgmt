@@ -6,7 +6,7 @@
         fluid
         fill-height
       >
-        <v-fade-transition>
+        <v-fade-transition leave-absolute hide-on-leave>
           <router-view></router-view>
         </v-fade-transition>
       </v-container>
