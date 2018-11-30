@@ -22,9 +22,10 @@
             color="gold"
             label="Kino"
             background-color="black"
-            :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
+            :items="cinemas()"
             :menu-props="{'content-class': 'select__menu--black elevation-0'}"
-            v-model="cinema"
+            v-model="currentCinema"
+            @change="setCinemaCookie()"
           ></v-select>
         </v-flex>
         <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
@@ -47,20 +48,23 @@
         align-start
         justify-center
       >
-        <v-flex v-for="movie in movies" :key="movie" class="card--style text-xs-center">
+        <v-flex v-for="movie in movies()" :key="movie.title" class="card--style text-xs-center">
           <v-card
             color="black"
             flat
             class="mx-auto"
             width="240px"
           >
-            <v-img
-              :src="movie.cover"
-              class="image--style"
-            ></v-img>
-            <div class="alegreya-sc--light movie--title">
-              {{movie.title}}
-            </div>
+            <router-link :to="{name: 'abc'}" class="router--link">
+              <v-img
+                :src="movie.cover"
+                class="image--style"
+                height="340px"
+              ></v-img>
+              <div class="alegreya-sc--light movie--title">
+                {{movie.title}}
+              </div>
+            </router-link>
           </v-card>
         </v-flex>
       </v-layout>
@@ -69,15 +73,13 @@
 </template>
 
 <script>
+  import ChangesCinema from '../mixins/ChangesCinema'
+
   let weekDays = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So']
 
   export default {
     name: 'AppMovieList',
-    props: {
-      cinema: {
-        type: String
-      }
-    },
+    mixins: [ChangesCinema],
     methods: {
       buttonDayColor (day) {
         if (day === this.selectedDay) {
@@ -85,6 +87,9 @@
         } else {
           return 'white'
         }
+      },
+      movies () {
+        return this.$store.getters['getMovies']
       }
     },
     computed: {
@@ -99,15 +104,12 @@
     },
     data () {
       return {
-        selectedDay: weekDays[(new Date()).getDay()],
-        movies: [
-          { title: 'Jak Zdać IO', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' }
-        ]
+        selectedDay: weekDays[(new Date()).getDay()]
+      }
+    },
+    mounted: function () {
+      if (!this.movies().length) {
+        this.$store.dispatch('requestMovies', this.currentCinema)
       }
     }
   }
@@ -140,5 +142,8 @@
     letter-spacing: 2px
     font-size: 1.5rem
     hyphens: auto
+
+  .router--link
+    text-decoration: none;
 
 </style>

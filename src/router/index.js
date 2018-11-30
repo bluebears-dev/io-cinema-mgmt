@@ -16,8 +16,7 @@ const router = new Router({
     {
       path: '/repertuar',
       name: 'Movies',
-      component: require('@/views/AppMovieList.vue').default,
-      props: true
+      component: require('@/views/AppMovieList.vue').default
     },
     {
       path: '/cennik',
@@ -26,6 +25,11 @@ const router = new Router({
     {
       path: '/kontakt',
       name: 'Contact'
+    },
+    {
+      path: '/abc',
+      name: 'Movie',
+      component: require('@/views/AppMovie.vue').default
     },
     {
       path: '/',
@@ -45,7 +49,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   let cinemaCookie = cookie.get('cinema')
-  if (to.name !== 'CinemaSelection' && cinemaCookie.value == null) {
+  if (to.name !== 'CinemaSelection' && (cinemaCookie.value == null || cinemaCookie.value === '')) {
     next({name: 'CinemaSelection'})
   } else {
     next()
