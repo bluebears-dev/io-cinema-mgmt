@@ -37,12 +37,12 @@ const api = [
 ]
 
 const actions = {
-  setCurrentCinema ({state, commit, dispatch}, cinema) {
+  setCurrentCinema ({commit, dispatch}, cinema) {
     commit('SET_CURRENT_CINEMA', cinema)
     dispatch('requestMovies', cinema)
   },
-  requestMovies ({state, commit}, cinema) {
-    let movies = api.filter(v => v.cinema === cinema)
+  requestMovies ({state, commit}) {
+    let movies = api.filter(v => v.cinema === state.currentCinema)
     commit('SET_MOVIES', movies)
   }
 }
