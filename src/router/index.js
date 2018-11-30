@@ -15,8 +15,14 @@ const router = new Router({
     },
     {
       path: '/repertuar',
-      name: 'Movies',
-      component: require('@/views/AppMovieList.vue').default
+      component: require('@/views/AppMovie.vue').default,
+      children: [
+        {
+          path: '',
+          name: 'Movies',
+          component: require('@/components/AppMovie/MovieList.vue').default
+        }
+      ]
     },
     {
       path: '/cennik',
