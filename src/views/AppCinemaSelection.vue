@@ -60,7 +60,7 @@
     },
     methods: {
       chooseCinema () {
-        this.$cookie.set('cinema', this.currentCinema)
+        this.setCinemaCookie()
         this.$router.push({ name: 'Movies', params: { cinema: this.cinema } })
       }
     }
