@@ -29,15 +29,15 @@
         </v-flex>
         <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
           <v-btn
-            v-for="day in days" :key="day"
+            v-for="day in days" :key="day.title"
             icon
             flat
             depressed
             :ripple="false"
-            @click="selectedDay = day"
+            @click="selectedDay = day.title"
             class="alegreya-sc--light text-capitalize day-button"
-            :color="buttonDayColor(day)"
-          >{{day}}
+            :color="buttonDayColor(day.title)"
+          >{{day.title}}
           </v-btn>
         </v-flex>
       </v-layout>
@@ -51,6 +51,8 @@
 <script>
   import ChangesCinema from '../mixins/ChangesCinema'
 
+  let weekDays = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So']
+
   export default {
     name: 'AppMovieList',
     mixins: [ChangesCinema],
@@ -63,10 +65,19 @@
         }
       }
     },
+    computed: {
+      days () {
+        let cinemaDays = []
+        let currentDay = (new Date()).getDay()
+        for (let i = 0; i < weekDays.length; i++) {
+          cinemaDays[i] = { title: weekDays[(i + currentDay) % 7], action: '' }
+        }
+        return cinemaDays
+      }
+    },
     data () {
       return {
-        days: ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'],
-        selectedDay: 'Pn'
+        selectedDay: weekDays[(new Date()).getDay()]
       }
     }
   }

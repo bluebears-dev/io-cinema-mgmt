@@ -32,6 +32,14 @@ const router = new Router({
             default: require('@/components/AppMovie/MovieList.vue').default,
             toolbar
           }
+        },
+        {
+          path: 'abc',
+          name: 'MovieDetails',
+          components: {
+            default: require('@/components/AppMovie/MovieDetails.vue').default,
+            toolbar
+          }
         }
       ]
     },
