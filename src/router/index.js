@@ -45,7 +45,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   let cinemaCookie = cookie.get('cinema')
-  if (to.name !== 'CinemaSelection' && cinemaCookie.value == null) {
+  if (to.name !== 'CinemaSelection' && (cinemaCookie.value == null || cinemaCookie.value === '')) {
     next({name: 'CinemaSelection'})
   } else {
     next()
