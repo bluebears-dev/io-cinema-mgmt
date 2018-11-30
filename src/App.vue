@@ -2,10 +2,7 @@
   <v-app class="black">
     <router-view name="toolbar"/>
     <v-content class="black">
-      <v-container
-        fluid
-        fill-height
-      >
+      <v-container fluid>
         <v-fade-transition leave-absolute hide-on-leave>
           <router-view/>
         </v-fade-transition>

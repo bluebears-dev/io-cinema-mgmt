@@ -3,10 +3,10 @@
     justify-center
     fill-height
     row wrap
+    class="layout--align-fix"
   >
     <v-flex xs11 class="top__bar--padding">
       <v-layout
-        justify-space-between
         row wrap
         class="top__bar"
       >
