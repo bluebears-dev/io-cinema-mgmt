@@ -6,22 +6,50 @@ Vue.use(Router)
 
 // ******************* Routes ******************* //
 
+const toolbar = require('@/components/AppToolbar.vue').default
+
 const router = new Router({
   routes: [
     {
       path: '/kino',
       name: 'CinemaSelection',
-      component: require('@/views/AppCinemaSelection.vue').default
+      components: {
+        default: require('@/views/AppCinemaSelection.vue').default,
+        toolbar: require('@/components/AppToolbar/ToolbarWrapper.vue').default
+      }
     },
     {
       path: '/repertuar',
-      name: 'Movies',
-      component: require('@/views/AppMovieList.vue').default,
-      props: true
+      components: {
+        default: require('@/views/AppMovie.vue').default,
+        toolbar
+      },
+      children: [
+        {
+          path: '',
+          name: 'Movies',
+          components: {
+            default: require('@/components/AppMovie/MovieList.vue').default,
+            toolbar
+          }
+        },
+        {
+          path: 'abc',
+          name: 'MovieDetails',
+          components: {
+            default: require('@/components/AppMovie/MovieDetails.vue').default,
+            toolbar
+          }
+        }
+      ]
     },
     {
       path: '/cennik',
-      name: 'Pricing'
+      name: 'Prices',
+      components: {
+        default: require('@/views/AppPrices.vue').default,
+        toolbar
+      }
     },
     {
       path: '/kontakt',
@@ -45,7 +73,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   let cinemaCookie = cookie.get('cinema')
-  if (to.name !== 'CinemaSelection' && cinemaCookie.value == null) {
+  if (to.name !== 'CinemaSelection' && (cinemaCookie.value == null || cinemaCookie.value === '')) {
     next({name: 'CinemaSelection'})
   } else {
     next()

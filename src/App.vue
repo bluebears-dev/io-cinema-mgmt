@@ -1,13 +1,10 @@
 <template>
   <v-app class="black">
-    <AppToolbar/>
+    <router-view name="toolbar"/>
     <v-content class="black">
-      <v-container
-        fluid
-        fill-height
-      >
-        <v-fade-transition>
-          <router-view></router-view>
+      <v-container fluid>
+        <v-fade-transition leave-absolute hide-on-leave>
+          <router-view/>
         </v-fade-transition>
       </v-container>
     </v-content>
