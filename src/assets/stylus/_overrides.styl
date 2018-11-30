@@ -11,19 +11,32 @@
     color: inherit !important
     @extends .alegreya--bold
 
+
+
 // v-list - font styling
 .v-list
   .theme--light
     @extends .v-select__slot .v-select__selections
 
+    .v-ripple__container
+      color: var(--v-gold-base)
+
 .select__menu--black
-  .theme--light
-    color: var(--v-white-base)
+  // v-list - change tile styling
+  .v-list
     background-color: var(--v-black-base)
+    border: 1px solid var(--v-gold-base)
+    color: var(--v-white-base)
 
-    .v-list__tile:hover
-      background-color: var(--v-bronze-base)
+    // ripple - change ripple color
+    .theme--light
+      .v-ripple__container
+        color: var(--v-gold-base)
 
+    // v-list - change on hover color of the tiles
+    .v-list__tile
+      &:hover
+        background-color: var(--v-bronze-base)
 
 .select--cinema
   // MovieList select - change arrow color
