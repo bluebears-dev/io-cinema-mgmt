@@ -37,7 +37,11 @@ const router = new Router({
     },
     {
       path: '/cennik',
-      name: 'Pricing'
+      name: 'Prices',
+      components: {
+        default: require('@/views/AppPrices.vue').default,
+        toolbar
+      }
     },
     {
       path: '/kontakt',

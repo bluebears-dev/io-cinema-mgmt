@@ -75,7 +75,7 @@
         dropdownMenu: false,
         buttons: [
           {title: 'Repertuar', name: 'Movies'},
-          {title: 'Cennik', name: 'Pricing'},
+          {title: 'Cennik', name: 'Prices'},
           {title: 'Kontakt', name: 'Contact'}
         ]
       }

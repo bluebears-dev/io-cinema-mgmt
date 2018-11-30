@@ -2,7 +2,7 @@
   <v-toolbar
     flat
     app
-    :height="height"
+    :height="toolbarHeight"
     class="border--gold toolbar--background"
   >
     <v-toolbar-title class="alegreya-sc--regular white--text display-1">{{ title.toUpperCase() }}</v-toolbar-title>
@@ -39,4 +39,3 @@
     &--background
       background-color: var(--v-black-base) !important
 </style>
-
