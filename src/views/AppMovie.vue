@@ -75,6 +75,7 @@
 <style scoped lang="stylus">
   .top__bar
     border-bottom: 1.5px solid var(--v-gold-base)
+
     &--padding
       padding-bottom: 40px
       padding-top: 100px

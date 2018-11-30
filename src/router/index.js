@@ -6,21 +6,32 @@ Vue.use(Router)
 
 // ******************* Routes ******************* //
 
+const toolbar = require('@/components/AppToolbar.vue').default
+
 const router = new Router({
   routes: [
     {
       path: '/kino',
       name: 'CinemaSelection',
-      component: require('@/views/AppCinemaSelection.vue').default
+      components: {
+        default: require('@/views/AppCinemaSelection.vue').default,
+        toolbar: require('@/components/AppToolbar/ToolbarWrapper.vue').default
+      }
     },
     {
       path: '/repertuar',
-      component: require('@/views/AppMovie.vue').default,
+      components: {
+        default: require('@/views/AppMovie.vue').default,
+        toolbar
+      },
       children: [
         {
           path: '',
           name: 'Movies',
-          component: require('@/components/AppMovie/MovieList.vue').default
+          components: {
+            default: require('@/components/AppMovie/MovieList.vue').default,
+            toolbar
+          }
         }
       ]
     },

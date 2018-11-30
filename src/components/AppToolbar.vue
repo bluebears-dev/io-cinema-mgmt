@@ -1,17 +1,12 @@
 <template>
   <div>
-    <v-toolbar
-      flat
-      app
-      height="76"
-      class="toolbar border--gold toolbar--background"
-      v-if="toggleOnBreakpoint"
-    >
-      <v-toolbar-title class="alegreya-sc--regular white--text display-1">{{ title.toUpperCase() }}</v-toolbar-title>
+    <ToolbarWrapper>
       <v-layout
         fill-height
         align-end
         justify-end
+        v-if="toggleOnBreakpoint"
+        class="toolbar__desktop-layout"
       >
         <v-btn
           :key="button.title"
@@ -26,21 +21,14 @@
           <span class="button__text">{{ button.title }}</span>
         </v-btn>
       </v-layout>
-    </v-toolbar>
-    <v-toolbar
-      flat
-      app
-      height="55"
-      class="border--gold toolbar--background"
-      v-else
-    >
-      <v-toolbar-title class="alegreya-sc--regular white--text display-1">{{ title.toUpperCase() }}</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-side-icon
-        class="gold--text"
-        @click="dropdownMenu = !dropdownMenu"
-      ></v-toolbar-side-icon>
-    </v-toolbar>
+      <v-layout v-else>
+        <v-spacer></v-spacer>
+        <v-toolbar-side-icon
+          class="gold--text"
+          @click="dropdownMenu = !dropdownMenu"
+        ></v-toolbar-side-icon>
+      </v-layout>
+    </ToolbarWrapper>
     <v-slide-y-transition>
       <menu
         v-if="dropdownMenu && !toggleOnBreakpoint"
@@ -71,8 +59,11 @@
 </template>
 
 <script>
+  import ToolbarWrapper from './AppToolbar/ToolbarWrapper'
+
   export default {
     name: 'AppToolbar',
+    components: {ToolbarWrapper},
     computed: {
       toggleOnBreakpoint () {
         let breakpoint = this.$vuetify.breakpoint.name
@@ -82,7 +73,6 @@
     data () {
       return {
         dropdownMenu: false,
-        title: 'KAPPA',
         buttons: [
           {title: 'Repertuar', name: 'Movies'},
           {title: 'Cennik', name: 'Pricing'},
@@ -100,10 +90,7 @@
   .border--gold
     border-bottom: 2px solid var(--v-gold-base)
 
-  .toolbar
-    &--background
-      background-color: var(--v-black-base) !important
-
+  .toolbar__desktop-layout
     .button--main
       border: 2px solid var(--v-gold-base)
       margin: 0
@@ -111,10 +98,7 @@
       border-bottom-width: 0
 
       &:active
-        @extends .toolbar .button--main
-
-  .button__text
-    color: var(--v-white-base)
+        @extends .toolbar__desktop-layout .button--main
 
   .menu--mobile
     background-color: var(--v-black-base)
@@ -122,6 +106,9 @@
     top: 55px
     width: 100%
     z-index: 1
+
+  .button__text
+    color: var(--v-white-base)
 
   .button--active
     background: var(--v-gold-base) !important
