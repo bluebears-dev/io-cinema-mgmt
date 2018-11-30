@@ -34,8 +34,9 @@
             icon
             flat
             depressed
+            :ripple="false"
             @click="selectedDay = day"
-            class="alegreya-sc--light text-capitalize days"
+            class="alegreya-sc--light text-capitalize day-button"
             :color="buttonDayColor(day)"
           >{{day}}
           </v-btn>
@@ -109,9 +110,12 @@
       padding-bottom: 40px
       padding-top: 100px
 
-  .days
+  .day-button
     font-size: 1.4rem
     letter-spacing: 3px
+
+    &::before
+      background-color: transparent !important
 
   .image--style
     width: 240px
