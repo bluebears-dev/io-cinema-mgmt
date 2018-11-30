@@ -4,6 +4,9 @@ const getters = {
   },
   getCinemas (state) {
     return state.cinemas
+  },
+  getMovies (state) {
+    return state.movies
   }
 }
 

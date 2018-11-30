@@ -4,6 +4,9 @@ const mutations = {
   },
   SET_CINEMAS (state, cinemas) {
     state.cinemas = cinemas
+  },
+  SET_MOVIES (state, movies) {
+    state.movies = movies
   }
 }
 

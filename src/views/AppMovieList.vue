@@ -25,6 +25,7 @@
             :items="cinemas()"
             :menu-props="{'content-class': 'select__menu--black elevation-0'}"
             v-model="currentCinema"
+            @change="setCinemaCookie()"
           ></v-select>
         </v-flex>
         <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
@@ -47,7 +48,7 @@
         align-start
         justify-center
       >
-        <v-flex v-for="movie in movies" :key="movie" class="card--style text-xs-center">
+        <v-flex v-for="movie in movies()" :key="movie.title" class="card--style text-xs-center">
           <v-card
             color="black"
             flat
@@ -57,6 +58,7 @@
             <v-img
               :src="movie.cover"
               class="image--style"
+              height="340px"
             ></v-img>
             <div class="alegreya-sc--light movie--title">
               {{movie.title}}
@@ -74,11 +76,6 @@
   export default {
     name: 'AppMovieList',
     mixins: [ChangesCinema],
-    props: {
-      cinema: {
-        type: String
-      }
-    },
     methods: {
       buttonDayColor (day) {
         if (day === this.selectedDay) {
@@ -86,20 +83,20 @@
         } else {
           return 'white'
         }
+      },
+      movies () {
+        return this.$store.getters['getMovies']
       }
     },
     data () {
       return {
         days: ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'],
-        selectedDay: 'Pn',
-        movies: [
-          {title: 'Jak Zdać IO', cover: '/static/bohemian.jpg'},
-          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
-          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
-          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
-          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
-          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'}
-        ]
+        selectedDay: 'Pn'
+      }
+    },
+    mounted: function () {
+      if (!this.movies().length) {
+        this.$store.dispatch('requestMovies', this.currentCinema)
       }
     }
   }

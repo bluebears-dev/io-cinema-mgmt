@@ -16,8 +16,7 @@ const router = new Router({
     {
       path: '/repertuar',
       name: 'Movies',
-      component: require('@/views/AppMovieList.vue').default,
-      props: true
+      component: require('@/views/AppMovieList.vue').default
     },
     {
       path: '/cennik',
