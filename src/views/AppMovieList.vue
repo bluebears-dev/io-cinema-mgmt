@@ -22,9 +22,9 @@
             color="gold"
             label="Kino"
             background-color="black"
-            :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
+            :items="cinemas()"
             :menu-props="{'content-class': 'select__menu--black elevation-0'}"
-            v-model="cinema"
+            v-model="currentCinema"
           ></v-select>
         </v-flex>
         <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
@@ -58,9 +58,9 @@
               :src="movie.cover"
               class="image--style"
             ></v-img>
-              <div class="alegreya-sc--light movie--title">
-                {{movie.title}}
-              </div>
+            <div class="alegreya-sc--light movie--title">
+              {{movie.title}}
+            </div>
           </v-card>
         </v-flex>
       </v-layout>
@@ -69,8 +69,11 @@
 </template>
 
 <script>
+  import ChangesCinema from '../mixins/ChangesCinema'
+
   export default {
     name: 'AppMovieList',
+    mixins: [ChangesCinema],
     props: {
       cinema: {
         type: String
@@ -90,12 +93,12 @@
         days: ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'],
         selectedDay: 'Pn',
         movies: [
-          { title: 'Jak Zdać IO', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' },
-          { title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg' }
+          {title: 'Jak Zdać IO', cover: '/static/bohemian.jpg'},
+          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
+          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
+          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
+          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'},
+          {title: 'Bohemian Rhapsody', cover: '/static/bohemian.jpg'}
         ]
       }
     }
