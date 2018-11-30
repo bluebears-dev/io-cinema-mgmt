@@ -11,14 +11,16 @@
         class="mx-auto"
         width="240px"
       >
-        <v-img
-          :src="movie.cover"
-          class="image--style"
-          height="340px"
-        ></v-img>
-        <div class="alegreya-sc--light movie--title">
-          {{movie.title}}
-        </div>
+        <router-link :to="{name: 'MovieDetails'}" class="router--link">
+          <v-img
+            :src="movie.cover"
+            class="image--style"
+            height="340px"
+          ></v-img>
+          <div class="alegreya-sc--light movie--title">
+            {{movie.title}}
+          </div>
+        </router-link>
       </v-card>
     </v-flex>
   </v-layout>
@@ -56,4 +58,7 @@
     letter-spacing: 2px
     font-size: 1.5rem
     hyphens: auto
+
+  .router--link
+    text-decoration none
 </style>

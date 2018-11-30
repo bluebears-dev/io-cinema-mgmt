@@ -21,6 +21,11 @@ const router = new Router({
           path: '',
           name: 'Movies',
           component: require('@/components/AppMovie/MovieList.vue').default
+        },
+        {
+          path: 'abc',
+          name: 'MovieDetails',
+          component: require('@/components/AppMovie/MovieDetails.vue').default
         }
       ]
     },
