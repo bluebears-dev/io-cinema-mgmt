@@ -17,6 +17,7 @@
         row wrap
         class="white--text pa-4"
         v-for="price in prices"
+        :key="price.title"
       >
         <v-flex pt-2>
           <v-layout>
