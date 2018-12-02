@@ -1,11 +1,34 @@
 @import "mixins/_font.styl"
 
-.algreya
+.alegreya
+  &-sc
+    &--regular
+      alegreya-sc-font(400)
+
+    &--light
+      alegreya-sc-font(300)
+
+    &--thin
+      alegreya-sc-font(100)
+
+  &--bold
+    alegreya-font(700)
+
   &--regular
-    algreya-font(400)
+    alegreya-font(400)
 
   &--light
-    algreya-font(300)
+    alegreya-font(300)
 
   &--thin
-    algreya-font(100)
+    alegreya-font(100)
+
+.roboto
+  &--regular
+    roboto-font(400)
+
+  &--light
+    roboto-font(300)
+
+  &--bold
+    roboto-font(700)

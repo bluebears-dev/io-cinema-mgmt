@@ -1,0 +1,51 @@
+.v-select__slot
+  // v-select - selection text/value styling
+  .v-select__selections
+    letter-spacing: 1.8px
+    font-size 1.3rem
+    text-transform: capitalize
+    @extends .alegreya-sc--regular
+
+  // v-select - label styling
+  .theme--light
+    color: inherit !important
+    @extends .alegreya--bold
+
+
+
+// v-list - font styling
+.v-list
+  .theme--light
+    @extends .v-select__slot .v-select__selections
+
+    .v-ripple__container
+      color: var(--v-gold-base)
+
+.select__menu--black
+  // v-list - change tile styling
+  .v-list
+    background-color: var(--v-black-base)
+    border: 1px solid var(--v-gold-base)
+    color: var(--v-white-base)
+
+    // ripple - change ripple color
+    .theme--light
+      .v-ripple__container
+        color: var(--v-gold-base)
+
+    // v-list - change on hover color of the tiles
+    .v-list__tile
+      &:hover
+        background-color: var(--v-bronze-base)
+
+.select--cinema
+  // MovieList select - change arrow color
+  .v-select__slot
+    color: var(--v-gold-base) !important
+
+    // MovieList select - change font and color of selected value
+    .v-select__selections
+      color: var(--v-gold-base) !important
+      letter-spacing: 3.5px
+      font-size: 1.8rem
+      @extends .alegreya-sc--light
