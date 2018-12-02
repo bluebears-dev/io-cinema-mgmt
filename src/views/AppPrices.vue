@@ -16,7 +16,7 @@
       <v-layout
         row wrap
         class="white--text pa-4"
-        v-for="price in prices"
+        v-for="price in prices" v-bind:key="price"
       >
         <v-flex pt-2>
           <v-layout>
