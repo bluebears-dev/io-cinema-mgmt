@@ -10,7 +10,7 @@ class Movie(models.Model):
     releaseDate = models.DateField()
     length = models.IntegerField()
     producer = models.TextField()
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True, unique=True)
     cover = models.ImageField(unique=True)
 
     class Meta:
@@ -49,7 +49,7 @@ class Cinema(models.Model):
     name = models.CharField(50, primary_key=True)
     city = models.TextField()
     postalCode = PostalCodeField()    # todo trzeba zrobić, not null, no default, no unique
-    address = models.TextField()      # todo not null, no default, de facto unique, ale czy uwzględniamy miasto?
+    address = models.TextField(unique=True)      # todo not null, no default, de facto unique, ale czy uwzględniamy miasto?
     phoneNumber = PhoneField()        # todo trzeba zrobić, not null, no default, unique
 
 
@@ -67,8 +67,8 @@ class Showing(models.Model):
     """Represents a single spextacle"""
     date = models.DateField()
     hour = models.TimeField()
-    room = models.ForeignKey(Room, models.CASCADE)           # todo nie może się pokryć pokójxgodzinaxdata w żadnym filmie, byłoby fajnie
-    movie = models.ForeignKey(Movie, models.CASCADE)                                 # todo foreign key, not null, no default, no unique
+    room = models.ForeignKey(Room, models.CASCADE)
+    movie = models.ForeignKey(Movie, models.CASCADE)
     audioType = models.CharField(10, choices=(
       ('one', 'quiet'),
       ('two', 'loud'),
@@ -92,7 +92,7 @@ class Showing(models.Model):
 
 class User(models.Model):
     email = models.EmailField(primary_key=True)
-    password = models.CharField(100)  # todo Ale to ma być hash jak coś
+    password = models.CharField(100)  # todo Ale to ma być hash jak coś, a ten komentarz tutaj to tylko tak żeby był
     firstname = models.CharField(20)
     surname = models.CharField(50)
     phoneNumber = PhoneField()          # todo trzeba napisać, chyba null, no default, no unique
@@ -104,20 +104,30 @@ class User(models.Model):
 
 
 class Booking(models.Model):
-  user                          # todo foreign key, not null, no default, no unique
-  showing                       # todo foreign key, not null, no default, no unique - ktoś może najpierw zamówić, a potem zamówić ponownie
-  state = models.CharField(20)  # not null, default na stan początkowy jak najbardziej, no unique, enum
+    user = models.ForeignKey(User, models.CASCADE)
+    showing = models.ForeignKey(Showing, models.CASCADE)
+    state = models.CharField(20, choices=(
+      ('first_state', 'first_state'),
+      ('second_state', 'second_state'),
+      ('stety', 'niestety'),
+    ), default='first_state')
 
 
 class Seat(models.Model):
-  room                                    # todo foreign key, not null, no default, no unique
-  row = models.SmallIntegerField()        # not null, no default, unique tylko w tym samym room
-  column = models.SmallIntegerField()     # jak wyżej
-  realRow = models.SmallIntegerField()    # jak wyżej
-  realColumn = models.CharField(2)        # jak wyżej
+    room = models.ForeignKey(Room, models.CASCADE)
+    row = models.SmallIntegerField()        # not null, no default, unique tylko w tym samym room
+    column = models.SmallIntegerField()
+    realRow = models.SmallIntegerField()
+    realColumn = models.CharField(2)
+
+    class Meta:
+        unique_together = ()   # todo ale jak to to jak toto
 
 
 class Ticket(models.Model):
-  booking     # todo foreign key, not null, no default, no unique
-  seat        # todo foreign key, not null, no default, unique ale tylko w tym samym booking
-  type        # todo foreign key, not null, no default, no unique
+    booking = models.ForeignKey(Booking, models.CASCADE)
+    seat = models.ForeignKey(Seat, models.CASCADE)
+    typo = models.ForeignKey(TicketType, models.CASCADE, verbose_name="type")  # todo upewnij się, że z tym verbose w foreign nie bedzie problemu
+
+    class Meta:
+        unique_together = ('booking', 'seat')
