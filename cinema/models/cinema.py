@@ -24,7 +24,7 @@ class Cinema(models.Model):
       message=_('Wprowadż poprawny kod pocztowy')
     )
   ])
-  phone_number = models.CharField(max_length=12, blank=False, validators=[
+  phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, blank=False, validators=[
     RegexValidator(
       regex=PHONE_NUMBER_REGEX,
       message=_('Wprowadź poprawny numer telefonu (może zawierać spacje).')
