@@ -16,5 +16,8 @@ export default {
         this.$store.dispatch('setCurrentCinema', newValue)
       }
     }
+  },
+  created () {
+    this.$store.dispatch('requestCinemas')
   }
 }
