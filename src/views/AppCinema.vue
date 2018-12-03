@@ -20,6 +20,8 @@
             label="Kino"
             background-color="black"
             :items="cinemas()"
+            item-text="name"
+            item-value="id"
             :menu-props="{'content-class': 'select__menu--black elevation-0'}"
             v-model="currentCinema"
             @change="setCinemaCookie()"
@@ -46,20 +48,20 @@
                 xs12 sm6
                 class="alegreya-sc--light cinema--details"
               >
-                <span>{{cinema.address}}, {{cinema.postalCode}} {{cinema.city}}</span><br>
+                <span>{{cinemaDetails.address}}, {{cinemaDetails.postal_code}} {{cinemaDetails.city}}</span><br>
               </v-flex>
               <v-flex
                 xs12 sm4 offset-sm1
                 class="alegreya-sc--regular cinema--details"
               >
-                <span>Numer teleefonu:</span>
+                <span>Numer telefonu:</span>
               </v-flex>
 
               <v-flex
                 xs12 sm6
                 class="alegreya-sc--light cinema--details"
               >
-                <span>{{cinema.telephone}}</span><br>
+                <span>{{cinemaDetails.phone_number}}</span><br>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -76,9 +78,9 @@
   export default {
     name: 'AppCinema',
     mixins: [ChangesCinema],
-    data () {
-      return {
-        cinema: { address: 'Agjehofska 32', postalCode: '00-450', city: 'Kraków', telephone: '12 000 01 10' }
+    computed: {
+      cinemaDetails () {
+        return this.$store.getters['getCinemaDetails']
       }
     }
   }
