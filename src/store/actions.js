@@ -39,11 +39,11 @@ const api = [
 ]
 
 const actions = {
-  setCurrentCinema ({commit, dispatch}, cinema) {
+  setCurrentCinema ({ commit, dispatch }, cinema) {
     commit('SET_CURRENT_CINEMA', cinema)
     dispatch('requestMovies', cinema)
   },
-  requestCinemas ({state, commit}) {
+  requestCinemas ({ state, commit }) {
     if (state.cinemas.length === 0) {
       axios.get('cinema/')
         .then((response) => {
@@ -51,9 +51,17 @@ const actions = {
         })
     }
   },
-  requestMovies ({state, commit}) {
+  requestMovies ({ state, commit }) {
     let movies = api.filter(v => v.cinema === state.currentCinema)
     commit('SET_MOVIES', movies)
+  },
+  requestTicketTypes ({ state, commit }) {
+    if (state.ticketTypes.length === 0) {
+      axios.get('prices/')
+        .then((response) => {
+          commit('SET_TICKET_TYPES', response.data)
+        })
+    }
   }
 }
 

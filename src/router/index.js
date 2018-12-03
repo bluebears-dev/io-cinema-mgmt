@@ -53,7 +53,11 @@ const router = new Router({
     },
     {
       path: '/kontakt',
-      name: 'Contact'
+      name: 'Contact',
+      components: {
+        default: require('@/views/AppCinema.vue').default,
+        toolbar
+      }
     },
     {
       path: '/',
