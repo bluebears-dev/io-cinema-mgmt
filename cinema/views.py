@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cinema.models import Cinema
-from cinema.serializers import CinemaSerializer
+from cinema.models import Cinema, TicketType
+from cinema.serializers import CinemaSerializer, TicketTypeSerializer
 
 
 class CinemaListView(APIView):
@@ -13,6 +13,12 @@ class CinemaListView(APIView):
     serializer = CinemaSerializer(cinema, many=True)
     return Response(serializer.data)
 
+
+class TicketTypeView(APIView):
+  def get(self, request, format=None):
+    ticket_type = TicketType.objects.all()
+    serializer = TicketTypeSerializer(ticket_type, many=True)
+    return Response(serializer.data)
 
 
 def index(request):
