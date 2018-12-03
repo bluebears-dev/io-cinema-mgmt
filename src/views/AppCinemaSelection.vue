@@ -24,6 +24,8 @@
               background-color="gold"
               class="gold--text pb-5"
               :items="cinemas()"
+              item-text="name"
+              item-value="id"
               :rules="[v => !!v]"
               hide-details
               v-model="currentCinema"
