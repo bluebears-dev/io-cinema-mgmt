@@ -1,1 +1,1 @@
-from .cinema import CinemaSerializer, CinemaBriefSerializer
+from .cinema import CinemaSerializer
