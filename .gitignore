@@ -79,3 +79,5 @@ typings/
 
 # python virtual environment
 venv
+
+.scannerwork
