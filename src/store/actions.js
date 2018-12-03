@@ -54,6 +54,14 @@ const actions = {
   requestMovies ({ state, commit }) {
     let movies = api.filter(v => v.cinema === state.currentCinema)
     commit('SET_MOVIES', movies)
+  },
+  requestTicketTypes ({ state, commit }) {
+    if (state.ticketTypes.length === 0) {
+      axios.get('prices/')
+        .then((response) => {
+          commit('SET_TICKET_TYPES', response.data)
+        })
+    }
   }
 }
 

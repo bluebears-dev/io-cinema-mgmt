@@ -10,6 +10,9 @@ const getters = {
   },
   getCinemaDetails (state) {
     return state.cinemas.find(e => e.id === state.currentCinema)
+  },
+  getTicketTypes (state) {
+    return state.ticketTypes
   }
 }
 
