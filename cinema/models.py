@@ -36,6 +36,10 @@ class Movie(models.Model):
         verbose_name = _('Film')
         verbose_name_plural = _('Filmy')
 
+    def __str__(self):
+        # return _('%(title)s' % {'title': self.title}) # usuń tą linię, jeśli wszystko będzie ok
+        return _('{0}'.format(self.title))
+
 
 class MovieGenre(models.Model):
 
@@ -70,6 +74,9 @@ class MovieGenre(models.Model):
         verbose_name = _('Gatunek')
         verbose_name_plural = _('Gatunki')
 
+    def __str__(self):
+        return _('{0} : {1}'.format(self.movie, self.genre))
+
 
 class TicketType(models.Model):
     """Represents kind of ticket
@@ -80,12 +87,12 @@ class TicketType(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name=_('Cena'))
     description = models.TextField(unique=True, verbose_name=_('Opis'), max_length=200)
 
-    def __str__(self):
-        return _('%(ticket_type)s' % {'ticket_type': self.typo})
-
     class Meta:
         verbose_name = _('Typ biletu')
         verbose_name_plural = _('Typy biletów')
+
+    def __str__(self):
+        return _('{0}'.format(self.typo))
 
 
 # class Cinema(models.Model):
@@ -116,7 +123,7 @@ class Cinema(models.Model):
     ])
 
     def __str__(self):
-        return _('%(cinema)s' % {'cinema': self.name})
+        return _('{0}'.format(self.name))
 
     class Meta:
         verbose_name = _('Kino')
@@ -133,6 +140,9 @@ class Room(models.Model):
         unique_together = (('name', 'cinema'),)
         verbose_name_plural = _('Sale')
         verbose_name = _('Sala')
+
+    def __str__(self):
+        return _('Sala {0} : {1}'.format(self.cinema, self.name))
 
 
 class Showing(models.Model):
@@ -185,6 +195,9 @@ class Showing(models.Model):
         unique_together = ('room', 'hour', 'date')
         verbose_name = _('Seans')
         verbose_name_plural = _('Seanse')
+
+    def __str__(self):
+        return _('Seans {0} {1} : {2}'.format(self.date, self.hour, self.movie))
 
 
 class UserProfile(models.Model):
@@ -242,6 +255,11 @@ class Booking(models.Model):
         verbose_name = _('Rezerwacja')
         verbose_name_plural = _('Rezerwacje')
 
+    def __str__(self):
+        return _('Rezerwacja na {0}'.format(self.showing))
+
+
+
 
 class Seat(models.Model):   # details unknown yet
     room = models.ForeignKey(Room, models.CASCADE, verbose_name=_('Sala'))
@@ -255,6 +273,8 @@ class Seat(models.Model):   # details unknown yet
         verbose_name = _('Miejsce')
         verbose_name_plural = _('Miejsca')
 
+    def __str__(self):
+        return _('Rząd {0}, kolumna {1}'.format(self.realRow, self.realColumn))
 
 class Ticket(models.Model):
     booking = models.ForeignKey(Booking, models.CASCADE, verbose_name=_('Rezerwacja'))
@@ -265,3 +285,6 @@ class Ticket(models.Model):
         unique_together = ('booking', 'seat')
         verbose_name = _('Bilet')
         verbose_name_plural = _('Bilety')
+
+    def __str__(self):
+        return _('Bilet na {0}'.format(self.booking))
