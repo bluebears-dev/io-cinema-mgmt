@@ -76,6 +76,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 
+MEDIA_ROOT = BASE_DIR + '/static'
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
