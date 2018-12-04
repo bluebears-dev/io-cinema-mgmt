@@ -19,34 +19,56 @@ Matches postal code format:
 """
 
 
+# todo ewentualnie, można podopisywać helpy i error message, ale nie jest to teraz konieczne
 class Movie(models.Model):
     """One set of values represents one movie"""
 
-    title = models.TextField()
-    releaseDate = models.DateField()
-    length = models.IntegerField()
-    producer = models.TextField()
-    description = models.TextField(null=True, blank=True, unique=True)
-    cover = models.ImageField(unique=True, max_length=200)                              # todo ważne, jak już się będzie dało, zrób test, czy jak dodasz obraz i go usuniesz, to czy plik zostanie, jeśli tak, to nadpisz metodę delete, żeby najpierw usuwało obraz, a dopiero później obiekt
+    title = models.TextField(verbose_name=_('Tytuł'))
+    releaseDate = models.DateField(verbose_name=_('Data wydania'))
+    length = models.IntegerField(verbose_name=_('Długość'))
+    producer = models.TextField(verbose_name=_('Producent'))
+    description = models.TextField(null=True, blank=True, unique=True, verbose_name=_('Opis'))
+    cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))                              # todo ważne, jak już się będzie dało, zrób test, czy jak dodasz obraz i go usuniesz, to czy plik zostanie, jeśli tak, to nadpisz metodę delete, żeby najpierw usuwało obraz, a dopiero później obiekt
 
     class Meta:
         # this means that the pair of those below must be unique
         unique_together = (("title", "releaseDate"),)
+        verbose_name = _('Film')
+        verbose_name_plural = _('Filmy')
 
 
 class MovieGenre(models.Model):
+
+    # choices for genre, should be set normal when the time is right
+    G1 = 'gat1'
+    G2 = 'gat2'
+    HP = 'wiz'
+    FB = 'lotr'
+    HO = 'hor'
+    KO = 'kom'
+    LA = 'gat'
+    UPS = 'ext'
+
+    CHOICES_FOR_GENRE = (
+      (G1, 'gatunek pierwszy'),
+      (G2, 'gatunek drugi'),
+      (HP, "you're a wizard, Harry"),
+      (FB, 'you shall not pass'),
+      (HO, 'sikasz ze strachu'),
+      (KO, 'sikasz ze smiechu'),
+      (LA, 'ostatni egzemplarz gatunków'),
+      (UPS, 'extinction'),
+    )
+
+    # end choices
+
     """One movie can have more than one movie_genre but they should not be repeated"""
-    movie = models.ForeignKey(Movie, models.CASCADE)
-    genre = models.CharField(20, choices=(
-      ('gat1', 'gatunek pierwszy'),
-      ('gat2', 'gatunek drugi'),
-      ('wiz', "you're a wizard, Harry"),
-      ('lotr', 'you shall not pass'),
-      ('hor', 'sikasz ze strachu'),
-      ('kom', 'sikasz ze smiechu'),
-      ('gat', 'ostatni gatunek'),
-      ('ext', 'extinction'),
-    ))
+    movie = models.ForeignKey(Movie, models.CASCADE, verbose_name=_('Film'))
+    genre = models.CharField(20, choices=CHOICES_FOR_GENRE, verbose_name=_('Gatunek'))
+
+    class Meta:
+        verbose_name = _('Gatunek')
+        verbose_name_plural = _('Gatunki')
 
 
 class TicketType(models.Model):
@@ -104,11 +126,13 @@ class Cinema(models.Model):
 class Room(models.Model):
     """Represents a single room in some specified cinema"""
 
-    name = models.CharField(2)
-    cinema = models.ForeignKey(Cinema, models.CASCADE)
+    name = models.CharField(2, verbose_name=_('Nazwa'))
+    cinema = models.ForeignKey(Cinema, models.CASCADE, verbose_name=_('Kino'))
 
     class Meta:
         unique_together = (('name', 'cinema'),)
+        verbose_name_plural = _('Sale')
+        verbose_name = _('Sala')
 
 
 class Showing(models.Model):
@@ -150,15 +174,17 @@ class Showing(models.Model):
     )
 
     """Represents a single spextacle"""
-    date = models.DateField()
-    hour = models.TimeField()
-    room = models.ForeignKey(Room, models.CASCADE)
-    movie = models.ForeignKey(Movie, models.CASCADE)
-    audioType = models.CharField(10, choices=AUDIO_CHOICES)
-    pictureType = models.CharField(2, choices=PICTURE_CHOICES)
+    date = models.DateField(verbose_name=_('Data'))
+    hour = models.TimeField(verbose_name=_('Godzina'))
+    room = models.ForeignKey(Room, models.CASCADE, verbose_name=_('Sala'))
+    movie = models.ForeignKey(Movie, models.CASCADE, verbose_name=_('Film'))
+    audioType = models.CharField(10, choices=AUDIO_CHOICES, verbose_name=_('Jakość dźwięku'))
+    pictureType = models.CharField(2, choices=PICTURE_CHOICES, verbose_name=_('Jakość obrazu'))
 
     class Meta:
         unique_together = ('room', 'hour', 'date')
+        verbose_name = _('Seans')
+        verbose_name_plural = _('Seanse')
 
 
 class UserProfile(models.Model):
@@ -208,26 +234,34 @@ class Booking(models.Model):
 
     # end choices
 
-    user = models.ForeignKey(User, models.CASCADE)
-    showing = models.ForeignKey(Showing, models.CASCADE)
-    state = models.CharField(20, choices=CHOICES_FOR_STATE, default='first_state')
+    user = models.ForeignKey(UserProfile, models.CASCADE, verbose_name=_('Profil użytkownika'))
+    showing = models.ForeignKey(Showing, models.CASCADE, verbose_name=_('Seans'))
+    state = models.CharField(20, choices=CHOICES_FOR_STATE, default='first_state',verbose_name=_('Stan'))
+
+    class Meta:
+        verbose_name = _('Rezerwacja')
+        verbose_name_plural = _('Rezerwacje')
 
 
 class Seat(models.Model):   # details unknown yet
-    room = models.ForeignKey(Room, models.CASCADE)
-    row = models.SmallIntegerField()
-    column = models.SmallIntegerField()
-    realRow = models.SmallIntegerField()
-    realColumn = models.CharField(2)
+    room = models.ForeignKey(Room, models.CASCADE, verbose_name=_('Sala'))
+    row = models.SmallIntegerField(verbose_name=_('Rząd w reprezentacji do wyświetlania'))
+    column = models.SmallIntegerField(verbose_name=_('Kolumna w reprezentacji do wyświetlania'))
+    realRow = models.SmallIntegerField(verbose_name=_('Numer rzędu'))
+    realColumn = models.CharField(2, verbose_name=_('Numer kolumny'))
 
     class Meta:
         unique_together = ('room', 'row', 'column', 'realRow', 'realColumn')
+        verbose_name = _('Miejsce')
+        verbose_name_plural = _('Miejsca')
 
 
 class Ticket(models.Model):
-    booking = models.ForeignKey(Booking, models.CASCADE)
-    seat = models.ForeignKey(Seat, models.CASCADE)
-    typo = models.ForeignKey(TicketType, models.CASCADE, verbose_name="type")
+    booking = models.ForeignKey(Booking, models.CASCADE, verbose_name=_('Rezerwacja'))
+    seat = models.ForeignKey(Seat, models.CASCADE, verbose_name=_('Miejsce'))
+    typo = models.ForeignKey(TicketType, models.CASCADE, verbose_name=_('Typ biletu'))
 
     class Meta:
         unique_together = ('booking', 'seat')
+        verbose_name = _('Bilet')
+        verbose_name_plural = _('Bilety')
