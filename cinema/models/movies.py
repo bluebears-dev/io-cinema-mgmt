@@ -8,11 +8,11 @@ from django.contrib import admin
 class Movie(models.Model):
     """One set of values represents one movie"""
 
-    title = models.TextField(verbose_name=_('Tytuł'))
+    title = models.CharField(max_length=100, verbose_name=_('Tytuł'))
     releaseDate = models.DateField(verbose_name=_('Data produkcji'))
     length = models.IntegerField(verbose_name=_('Czas trwania'))
-    producer = models.TextField(verbose_name=_('Reżyseria'))
-    description = models.TextField(null=True, blank=True, unique=True, verbose_name=_('Opis'))
+    producer = models.CharField(max_length=50, verbose_name=_('Reżyseria'))
+    description = models.TextField(verbose_name=_('Opis'))
     cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))
 
     class Meta:
