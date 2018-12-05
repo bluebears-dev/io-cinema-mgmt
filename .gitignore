@@ -82,3 +82,6 @@ venv
 
 # everything with __pycache__ in name
 *__pycache__*
+
+.scannerwork
+cinema/migrations/0*.py
