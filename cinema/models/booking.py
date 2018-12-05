@@ -24,46 +24,6 @@ class TicketType(models.Model):
 		return _('{0}'.format(self.ticketType))
 
 
-class Showing(models.Model):
-	"""
-		Model representing showing in cinema
-	"""
-	DUBBING = 'Dubbing'
-	ORIGINAL = 'Oryginalny'
-	VOICE_OVER = 'Lektor'
-	SUBTITLES = 'Napisy'
-
-	AUDIO_CHOICES = (
-		(DUBBING, 'Dubbing'),
-		(ORIGINAL, 'Oryginalny'),
-		(VOICE_OVER, 'Lektor'),
-		(SUBTITLES, 'Napisy')
-	)
-
-	TWO_DIM = '2D'
-	THREE_DIM = '3D'
-
-	PICTURE_CHOICES = (
-		(TWO_DIM, '2D'),
-		(THREE_DIM, '3D')
-	)
-
-	date = models.DateField(verbose_name=_('Data seansu'))
-	hour = models.TimeField(verbose_name=_('Godzina seansu'))
-	room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
-	movie = models.ForeignKey(verbose_name=_('Film'), to='Movie', on_delete=models.CASCADE)
-	audioType = models.CharField(verbose_name=_('Przekład'), max_length=10, choices=AUDIO_CHOICES)
-	pictureType = models.CharField(verbose_name=_('Typ obrazu'), max_length=2, choices=PICTURE_CHOICES)
-
-	class Meta:
-		unique_together = ('room', 'hour', 'date')
-		verbose_name = _('Seans')
-		verbose_name_plural = _('Seanse')
-
-	def __str__(self):
-		return _('Seans {0} {1} : {2}'.format(self.date, self.hour, self.movie))
-
-
 class Booking(models.Model):
 	FIRST = 'first_state'
 	SECOND = 'second_state'
