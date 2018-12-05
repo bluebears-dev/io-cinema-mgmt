@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import UserProfile, Movie
+from .models import UserProfile, Movie, TicketType
 
 
 class UserInline(admin.StackedInline):
@@ -24,6 +24,14 @@ class MovieAdmin(admin.ModelAdmin):
 	list_filter = ('releaseDate', 'producer')
 
 
+class TicketTypeAdmin(admin.ModelAdmin):
+	"""
+		TicketType list display
+	"""
+	list_display = ('ticketType', 'price')
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Movie, MovieAdmin)
+admin.site.register(TicketType, TicketTypeAdmin)
