@@ -9,15 +9,14 @@ class Movie(models.Model):
     """One set of values represents one movie"""
 
     title = models.TextField(verbose_name=_('Tytuł'))
-    releaseDate = models.DateField(verbose_name=_('Data wydania'))
-    length = models.IntegerField(verbose_name=_('Długość'))
-    producer = models.TextField(verbose_name=_('Producent'))
+    releaseDate = models.DateField(verbose_name=_('Data produkcji'))
+    length = models.IntegerField(verbose_name=_('Czas trwania'))
+    producer = models.TextField(verbose_name=_('Reżyseria'))
     description = models.TextField(null=True, blank=True, unique=True, verbose_name=_('Opis'))
-    # cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))
+    cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))
 
     class Meta:
-        # this means that the pair of those below must be unique
-        unique_together = (("title", "releaseDate"),)
+        unique_together = (("title", "producer"),)
         verbose_name = _('Film')
         verbose_name_plural = _('Filmy')
 
@@ -25,6 +24,7 @@ class Movie(models.Model):
         return _('{0}'.format(self.title))
 
 
+# todo: zmienić MovieGenre jako pojedynczy gatunek
 class MovieGenre(models.Model):
 
     # choices for genre, should be set normal when the time is right
