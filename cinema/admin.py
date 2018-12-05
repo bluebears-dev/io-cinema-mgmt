@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+
+from cinema.models import Cinema, Room
 from .models import UserProfile, Movie, TicketType, Showing
 
 
@@ -39,8 +41,11 @@ class ShowingAdmin(admin.ModelAdmin):
 	list_filter = ('movie', 'date', 'room')
 
 
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Movie, MovieAdmin)
 admin.site.register(TicketType, TicketTypeAdmin)
 admin.site.register(Showing, ShowingAdmin)
+admin.site.register(Cinema)
+admin.site.register(Room)
