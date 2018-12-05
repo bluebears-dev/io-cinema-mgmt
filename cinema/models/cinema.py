@@ -15,16 +15,16 @@ Matches postal code format:
 
 
 class Cinema(models.Model):
-  name = models.CharField(verbose_name=_('Nazwa kina'), max_length=100, blank=False, unique=True)
-  city = models.CharField(verbose_name=_('Miasto'), max_length=60, blank=False)
-  address = models.CharField(verbose_name=_('Adres'), max_length=100, blank=False)
-  postal_code = models.CharField(verbose_name=_('Kod pocztowy'), max_length=6, blank=False, validators=[
+  name = models.CharField(verbose_name=_('Nazwa kina'), max_length=100, unique=True)
+  city = models.CharField(verbose_name=_('Miasto'), max_length=60, )
+  address = models.CharField(verbose_name=_('Adres'), max_length=100)
+  postal_code = models.CharField(verbose_name=_('Kod pocztowy'), max_length=6, validators=[
     RegexValidator(
       regex=POSTAL_CODE_REGEX,
-      message=_('Wprowadż poprawny kod pocztowy')
+      message=_('Wprowadż poprawny kod pocztowy.')
     )
   ])
-  phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, blank=False, validators=[
+  phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, validators=[
     RegexValidator(
       regex=PHONE_NUMBER_REGEX,
       message=_('Wprowadź poprawny numer telefonu (może zawierać spacje).')
@@ -42,12 +42,11 @@ class Cinema(models.Model):
 class Room(models.Model):
     """Represents a single room in some specified cinema"""
 
-    name = models.CharField(max_length=2, verbose_name=_('Nazwa'))
-    cinema = models.ForeignKey(Cinema, models.CASCADE, verbose_name=_('Kino'))
+    name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
+    cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
 
     class Meta:
       unique_together = (('name', 'cinema'),)
-      verbose_name_plural = _('Sale')
       verbose_name = _('Sala')
 
     def __str__(self):

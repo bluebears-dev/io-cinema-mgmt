@@ -5,32 +5,22 @@
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext as _
-from .cinema import Room, Seat
-from .movies import Movie
-from django.contrib.auth.models import User
 
 
 class TicketType(models.Model):
-  """Represents kind of ticket
-
-  One can consider changing the price to movie dependent version assuming there is time for that"""
-
-  typo = models.CharField(max_length=20, primary_key=True, verbose_name=_('Typ biletu'), db_column='type')
-  price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name=_('Cena'))
-  description = models.TextField(unique=True, verbose_name=_('Opis'), max_length=200)
+  ticketType = models.CharField(verbose_name=_('Typ biletu'), max_length=20, unique=True, db_column='type')
+  price = models.DecimalField(verbose_name=_('Cena'), max_digits=6, decimal_places=2)
+  description = models.TextField(verbose_name=_('Opis'), max_length=200)
 
   class Meta:
     verbose_name = _('Typ biletu')
     verbose_name_plural = _('Typy biletów')
 
   def __str__(self):
-    return _('{0}'.format(self.typo))
+    return _('{0}'.format(self.ticketType))
 
 
 class Showing(models.Model):
-    # Choices for audio type, should be corrected to normal when types are known
-    # or else if just something sensible is needed before the deadline
-
     QUI = 'one'
     LLO = 'two'
     TTR = 'thr'
@@ -64,13 +54,12 @@ class Showing(models.Model):
       (D3, 'colorful in 3D'),
     )
 
-    """Represents a single spextacle"""
-    date = models.DateField(verbose_name=_('Data'))
-    hour = models.TimeField(verbose_name=_('Godzina'))
-    room = models.ForeignKey(Room, models.CASCADE, verbose_name=_('Sala'))
-    movie = models.ForeignKey(Movie, models.CASCADE, verbose_name=_('Film'))
-    audioType = models.CharField(max_length=10, choices=AUDIO_CHOICES, verbose_name=_('Jakość dźwięku'))
-    pictureType = models.CharField(max_length=2, choices=PICTURE_CHOICES, verbose_name=_('Jakość obrazu'))
+    date = models.DateField(verbose_name=_('Data seansu'))
+    hour = models.TimeField(verbose_name=_('Godzina seansu'))
+    room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
+    movie = models.ForeignKey(verbose_name=_('Film'), to='Movie', on_delete=models.CASCADE)
+    audioType = models.CharField(verbose_name=_('Przekład'), max_length=10, choices=AUDIO_CHOICES)
+    pictureType = models.CharField(verbose_name=_('Typ obrazu'), max_length=2, choices=PICTURE_CHOICES)
 
     class Meta:
       unique_together = ('room', 'hour', 'date')
@@ -82,7 +71,6 @@ class Showing(models.Model):
 
 
 class Booking(models.Model):
-    # Choices to be used
     FIRST = 'first_state'
     SECOND = 'second_state'
     THIRD = 'stety'
@@ -93,11 +81,9 @@ class Booking(models.Model):
       (THIRD, 'niestety'),
     )
 
-    # end choices
-
-    user = models.ForeignKey(User, models.CASCADE, verbose_name=_('Profil użytkownika'))
-    showing = models.ForeignKey(Showing, models.CASCADE, verbose_name=_('Seans'))
-    state = models.CharField(max_length=20, choices=CHOICES_FOR_STATE, default='first_state', verbose_name=_('Stan'))
+    user = models.ForeignKey(verbose_name=_('Klient'), to='User', on_delete=models.CASCADE)
+    showing = models.ForeignKey(verbose_name=_('Seans'), to='Showing', on_delete=models.CASCADE)
+    state = models.CharField(verbose_name=_('Stan rezerwacji'), max_length=20, choices=CHOICES_FOR_STATE, default='first_state')
 
     class Meta:
       verbose_name = _('Rezerwacja')
@@ -108,9 +94,9 @@ class Booking(models.Model):
 
 
 class Ticket(models.Model):
-  booking = models.ForeignKey(Booking, models.CASCADE, verbose_name=_('Rezerwacja'))
-  seat = models.ForeignKey(Seat, models.CASCADE, verbose_name=_('Miejsce'))
-  typo = models.ForeignKey(TicketType, models.CASCADE, verbose_name=_('Typ biletu'), db_column='type')
+  booking = models.ForeignKey(verbose_name=_('Rezerwacja'), to='Booking', on_delete=models.CASCADE)
+  seat = models.ForeignKey(verbose_name=_('Miejsce'), to='Seat', on_delete=models.CASCADE)
+  ticketType = models.ForeignKey(verbose_name=_('Typ biletu'), to='TicketType', on_delete=models.CASCADE, db_column='type')
 
   class Meta:
     unique_together = ('booking', 'seat')

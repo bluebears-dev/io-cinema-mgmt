@@ -5,8 +5,8 @@
   >
     <v-flex sm9 md7 lg5>
       <v-form form
-        class="cinema--form"
-        v-model="validCinemaForm"
+              class="cinema--form"
+              v-model="validCinemaForm"
       >
         <div class="alegreya-sc--regular form--text text-xs-center">Wybierz Kino</div>
         <v-layout
@@ -23,10 +23,12 @@
               color="gold"
               background-color="gold"
               class="gold--text pb-5"
-              :items="['fajne', 'fajniejsze', 'jeszcze fajniejsze']"
+              :items="cinemas()"
+              item-text="name"
+              item-value="id"
               :rules="[v => !!v]"
               hide-details
-              v-model="cinema"
+              v-model="currentCinema"
             ></v-select>
           </v-flex>
           <v-flex xs12 class="text-xs-center button--padding">
@@ -48,18 +50,20 @@
 </template>
 
 <script>
+  import ChangesCinema from '../mixins/ChangesCinema'
+
   export default {
     name: 'AppCinemaSelection',
+    mixins: [ChangesCinema],
     data () {
       return {
-        validCinemaForm: false,
-        cinema: null
+        validCinemaForm: false
       }
     },
     methods: {
       chooseCinema () {
-        this.$cookie.set('cinema', this.cinema)
-        this.$router.push({ name: 'Movies', params: { cinema: this.cinema } })
+        this.setCinemaCookie()
+        this.$router.push({name: 'Movies'})
       }
     }
   }
