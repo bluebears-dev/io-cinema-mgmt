@@ -25,20 +25,23 @@ class TicketType(models.Model):
 
 
 class Booking(models.Model):
-	FIRST = 'first_state'
-	SECOND = 'second_state'
-	THIRD = 'stety'
+	"""
+		Represents client's bookings and their states
+	"""
+	INITIATED = 'Rozpoczęta'
+	UNPAID = 'Nieopłacona'
+	PAID = 'Opłacona'
 
 	CHOICES_FOR_STATE = (
-		(FIRST, 'first_state'),
-		(SECOND, 'second_state'),
-		(THIRD, 'niestety'),
+		(INITIATED, 'Rozpoczęta'),
+		(UNPAID, 'Nieopłacona'),
+		(PAID, 'Opłacona'),
 	)
 
 	user = models.ForeignKey(verbose_name=_('Klient'), to=User, on_delete=models.CASCADE)
 	showing = models.ForeignKey(verbose_name=_('Seans'), to='Showing', on_delete=models.CASCADE)
 	state = models.CharField(verbose_name=_('Stan rezerwacji'), max_length=20, choices=CHOICES_FOR_STATE,
-	                         default='first_state')
+	                         default=INITIATED)
 
 	class Meta:
 		verbose_name = _('Rezerwacja')
