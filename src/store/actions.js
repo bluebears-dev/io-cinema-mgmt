@@ -1,42 +1,5 @@
 import axios from 'axios'
 
-const api = [
-  {
-    cinema: 1,
-    title: 'Jak zdać IO?',
-    cover: '/static/bohemian.jpg'
-  },
-  {
-    cinema: 1,
-    title: 'Jak zdać Wzorce?',
-    cover: '/static/miserables.jpg'
-  },
-  {
-    cinema: 2,
-    title: 'Jak zdać MISS?',
-    cover: '/static/bohemian.jpg'
-  },
-  {
-    cinema: 2,
-    title: 'Jak zdać AGH?',
-    cover: '/static/bighero.png'
-  },
-  {
-    cinema: 2,
-    title: 'Jak zdać AIMO?',
-    cover: '/static/miserables.jpg'
-  },
-  {
-    cinema: 3,
-    title: 'Jak zdać Prawo?',
-    cover: '/static/miserables.jpg'
-  },
-  {
-    cinema: 3,
-    title: 'Jak zdać PWIR?',
-    cover: '/static/bighero.png'
-  }
-]
 
 const actions = {
   setCurrentCinema ({ commit, dispatch }, cinema) {
@@ -52,8 +15,10 @@ const actions = {
     }
   },
   requestMovies ({ state, commit }) {
-    let movies = api.filter(v => v.cinema === state.currentCinema)
-    commit('SET_MOVIES', movies)
+    axios.get ('showings/'+state.currentCinema)
+      .then((response) => {
+            commit('SET_MOVIES', response.data)
+      })
   },
   requestTicketTypes ({ state, commit }) {
     if (state.ticketTypes.length === 0) {
