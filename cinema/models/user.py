@@ -17,20 +17,20 @@ Matches number delimited space in three different formats:
 
 
 class UserProfile(models.Model):
-  """
-  User profile containing non-auth data
-  """
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
-  phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, validators=[
-    RegexValidator(
-      regex=PHONE_NUMBER_REGEX,
-      message=_('Wprowadź poprawny numer telefonu (może zawierać spacje).')
-    )
-  ])
+	"""
+		User profile containing non-auth data
+	"""
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, validators=[
+		RegexValidator(
+			regex=PHONE_NUMBER_REGEX,
+			message=_('Wprowadź poprawny numer telefonu (może zawierać spacje).')
+		)
+	])
 
-  def __str__(self):
-    return _('Dane kontaktowe')
+	def __str__(self):
+		return _('Dane kontaktowe')
 
-  class Meta:
-    verbose_name = _('Profil użytkownika')
-    verbose_name_plural = _('Profile użytkownika')
+	class Meta:
+		verbose_name = _('Profil użytkownika')
+		verbose_name_plural = _('Profile użytkownika')
