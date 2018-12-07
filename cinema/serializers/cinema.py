@@ -12,9 +12,10 @@ class CinemaSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     cinema = CinemaSerializer(read_only=True)
+
     class Meta:
         model = Room
-        fields = ('id','name', 'cinema')
+        fields = ('id', 'name', 'cinema')
         read_only_fields = fields
 
 

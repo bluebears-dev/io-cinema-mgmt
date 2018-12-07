@@ -16,8 +16,8 @@ Matches postal code format:
 
 class Cinema(models.Model):
     """
-          Represents building location
-      """
+        Represents building location
+    """
     name = models.CharField(verbose_name=_('Nazwa kina'), max_length=100, unique=True)
     city = models.CharField(verbose_name=_('Miasto'), max_length=60, )
     address = models.CharField(verbose_name=_('Adres'), max_length=100)
@@ -44,8 +44,8 @@ class Cinema(models.Model):
 
 class Showing(models.Model):
     """
-          Model representing showing in cinema
-      """
+        Model representing showing in cinema
+    """
     DUBBING = 'Dubbing'
     ORIGINAL = 'Oryginalny'
     VOICE_OVER = 'Lektor'
@@ -84,8 +84,8 @@ class Showing(models.Model):
 
 class Room(models.Model):
     """
-          Represents specific room in the cinema
-      """
+        Represents specific room in the cinema
+    """
     name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
     cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
 

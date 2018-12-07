@@ -9,8 +9,8 @@ from .serializers import CinemaSerializer, TicketTypeSerializer, CinemaShowingSe
 class CinemaListView(APIView):
     def get(self, request, format=None):
         """
-			Return a list of all cinemas in the system (with details)
-		"""
+            Return a list of all cinemas in the system (with details)
+        """
         cinema = Cinema.objects.all()
         serializer = CinemaSerializer(cinema, many=True)
         return Response(serializer.data)
@@ -19,11 +19,12 @@ class CinemaListView(APIView):
 class TicketTypeView(APIView):
     def get(self, request, format=None):
         """
-			Return a list of all types of tickets in the system (with details)
-		"""
+            Return a list of all types of tickets in the system (with details)
+        """
         ticket_type = TicketType.objects.all()
         serializer = TicketTypeSerializer(ticket_type, many=True)
         return Response(serializer.data)
+
 
 class ShowingView(APIView):
     def get(self, request, format=None):

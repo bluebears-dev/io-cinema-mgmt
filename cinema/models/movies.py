@@ -3,23 +3,29 @@ from django.utils.translation import gettext as _
 
 
 class Movie(models.Model):
-	"""
-		Model representing movie played at the cinema
-	"""
-	title = models.CharField(max_length=100, verbose_name=_('Tytuł'))
-	releaseDate = models.DateField(verbose_name=_('Data produkcji'))
-	length = models.IntegerField(verbose_name=_('Czas trwania'))
-	producer = models.CharField(max_length=50, verbose_name=_('Reżyseria'))
-	description = models.TextField(verbose_name=_('Opis'))
-	cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))
+    """
+        Model representing movie played at the cinema
+    """
+    title = models.CharField(verbose_name=_('Tytuł'), max_length=100)
+    releaseDate = models.DateField(verbose_name=_('Data produkcji'))
+    length = models.IntegerField(verbose_name=_('Czas trwania'))
+    producer = models.CharField(verbose_name=_('Reżyseria'), max_length=50)
+    description = models.TextField(verbose_name=_('Opis'))
+    cover = models.ImageField(
+        verbose_name=_('Okładka'),
+        unique=True
+    )
 
-	class Meta:
-		unique_together = (("title", "producer"),)
-		verbose_name = _('Film')
-		verbose_name_plural = _('Filmy')
+    def images(self, filename):
+        pass
 
-	def __str__(self):
-		return _('{0}'.format(self.title))
+    class Meta:
+        unique_together = (("title", "producer"),)
+        verbose_name = _('Film')
+        verbose_name_plural = _('Filmy')
+
+    def __str__(self):
+        return _('{0}'.format(self.title))
 
 #
 # # todo: zmienić MovieGenre jako pojedynczy gatunek
