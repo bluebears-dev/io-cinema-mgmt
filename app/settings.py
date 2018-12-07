@@ -78,8 +78,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-MEDIA_ROOT = BASE_DIR + '/static'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static').replace('\\','/')
+MEDIA_URL = '/static/'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -130,11 +130,10 @@ USE_TZ = True
 # Where collectstatic looks for static files
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dist'),
-    os.path.join(BASE_DIR, 'static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'public')
-STATIC_URL = '/static/'
+STATIC_URL = '/public/'
 
 # Webpack integration
 WEBPACK_LOADER = {
