@@ -1,5 +1,24 @@
+import os
+from uuid import uuid4
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
+
+
+def image_filename(path):
+    """
+        Generates a function that returns path with random filename for image
+
+    :param path: Special path inside static/ folder
+    :return: Function for upload_to that returns path of the image
+    """
+
+    def wrap(instance, filename):
+        extension = filename.split('.')[-1]
+        filename = '{}.{}'.format(uuid4().hex, extension)
+        return os.path.join(path, filename)
+
+    return wrap
 
 
 class Movie(models.Model):
@@ -13,11 +32,9 @@ class Movie(models.Model):
     description = models.TextField(verbose_name=_('Opis'))
     cover = models.ImageField(
         verbose_name=_('Okładka'),
-        unique=True
+        unique=True,
+        upload_to=image_filename('covers/')
     )
-
-    def images(self, filename):
-        pass
 
     class Meta:
         unique_together = (("title", "producer"),)
@@ -27,7 +44,26 @@ class Movie(models.Model):
     def __str__(self):
         return _('{0}'.format(self.title))
 
-#
+    def delete_file(self):
+        """
+            Try to delete image for specififc movie
+        :return:
+        """
+        try:
+            movie = Movie.objects.get(id=self.id)
+            movie.cover.delete(False)
+        except ObjectDoesNotExist:
+            pass
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.delete_file()
+        super(Movie, self).save()
+
+    def delete(self, using=None, keep_parents=False):
+        self.delete_file()
+        super(Movie, self).delete()
+
 # # todo: zmienić MovieGenre jako pojedynczy gatunek
 # class MovieGenre(models.Model):
 # 	G1 = 'gat1'
