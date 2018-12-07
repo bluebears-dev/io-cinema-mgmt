@@ -7,6 +7,9 @@ const mutations = {
   },
   SET_MOVIES (state, movies) {
     state.movies = movies
+  },
+  SET_TICKET_TYPES (state, ticketTypes) {
+    state.ticketTypes = ticketTypes
   }
 }
 

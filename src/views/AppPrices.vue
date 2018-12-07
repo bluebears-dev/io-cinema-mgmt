@@ -17,6 +17,7 @@
         row wrap
         class="white--text pa-4"
         v-for="price in prices"
+        :key="price.id"
       >
         <v-flex pt-2>
           <v-layout>
@@ -24,13 +25,13 @@
               xs9
               class="alegreya-sc--regular price"
             >
-              {{price.title}}
+              {{price.type}}
             </v-flex>
             <v-flex
               xs5
               class="alegreya-sc--regular price"
             >
-              {{price.amount}}
+              {{price.price}}
             </v-flex>
           </v-layout>
         </v-flex>
@@ -49,21 +50,13 @@
 <script>
   export default {
     name: 'AppPrices',
-    data () {
-      return {
-        prices: [
-          {
-            title: 'Normalny',
-            amount: '15zł',
-            description: 'Regularny bilecik dla wszystkich w przystępnej cenie.'
-          },
-          {
-            title: 'Ulgowy',
-            amount: '10zł',
-            description: 'Bilecik zniżkowy, dostępny dla osób z upoważniającym dokumentem.'
-          }
-        ]
+    computed: {
+      prices () {
+        return this.$store.getters['getTicketTypes']
       }
+    },
+    created () {
+      this.$store.dispatch('requestTicketTypes')
     }
   }
 </script>

@@ -22,6 +22,8 @@
             label="Kino"
             background-color="black"
             :items="cinemas()"
+            item-text="name"
+            item-value="id"
             :menu-props="{'content-class': 'select__menu--black elevation-0'}"
             v-model="currentCinema"
             @change="setCinemaCookie()"
@@ -70,7 +72,7 @@
         let cinemaDays = []
         let currentDay = (new Date()).getDay()
         for (let i = 0; i < weekDays.length; i++) {
-          cinemaDays[i] = { title: weekDays[(i + currentDay) % 7], action: '' }
+          cinemaDays[i] = {title: weekDays[(i + currentDay) % 7], action: ''}
         }
         return cinemaDays
       }
