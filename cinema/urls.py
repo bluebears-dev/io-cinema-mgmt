@@ -8,5 +8,6 @@ urlpatterns = [
 	path('', views.index, name='index'),
 	path('cinema/', views.CinemaListView.as_view()),
 	path('prices/', views.TicketTypeView.as_view()),
+    path('showings/', views.ShowingView.as_view()),
 	path('docs/', include_docs_urls(title='KAPPA Cinema API')),
 ]
