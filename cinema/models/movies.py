@@ -13,8 +13,7 @@ class Movie(models.Model):
     description = models.TextField(verbose_name=_('Opis'))
     cover = models.ImageField(
         verbose_name=_('Okładka'),
-        unique=True,
-        upload_to=images
+        unique=True
     )
 
     def images(self, filename):
