@@ -5,8 +5,7 @@ from django.contrib.auth.models import User
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from cinema.models import Cinema, Room, Booking, Ticket
-from .models import UserProfile, Movie, TicketType, Showing
+from .models import Cinema, Room, Booking, UserProfile, Movie, TicketType, Showing
 
 
 class UserInline(admin.StackedInline):
