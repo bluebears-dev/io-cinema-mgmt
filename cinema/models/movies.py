@@ -1,27 +1,67 @@
+import os
+from uuid import uuid4
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
 
+PATH = 'covers/'
+
+
+def image_filename(instance, filename):
+    """
+        Generates a function that returns path with random filename for image
+
+    :param path: Special path inside static/ folder
+    :return: Function for upload_to that returns path of the image
+    """
+    extension = filename.split('.')[-1]
+    filename = '{0}.{1}'.format(uuid4().hex, extension)
+    return os.path.join(PATH, filename)
+
 
 class Movie(models.Model):
-	"""
-		Model representing movie played at the cinema
-	"""
-	title = models.CharField(max_length=100, verbose_name=_('Tytuł'))
-	releaseDate = models.DateField(verbose_name=_('Data produkcji'))
-	length = models.IntegerField(verbose_name=_('Czas trwania'))
-	producer = models.CharField(max_length=50, verbose_name=_('Reżyseria'))
-	description = models.TextField(verbose_name=_('Opis'))
-	cover = models.ImageField(unique=True, max_length=200, verbose_name=_('Okładka'))
+    """
+        Model representing movie played at the cinema
+    """
+    title = models.CharField(verbose_name=_('Tytuł'), max_length=100)
+    releaseDate = models.DateField(verbose_name=_('Data produkcji'))
+    length = models.IntegerField(verbose_name=_('Czas trwania'))
+    producer = models.CharField(verbose_name=_('Reżyseria'), max_length=50)
+    description = models.TextField(verbose_name=_('Opis'))
+    cover = models.ImageField(
+        verbose_name=_('Okładka'),
+        unique=True,
+        upload_to=image_filename
+    )
 
-	class Meta:
-		unique_together = (("title", "producer"),)
-		verbose_name = _('Film')
-		verbose_name_plural = _('Filmy')
+    class Meta:
+        unique_together = (("title", "producer"),)
+        verbose_name = _('Film')
+        verbose_name_plural = _('Filmy')
 
-	def __str__(self):
-		return _('{0}'.format(self.title))
+    def __str__(self):
+        return _('{0}'.format(self.title))
 
-#
+    def delete_file(self):
+        """
+            Try to delete image for specififc movie
+        :return:
+        """
+        try:
+            movie = Movie.objects.get(id=self.id)
+            movie.cover.delete(False)
+        except ObjectDoesNotExist:
+            pass
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.delete_file()
+        super(Movie, self).save()
+
+    def delete(self, using=None, keep_parents=False):
+        self.delete_file()
+        super(Movie, self).delete()
+
 # # todo: zmienić MovieGenre jako pojedynczy gatunek
 # class MovieGenre(models.Model):
 # 	G1 = 'gat1'
