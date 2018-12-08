@@ -16,6 +16,21 @@ Matches number delimited space in three different formats:
 """
 
 
+class EmployeeProfile(models.Model):
+    """
+        Employee profile containing relevant data to cinema internals
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cinema = models.ForeignKey(verbose_name=_('Placówka'), to='Cinema', on_delete=models.CASCADE, blank=True)
+
+    def __str__(self):
+        return _('Dane pracownika')
+
+    class Meta:
+        verbose_name = _('Profil pracownika')
+        verbose_name_plural = _('Profile pracownika')
+
+
 class UserProfile(models.Model):
     """
         User profile containing non-auth data
