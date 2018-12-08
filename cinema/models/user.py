@@ -16,6 +16,16 @@ Matches number delimited space in three different formats:
 """
 
 
+class Client(User):
+    """
+        Proxy model for isolation of Clients inside admin panel
+    """
+    class Meta:
+        proxy = True
+        verbose_name = _('Klient')
+        verbose_name_plural = _('Klienci')
+
+
 class EmployeeProfile(models.Model):
     """
         Employee profile containing relevant data to cinema internals
@@ -31,7 +41,7 @@ class EmployeeProfile(models.Model):
         verbose_name_plural = _('Profile pracownika')
 
 
-class UserProfile(models.Model):
+class ClientProfile(models.Model):
     """
         User profile containing non-auth data
     """

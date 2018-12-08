@@ -13,6 +13,9 @@ const getters = {
   },
   getTicketTypes (state) {
     return state.ticketTypes
+  },
+  getSelectedDate (state) {
+    return state.selectedDate
   }
 }
 
