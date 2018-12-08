@@ -9,13 +9,13 @@ PATH = 'covers/'
 
 def image_filename(instance, filename):
     """
-            Generates a function that returns path with random filename for image
+        Generates a function that returns path with random filename for image
 
-        :param path: Special path inside static/ folder
-        :return: Function for upload_to that returns path of the image
-        """
+    :param path: Special path inside static/ folder
+    :return: Function for upload_to that returns path of the image
+    """
     extension = filename.split('.')[-1]
-    filename = '{}.{}'.format(uuid4().hex, extension)
+    filename = '{0}.{1}'.format(uuid4().hex, extension)
     return os.path.join(PATH, filename)
 
 
