@@ -25,7 +25,7 @@
               xs9
               class="alegreya-sc--regular price"
             >
-              {{price.type}}
+              {{price.ticketType}}
             </v-flex>
             <v-flex
               xs5
