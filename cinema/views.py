@@ -28,13 +28,13 @@ class TicketTypeView(APIView):
 
 
 class ShowingView(APIView):
-    def get(self, request, cinema, format=None):
+    def get(self, request, cinema, date, format=None):
         """
             Return a list of all showings in the system (with details)
 
 
         """
-        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema).all()
+        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema, date=date).distinct('movie').all()
         serializer = MovieSerializer(map(lambda v: v.movie, showing), many=True)
         return Response(serializer.data)
 

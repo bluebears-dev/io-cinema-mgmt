@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-
 const actions = {
   setCurrentCinema ({ commit, dispatch }, cinema) {
     commit('SET_CURRENT_CINEMA', cinema)
@@ -15,9 +14,9 @@ const actions = {
     }
   },
   requestMovies ({ state, commit }) {
-    axios.get ('showings/'+state.currentCinema)
+    axios.get('showings/' + state.currentCinema + '/' + state.selectedDate.date)
       .then((response) => {
-            commit('SET_MOVIES', response.data)
+        commit('SET_MOVIES', response.data)
       })
   },
   requestTicketTypes ({ state, commit }) {

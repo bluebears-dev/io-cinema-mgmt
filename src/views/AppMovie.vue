@@ -1,53 +1,53 @@
 <template>
-  <v-layout
-    justify-center
-    fill-height
-    row wrap
-    class="layout--align-fix"
-  >
-    <v-flex xs11 class="top__bar--padding">
-      <v-layout
-        row wrap
-        class="top__bar"
-      >
-        <v-flex xs12 sm12 md5 lg4>
-          <v-select
-            class="select--cinema"
-            solo
-            light
-            flat
-            hide-details
-            dense
-            color="gold"
-            label="Kino"
-            background-color="black"
-            :items="cinemas()"
-            item-text="name"
-            item-value="id"
-            :menu-props="{'content-class': 'select__menu--black elevation-0'}"
-            v-model="currentCinema"
-            @change="setCinemaCookie()"
-          ></v-select>
+    <v-layout
+            justify-center
+            fill-height
+            row wrap
+            class="layout--align-fix"
+    >
+        <v-flex xs11 class="top__bar--padding">
+            <v-layout
+                    row wrap
+                    class="top__bar"
+            >
+                <v-flex xs12 sm12 md5 lg4>
+                    <v-select
+                            class="select--cinema"
+                            solo
+                            light
+                            flat
+                            hide-details
+                            dense
+                            color="gold"
+                            label="Kino"
+                            background-color="black"
+                            :items="cinemas()"
+                            item-text="name"
+                            item-value="id"
+                            :menu-props="{'content-class': 'select__menu--black elevation-0'}"
+                            v-model="currentCinema"
+                            @change="setCinemaCookie()"
+                    ></v-select>
+                </v-flex>
+                <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
+                    <v-btn
+                            v-for="day in days" :key="day.title"
+                            icon
+                            flat
+                            depressed
+                            :ripple="false"
+                            @click="setDate(day)"
+                            class="alegreya-sc--light text-capitalize day-button"
+                            :color="buttonDayColor(day.title)"
+                    >{{day.title}}
+                    </v-btn>
+                </v-flex>
+            </v-layout>
         </v-flex>
-        <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
-          <v-btn
-            v-for="day in days" :key="day.title"
-            icon
-            flat
-            depressed
-            :ripple="false"
-            @click="selectedDay = day.title"
-            class="alegreya-sc--light text-capitalize day-button"
-            :color="buttonDayColor(day.title)"
-          >{{day.title}}
-          </v-btn>
+        <v-flex xs9>
+            <router-view/>
         </v-flex>
-      </v-layout>
-    </v-flex>
-    <v-flex xs9>
-      <router-view/>
-    </v-flex>
-  </v-layout>
+    </v-layout>
 </template>
 
 <script>
@@ -65,14 +65,21 @@
         } else {
           return 'white'
         }
+      },
+      setDate (day) {
+        this.selectedDay = day.title
+        this.$store.commit('SET_SELECTED_DATE', day)
       }
     },
     computed: {
       days () {
         let cinemaDays = []
-        let currentDay = (new Date()).getDay()
+        let date = new Date()
+        let currentDay = date.getDay()
         for (let i = 0; i < weekDays.length; i++) {
-          cinemaDays[i] = {title: weekDays[(i + currentDay) % 7], action: ''}
+          // We use ISO format to split date into two pieces because time zone is not relevant
+          cinemaDays[i] = { title: weekDays[(i + currentDay) % 7], date: date.toISOString().split('T')[0] }
+          date.setDate(date.getDate() + 1)
         }
         return cinemaDays
       }
@@ -86,17 +93,17 @@
 </script>
 
 <style scoped lang="stylus">
-  .top__bar
-    border-bottom: 1.5px solid var(--v-gold-base)
+    .top__bar
+        border-bottom: 1.5px solid var(--v-gold-base)
 
-    &--padding
-      padding-bottom: 40px
-      padding-top: 100px
+        &--padding
+            padding-bottom: 40px
+            padding-top: 100px
 
-  .day-button
-    font-size: 1.4rem
-    letter-spacing: 3px
+    .day-button
+        font-size: 1.4rem
+        letter-spacing: 3px
 
-    &::before
-      background-color: transparent !important
+        &::before
+            background-color: transparent !important
 </style>
