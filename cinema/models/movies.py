@@ -4,21 +4,19 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
 
+PATH = 'covers/'
 
-def image_filename(path):
+
+def image_filename(instance, filename):
     """
-        Generates a function that returns path with random filename for image
+            Generates a function that returns path with random filename for image
 
-    :param path: Special path inside static/ folder
-    :return: Function for upload_to that returns path of the image
-    """
-
-    def wrap(instance, filename):
-        extension = filename.split('.')[-1]
-        filename = '{}.{}'.format(uuid4().hex, extension)
-        return os.path.join(path, filename)
-
-    return wrap
+        :param path: Special path inside static/ folder
+        :return: Function for upload_to that returns path of the image
+        """
+    extension = filename.split('.')[-1]
+    filename = '{}.{}'.format(uuid4().hex, extension)
+    return os.path.join(PATH, filename)
 
 
 class Movie(models.Model):
@@ -33,7 +31,7 @@ class Movie(models.Model):
     cover = models.ImageField(
         verbose_name=_('Okładka'),
         unique=True,
-        upload_to=image_filename('covers/')
+        upload_to=image_filename
     )
 
     class Meta:
