@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.middleware.SessionTimeoutMiddleware'
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -123,6 +124,16 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# timeout session after 10 minutes
+TIME = 60 * 10
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+SESSION_EXPIRE_AT_BROWSER_CLOSE= True
+SESSION_COOKIE_AGE = TIME
+
+SESSION_TIMEOUT = TIME
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
