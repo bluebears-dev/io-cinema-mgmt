@@ -1,6 +1,28 @@
 version: '3.2'
 
 services:
+  sonardata:
+    image: postgres
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonarqube
+    volumes:
+      - sonardata:/var/lib/postgresql/data
+
+  sonarqube:
+    image: sonarqube
+    restart: always
+    environment:
+      SONARQUBE_JDBC_USERNAME: sonar
+      SONARQUBE_JDBC_PASSWORD: sonar
+      SONARQUBE_JDBC_URL: jdbc:postgresql://sonardata:5432/sonarqube
+    ports:
+      - 9000:9000
+      - 9002:9002
+    volumes:
+      - sonar:/opt/sonarqube
+
   postgres:
     image: postgres
     restart: always
@@ -9,18 +31,22 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-        - ${PORT}:5432
-    volumes: 
-        - pgdata:/var/lib/postgresql/data
-  
+      - ${PORT}:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   django:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/django.dockerfile
     volumes:
       - "/io/:/code/"
     command: ["/wait.sh", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
     ports:
       - "80:8000"
     depends_on: ["postgres"]
-      
+
 volumes:
   pgdata:
+  sonar:
+  sonardata:
