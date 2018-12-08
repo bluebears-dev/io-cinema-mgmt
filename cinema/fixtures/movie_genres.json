@@ -1,0 +1,30 @@
+[
+	{
+		"model": "cinema.movieGenre",
+		"pk": 1,
+		"fields": {
+			"name": "Komedia romantyczna"
+		}
+	},
+	{
+		"model": "cinema.movieGenre",
+		"pk": 2,
+		"fields": {
+			"name": "Science fiction"
+		}
+	},
+	{
+		"model": "cinema.movieGenre",
+		"pk": 3,
+		"fields": {
+			"name": "Fantasy"
+		}
+	},
+	{
+		"model": "cinema.movieGenre",
+		"pk": 4,
+		"fields": {
+			"name": "Thriller psychologiczny"
+		}
+	}
+]
