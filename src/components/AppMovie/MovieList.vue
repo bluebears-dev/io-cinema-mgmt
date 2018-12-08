@@ -23,6 +23,12 @@
                 </router-link>
             </v-card>
         </v-flex>
+        <v-flex
+                v-if="!movies().length"
+                class="alegreya-sc--light no--showings text-xs-center"
+        >
+            Brak seansów na wybrany dzień.
+        </v-flex>
     </v-layout>
 </template>
 
@@ -43,6 +49,7 @@
     },
     methods: {
       movies () {
+        console.log(this.$store.getters['getMovies'].length)
         return this.$store.getters['getMovies']
       }
     },
@@ -73,4 +80,9 @@
 
     .router--link
         text-decoration none
+
+    .no--showings
+        color: var(--v-white-base)
+        font-size: 2rem
+        padding-top: 100px
 </style>
