@@ -71,7 +71,7 @@ class ClientAdmin(admin.ModelAdmin):
         """
         return '{0} {1}'.format(object.first_name, object.last_name)
 
-    full_name.short_description = 'Imię i nazwisko'
+    full_name.short_description = _('Imię i nazwisko')
 
     def get_queryset(self, request):
         """
