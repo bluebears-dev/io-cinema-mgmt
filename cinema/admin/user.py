@@ -3,25 +3,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 
-from cinema.models import Cinema, Room, Booking
-from .models import EmployeeProfile, ClientProfile, Movie, TicketType, Showing, Client
-from .forms import ShowingForm
-
-
-class EmployeeInline(admin.StackedInline):
-    """
-        Inline form for EmployeeProfile
-    """
-    model = EmployeeProfile
-    can_delete = False
-
-
-class ClientInline(admin.StackedInline):
-    """
-        Inline form for ClientProfile
-    """
-    model = ClientProfile
-    can_delete = False
+from cinema.models import Client
+from cinema.forms import EmployeeInline, ClientInline
 
 
 class EmployeeAdmin(BaseUserAdmin):
@@ -62,15 +45,14 @@ class EmployeeAdmin(BaseUserAdmin):
         fieldsets = filter(lambda fieldset: fieldset[0] != _('Important dates'), fieldsets)
         return fieldsets
 
-
     def get_queryset(self, request):
         """
             Return only employees - is_staff flag is set
         :param request:
         :return: filtered QuerySet
         """
-        qs = super(EmployeeAdmin, self).get_queryset(request)
-        return qs.filter(is_staff=True)
+        queryset = super(EmployeeAdmin, self).get_queryset(request)
+        return queryset.filter(is_staff=True)
 
 
 class ClientAdmin(admin.ModelAdmin):
@@ -97,49 +79,10 @@ class ClientAdmin(admin.ModelAdmin):
         :param request:
         :return: filtered QuerySet
         """
-        qs = super(ClientAdmin, self).get_queryset(request)
-        return qs.filter(is_staff=False)
+        queryset = super(ClientAdmin, self).get_queryset(request)
+        return queryset.filter(is_staff=False)
 
 
-class MovieAdmin(admin.ModelAdmin):
-    """
-        Movie list with filtering
-    """
-
-    list_display = ('title', 'releaseDate', 'producer', 'length')
-    list_filter = ('releaseDate', 'producer')
-
-
-class TicketTypeAdmin(admin.ModelAdmin):
-    """
-        TicketType list display
-    """
-    list_display = ('ticketType', 'price')
-
-
-class ShowingAdmin(admin.ModelAdmin):
-    """
-        Showing list display and filtering
-    """
-    list_display = ('movie', 'date', 'hour', 'room', 'audio_type', 'picture_type')
-    list_filter = ('movie', 'date', 'room')
-
-
-class BookingAdmin(admin.ModelAdmin):
-    """
-        Booking list display and filtering
-    """
-    list_display = ('showing', 'user', 'state')
-    list_filter = ('showing', 'user', 'state')
-
-
-# Register models (with admin panel models)
 admin.site.unregister(User)
 admin.site.register(User, EmployeeAdmin)
 admin.site.register(Client, ClientAdmin)
-admin.site.register(Movie, MovieAdmin)
-admin.site.register(TicketType, TicketTypeAdmin)
-admin.site.register(Showing, ShowingAdmin)
-admin.site.register(Cinema)
-admin.site.register(Room)
-admin.site.register(Booking, BookingAdmin)
