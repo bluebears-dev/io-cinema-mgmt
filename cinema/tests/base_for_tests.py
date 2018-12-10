@@ -4,7 +4,7 @@ you don't have to write creations
 
 It also creates variables that are easy access to those records"""
 
-from django.test import TestCase
+from django.test import TransactionTestCase
 from cinema.models.booking import TicketType, Ticket, Booking
 from cinema.models.user import UserProfile, User
 from cinema.models.cinema import Showing, Cinema, Room, Seat
@@ -13,7 +13,7 @@ from django.core.files import File
 from app.settings import MEDIA_ROOT, os
 
 
-class CinemaModelTest(TestCase):
+class CinemaModelTest(TransactionTestCase):
   def setUp(self):
 
     try:
@@ -91,23 +91,22 @@ class CinemaModelTest(TestCase):
   # ######################
   def tearDown(self):
 
-    try:
-      # delete cinemas (on cascade delete every room, seat, showing, booking and ticket)
-      self.cinema_wiosna.delete()
-      self.cinema_lato.delete()
+    # generally cleaning the database is not necessary as it will be deleted right after the tests
+    # except: movies, which contains cover files that must be deleted
 
+    try:
       # delete movies
       self.movie_wizard.delete()
 
-      # delete ticket types
-      self.ticket_type_ulgowy.delete()
-      self.ticket_type_normalny.delete()
-
-      # delete user (on cascade user profile)
-      self.user_elemelek.delete()
 
     except Exception as e:
       print('Something went wrong when cleaning the test database.\n'
             'Are you sure you haven\' called delete() method on any '
             'of the test class fields?\n'
-            'But this means the tearDown() method was called so the tests passed')
+            'But this means the tearDown() method was called so the tests passed\n\n'
+            'Another possible source of this exception is that you\'ve tried duplicate tests')
+
+
+class NoTestOccuredException(Exception):
+  """Exception used when an exception should have occured but it haven't happen"""
+  pass
