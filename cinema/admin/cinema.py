@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from cinema.models import Cinema, Showing, Room
 from cinema.forms import ShowingForm
+from cinema.models import Cinema, Showing, Room
 
 
 class ShowingAdmin(admin.ModelAdmin):
@@ -21,7 +21,7 @@ class ShowingAdmin(admin.ModelAdmin):
         queryset = super(ShowingAdmin, self).get_queryset(request)
         if request.user.is_superuser:
             return queryset
-        return queryset.filter(author=request.user)
+        return queryset
 
 
 admin.site.register(Cinema)
