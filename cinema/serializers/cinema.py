@@ -1,6 +1,6 @@
-from cinema.models import Cinema, Showing, Room
-from .movies import MovieSerializer
 from rest_framework import serializers
+
+from cinema.models import Cinema, Room
 
 
 class CinemaSerializer(serializers.ModelSerializer):
@@ -17,13 +17,3 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('id', 'name', 'cinema')
         read_only_fields = fields
-
-
-# class CinemaMovieSerializer(serializers.ModelSerializer):
-#     movie = MovieSerializer(read_only=True)
-#     # room = RoomSerializer(read_only=True)
-#
-#     class Meta:
-#         model = Showing
-#         fields = ('movie',)
-#         read_only_fields = fields

@@ -1,10 +1,10 @@
 ##                                  ##
 ##   ALL MODELS RELATED TO CINEMA   ##
 ##                                  ##
-from django.contrib import admin
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext as _
+
 from .user import PHONE_NUMBER_REGEX
 
 POSTAL_CODE_REGEX = r'\d{2}-\d{3}'
@@ -100,13 +100,10 @@ class Room(models.Model):
 
 class Seat(models.Model):  # details unknown yet
     room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
-    # row = models.SmallIntegerField(verbose_name=_('Rząd w reprezentacji do wyświetlania'))
-    # column = models.SmallIntegerField(verbose_name=_('Kolumna w reprezentacji do wyświetlania'))
     realRow = models.CharField(verbose_name=_('Numer rzędu'), max_length=2)
     realColumn = models.SmallIntegerField(verbose_name=_('Numer kolumny'))
 
     class Meta:
-        # unique_together = ('room', 'row', 'column', 'realRow', 'realColumn')
         verbose_name = _('Miejsce')
         verbose_name_plural = _('Miejsca')
 
