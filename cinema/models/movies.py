@@ -1,5 +1,6 @@
 import os
 from uuid import uuid4
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -52,6 +53,8 @@ class Movie(models.Model):
         :return: Coma delimited genre names
         """
         return ', '.join([g.name for g in self.genre.all()])
+
+    all_genres.short_description = _('Gatunki')
 
     def delete_file(self):
         """
