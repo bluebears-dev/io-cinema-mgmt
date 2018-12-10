@@ -73,7 +73,8 @@ class EditorAdmin(EmployeeAdmin):
         group = Group.objects.get(name=self.group)
         group.user_set.add(obj.pk)
         obj.is_staff = True
-        EmployeeProfile.objects.create(user=obj, cinema=request.user.employee_profile.cinema)
+        if not obj.employee_profile:
+            EmployeeProfile.objects.create(user=obj, cinema=request.user.employee_profile.cinema)
         super(EditorAdmin, self).save_model(request, obj, form, change)
 
     def get_queryset(self, request):
