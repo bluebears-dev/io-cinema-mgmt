@@ -10,7 +10,13 @@ export default {
   computed: {
     currentCinema: {
       get () {
-        return this.$store.getters['getCurrentCinema']
+        let cinema = this.$store.getters['getCurrentCinema']
+        if (this.cinemas().map(v => v.id).indexOf(cinema) !== -1) {
+          return this.$store.getters['getCurrentCinema']
+        } else {
+          this.$cookie.remove('cinema')
+          return -1
+        }
       },
       set (newValue) {
         this.$store.dispatch('setCurrentCinema', newValue)
