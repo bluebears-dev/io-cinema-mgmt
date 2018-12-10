@@ -10,6 +10,9 @@ class EmployeeInline(admin.StackedInline):
     """
     model = EmployeeProfile
     can_delete = False
+    extra = 1
+    max_num = 1
+    min_num = 1
 
 
 class ClientInline(admin.StackedInline):
@@ -18,6 +21,9 @@ class ClientInline(admin.StackedInline):
     """
     model = ClientProfile
     can_delete = False
+    extra = 1
+    max_num = 1
+    min_num = 1
 
 
 class ShowingForm(forms.ModelForm):
