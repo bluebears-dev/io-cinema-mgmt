@@ -35,8 +35,10 @@ class UserProfile(models.Model):
     """
         User profile containing non-auth data
     """
+
+    # todo or not todo, depends, as for now many users can have the same phone number
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, validators=[
+    phone_number = models.CharField(verbose_name=_('Numer telefonu'), max_length=12, unique=True, validators=[
         RegexValidator(
             regex=PHONE_NUMBER_REGEX,
             message=_('Wprowadź poprawny numer telefonu (może zawierać spacje).')

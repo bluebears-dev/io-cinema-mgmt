@@ -6,7 +6,7 @@ It also creates variables that are easy access to those records"""
 
 from django.test import TransactionTestCase
 from cinema.models.booking import TicketType, Ticket, Booking
-from cinema.models.user import UserProfile, User
+from cinema.models.user import UserProfile, User, EmployeeProfile
 from cinema.models.cinema import Showing, Cinema, Room, Seat
 from cinema.models.movies import Movie
 from django.core.files import File
@@ -63,12 +63,18 @@ class CinemaModelTest(TransactionTestCase):
                                                   description='Children below 18 years old and disabled')
       self.ticket_type_normalny = TicketType.objects.get(ticketType='Normalny', price=59.12, description='Everyone else')
 
-      # create a user
+      # create some users and their profiles
       User.objects.create(username="elemelek", password='ulala')
       self.user_elemelek = User.objects.get(username="elemelek", password='ulala')
 
+      User.objects.create(username="tabaluga", password='milusia')
+      self.user_tabaluga = User.objects.get(username="tabaluga", password='milusia')
+
       UserProfile.objects.create(user=self.user_elemelek, phone_number='880 111 533')
       self.user_profile_elemelek = UserProfile.objects.get(user=self.user_elemelek, phone_number='880 111 533')
+
+      EmployeeProfile.objects.create(user=self.user_tabaluga, cinema=self.cinema_lato)
+      self.user_profile_tabaluga = EmployeeProfile.objects.get(user=self.user_tabaluga, cinema=self.cinema_lato)
 
       # create a booking
       Booking.objects.create(user=self.user_elemelek, state=Booking.INITIATED, showing=self.showing_wizard1)

@@ -1,5 +1,5 @@
-from cinema.tests.base_for_tests import CinemaModelTest, NoTestOccuredException, TicketType
-from cinema.tests.base_for_tests import Booking, Ticket
+from cinema.tests.models.base_for_tests import CinemaModelTest, NoTestOccuredException, TicketType
+from cinema.tests.models.base_for_tests import Booking, Ticket
 
 
 
