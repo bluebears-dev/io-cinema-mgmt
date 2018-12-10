@@ -73,7 +73,7 @@ class EditorAdmin(EmployeeAdmin):
         group = Group.objects.get(name=self.group)
         group.user_set.add(obj.pk)
         obj.is_staff = True
-        if not obj.employee_profile:
+        if not hasattr(obj, 'employee_profile'):
             EmployeeProfile.objects.create(user=obj, cinema=request.user.employee_profile.cinema)
         super(EditorAdmin, self).save_model(request, obj, form, change)
 
@@ -85,11 +85,18 @@ class EditorAdmin(EmployeeAdmin):
         """
         queryset = super(EditorAdmin, self).get_queryset(request)
         current_user = request.user
-        queryset = queryset.prefetch_related().filter(
-            is_staff=True,
-            groups__name__in=[EmployeeAdmin.GROUP_NAMES['EDITORS']],
-            employee_profile__cinema=current_user.employee_profile.cinema
-        )
+        user_groups = [v.name for v in current_user.groups.all()]
+        if EmployeeAdmin.GROUP_NAMES['ADMINS'] not in user_groups and not current_user.is_superuser:
+            queryset = queryset.prefetch_related().filter(
+                is_staff=True,
+                groups__name__in=[EmployeeAdmin.GROUP_NAMES['EDITORS']],
+                employee_profile__cinema=current_user.employee_profile.cinema
+            )
+        else:
+            queryset = queryset.prefetch_related().filter(
+                is_staff=True,
+                groups__name__in=[EmployeeAdmin.GROUP_NAMES['EDITORS']]
+            )
         return queryset
 
 
