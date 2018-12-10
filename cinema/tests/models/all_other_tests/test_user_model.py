@@ -1,5 +1,5 @@
 from cinema.tests.models.base_for_tests import CinemaModelTest, NoTestOccuredException
-from cinema.tests.models.base_for_tests import User, UserProfile, EmployeeProfile, Cinema
+from cinema.tests.models.base_for_tests import User, UserProfile, EmployeeProfile
 
 
 class UserTest(CinemaModelTest):
