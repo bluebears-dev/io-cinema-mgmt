@@ -11,7 +11,7 @@
                     class="mx-auto"
                     width="240px"
             >
-                <router-link :to="{name: 'MovieDetails'}" class="router--link">
+              <router-link :to="{name: 'MovieDetails', params: {id: movie.id}}" class="router--link">
                     <v-img
                             :src="movie.cover"
                             class="image--style"

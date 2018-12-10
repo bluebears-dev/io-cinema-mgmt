@@ -1,50 +1,51 @@
 <template>
   <v-layout
-    row wrap
-    align-start
-    justify-center
+      align-start justify-center
+      row
+      wrap
   >
     <v-flex xs12 class="md-constant movie--cover text-xs-center">
       <div class="d-inline-block">
         <v-img
-          :src="movie.cover"
-          class="image--style"
-          :width="imageWidth"
+            :src="selectedMovie.cover"
+            :width="imageWidth"
+            class="image--style"
         ></v-img>
       </div>
     </v-flex>
     <v-flex xs12 class="md-flex movie--information">
-      <div class="movie--title alegreya-sc--regular">{{movie.title}}</div>
+      <div class="movie--title alegreya-sc--regular">{{selectedMovie.title}}</div>
       <div class="movie--details alegreya-sc--regular">
-        Rok Produkcji: {{movie.year}} &nbsp;&nbsp;|&nbsp;&nbsp; Reżyseria: {{movie.production}} &nbsp;&nbsp;|&nbsp;&nbsp;
-        {{movie.length}} min
+        Data Premiery: {{selectedMovie.releaseDate}} &nbsp;&nbsp;|&nbsp;&nbsp; Reżyseria: {{selectedMovie.producer}}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {{selectedMovie.length}} min
       </div>
       <div class="movie--details alegreya-sc--regular">
-        {{movie.genres.join(' &nbsp;&nbsp;| &nbsp;&nbsp;')}}
+        {{selectedMovie.genre.join(' &nbsp;&nbsp;| &nbsp;&nbsp;')}}
       </div>
       <div class="movie--description roboto--light">
-        {{movie.description}}
+        {{selectedMovie.description}}
       </div>
     </v-flex>
     <v-flex xs12>
       <div class="movie--date alegreya-sc--regular">
-        {{date}}
+        {{createDate}}
       </div>
       <v-layout
-        row wrap
+          row wrap
       >
         <v-btn
-          v-for="showing in showings" :key="showing.toString()"
-          block
-          flat
-          large
-          :ripple="false"
-          class="showing--button roboto--regular text-capitalize"
-          color="white"
+            :key="showing.toString()" :ripple="false"
+            block
+            class="showing--button roboto--regular text-capitalize"
+            color="white"
+            flat
+            large
+            v-for="showing in movieShowings"
         >
           <div>
-            <div class="showing--time">{{showing.time}} <br></div>
-            <div class="showing--type">{{showing.picture}} {{showing.sound}}</div>
+            <div class="showing--time">{{showing.hour}} <br></div>
+            <div class="showing--type">{{showing.picture_type}} {{showing.audio_type}}</div>
           </div>
         </v-btn>
       </v-layout>
@@ -55,6 +56,16 @@
 <script>
   export default {
     name: 'MovieDetails',
+    props: {
+      id: {
+        type: Number
+      }
+    },
+    watch: {
+      createDate () {
+        this.$store.dispatch('requestShowings', this.id)
+      }
+    },
     computed: {
       imageWidth () {
         let breakpoint = this.$vuetify.breakpoint.name
@@ -65,38 +76,53 @@
         } else {
           return width
         }
+      },
+      selectedMovie () {
+        return this.$store.getters['getMovieDetails'][0] || {}
+      },
+      movieShowings () {
+        return this.$store.getters['getShowings']
+      },
+      createDate () {
+        let date = new Date(this.$store.state.selectedDate.date)
+        let day = date.getDate()
+        let month = this.months[date.getMonth()]
+        let weekDay = this.days[date.getDay()]
+        return weekDay + ', ' + day + ' ' + month
       }
+    },
+    created () {
+      this.$store.dispatch('requestMovieDetails', this.id)
+      this.$store.dispatch('requestShowings', this.id)
     },
     data () {
       return {
-        date: 'Piątek, 19 Listopada',
+        months: [
+          'Stycznia',
+          'Lutego',
+          'Marca',
+          'Kwietnia',
+          'Maja',
+          'Czerwca',
+          'Lipca',
+          'Sierpnia',
+          'Września',
+          'Października',
+          'Listopada',
+          'Grudnia'
+        ],
+        days: [
+          'Niedziela',
+          'Poniedziałek',
+          'Wtorek',
+          'Środa',
+          'Czwartek',
+          'Piątek',
+          'Sobota'
+        ],
         movie: {
-          title: 'Bohemian Rhapsody',
-          cover: 'static/bohemian.jpg',
-          description: 'Porywająca opowieść o zespole Queen, jego muzyce i niezwykłym wokaliście Freddie’em Mercurym ' +
-            '(Rami Malek – serial TV ”Mr. Robot”), który przełamując stereotypy i konwencje, zdobył uwielbienie niezliczonych fanów. ',
-          year: 2018,
-          production: 'Brian Singer',
-          length: 135,
           genres: ['Muzyczny', 'Biograficzny']
-        },
-        showings: [
-          {time: '11:00', picture: '2D', sound: 'Napisy'},
-          {time: '14:00', picture: '3D', sound: 'Lektor'},
-          {time: '15:30', picture: '3D', sound: 'Dubbing'},
-          {time: '16:45', picture: '2D', sound: 'Napisy'},
-          {time: '21:00', picture: '2D', sound: 'Dubbing'},
-          {time: '11:00', picture: '2D', sound: 'Napisy'},
-          {time: '14:00', picture: '3D', sound: 'Lektor'},
-          {time: '15:30', picture: '3D', sound: 'Dubbing'},
-          {time: '16:45', picture: '2D', sound: 'Napisy'},
-          {time: '21:00', picture: '2D', sound: 'Dubbing'},
-          {time: '11:00', picture: '2D', sound: 'Napisy'},
-          {time: '14:00', picture: '3D', sound: 'Lektor'},
-          {time: '15:30', picture: '3D', sound: 'Dubbing'},
-          {time: '16:45', picture: '2D', sound: 'Napisy'},
-          {time: '21:00', picture: '2D', sound: 'Dubbing'}
-        ]
+        }
       }
     }
   }

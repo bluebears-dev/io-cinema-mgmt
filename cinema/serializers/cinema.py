@@ -1,6 +1,6 @@
-from cinema.models import Cinema, Showing, Room
-from .movies import MovieSerializer
 from rest_framework import serializers
+
+from cinema.models import Cinema, Showing, Room
 
 
 class CinemaSerializer(serializers.ModelSerializer):
@@ -18,6 +18,14 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'cinema')
         read_only_fields = fields
 
+
+class ShowingSerializer(serializers.ModelSerializer):
+    hour = serializers.TimeField(format="%H:%M")
+
+    class Meta:
+        model = Showing
+        fields = ('date', 'hour', 'movie', 'room', 'audio_type', 'picture_type')
+        read_only_fields = fields
 
 # class CinemaMovieSerializer(serializers.ModelSerializer):
 #     movie = MovieSerializer(read_only=True)

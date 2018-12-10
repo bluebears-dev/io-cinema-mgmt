@@ -13,6 +13,12 @@ const mutations = {
   },
   SET_SELECTED_DATE (state, selectedDate) {
     state.selectedDate = selectedDate
+  },
+  SET_MOVIE_DETAILS (state, movieDetails) {
+    state.movieDetails = movieDetails
+  },
+  SET_SHOWINGS (state, showings) {
+    state.showings = showings
   }
 }
 
