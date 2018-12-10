@@ -1,0 +1,24 @@
+[
+  {
+    "model": "cinema.cinema",
+    "pk": 1,
+    "fields": {
+      "name": "Kraków Bonarka",
+      "city": "Kraków",
+      "address": "ul. Spokojna 1",
+      "postal_code": "30-000",
+      "phone_number": "012012012"
+    }
+  },
+  {
+    "model": "cinema.cinema",
+    "pk": 2,
+    "fields": {
+      "name": "Kraków Bronowice",
+      "city": "Kraków",
+      "address": "ul. Niespokojna 1",
+      "postal_code": "30-001",
+      "phone_number": "013013332"
+    }
+  }
+]

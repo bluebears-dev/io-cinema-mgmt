@@ -1,0 +1,142 @@
+[
+  {
+    "model": "cinema.moviegenre",
+    "pk": 1,
+    "fields": {
+      "name": "Komedia"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 2,
+    "fields": {
+      "name": "Romantyczny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 3,
+    "fields": {
+      "name": "Thriller"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 4,
+    "fields": {
+      "name": "Horror"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 5,
+    "fields": {
+      "name": "Western"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 6,
+    "fields": {
+      "name": "Dramat"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 7,
+    "fields": {
+      "name": "Fantasy"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 8,
+    "fields": {
+      "name": "Science fiction"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 9,
+    "fields": {
+      "name": "Muzyczny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 10,
+    "fields": {
+      "name": "Biografia"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 11,
+    "fields": {
+      "name": "Familijny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 12,
+    "fields": {
+      "name": "Wojenny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 13,
+    "fields": {
+      "name": "Psychologiczny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 14,
+    "fields": {
+      "name": "Kryminał"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 15,
+    "fields": {
+      "name": "Historyczny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 16,
+    "fields": {
+      "name": "Dokumentalny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 17,
+    "fields": {
+      "name": "Przygodowy"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 18,
+    "fields": {
+      "name": "Akcji"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 19,
+    "fields": {
+      "name": "Katastroficzny"
+    }
+  },
+  {
+    "model": "cinema.moviegenre",
+    "pk": 20,
+    "fields": {
+      "name": "Animowany"
+    }
+  }
+]
