@@ -1,6 +1,6 @@
 import datetime
 
-from django.contrib.auth import logout, login
+from django.contrib.auth import logout
 
 from app import settings
 
@@ -18,7 +18,7 @@ class SessionTimeoutMiddleware:
             if 'last_login' in request:
                 delta_last_login = (current_time - request.session['last_login']).seconds
                 if delta_last_login > settings.SESSION_TIMEOUT:
-                    logout(request, login.html)
+                    logout(request)
             else:
                 request.session['last_login'] = current_time
         return None
