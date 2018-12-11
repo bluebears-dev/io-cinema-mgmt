@@ -10,7 +10,7 @@ from cinema.models.user import UserProfile, User, EmployeeProfile
 from cinema.models.cinema import Showing, Cinema, Room, Seat
 from cinema.models.movies import Movie
 from django.core.files import File
-from app.settings import MEDIA_ROOT, os
+from app.settings import BASE_DIR
 
 
 class CinemaModelTest(TransactionTestCase):
@@ -43,7 +43,7 @@ class CinemaModelTest(TransactionTestCase):
       # create some movie
       Movie.objects.create(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
                            description='You\'re a wizard, Harry',
-                           cover=File(open(MEDIA_ROOT + '/tests/bohemian.jpg', 'rb')))
+                           cover=File(open(BASE_DIR + '/tests/static/bohemian.jpg', 'rb')))
 
       self.movie_wizard = Movie.objects.get(title='Harry Potter', releaseDate='2017-02-12', length='123',
                                        producer='J. K. Rowling', description='You\'re a wizard, Harry')
