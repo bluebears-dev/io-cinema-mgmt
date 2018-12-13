@@ -4,13 +4,14 @@ you don't have to write creations
 
 It also creates variables that are easy access to those records"""
 
+from django.core.files import File
 from django.test import TransactionTestCase
+
+from app.settings import BASE_DIR
 from cinema.models.booking import TicketType, Ticket, Booking
-from cinema.models.user import UserProfile, User, EmployeeProfile
 from cinema.models.cinema import Showing, Cinema, Room, Seat
 from cinema.models.movies import Movie
-from django.core.files import File
-from app.settings import BASE_DIR
+from cinema.models.user import ClientProfile, User, EmployeeProfile
 
 
 class CinemaModelTest(TransactionTestCase):
@@ -43,7 +44,7 @@ class CinemaModelTest(TransactionTestCase):
       # create some movie
       Movie.objects.create(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
                            description='You\'re a wizard, Harry',
-                           cover=File(open(BASE_DIR + '/tests/static/bohemian.jpg', 'rb')))
+                           cover=File(open(BASE_DIR + '/cinema/tests/static/bohemian.jpg', 'rb')))
 
       self.movie_wizard = Movie.objects.get(title='Harry Potter', releaseDate='2017-02-12', length='123',
                                        producer='J. K. Rowling', description='You\'re a wizard, Harry')
@@ -70,8 +71,8 @@ class CinemaModelTest(TransactionTestCase):
       User.objects.create(username="tabaluga", password='milusia')
       self.user_tabaluga = User.objects.get(username="tabaluga", password='milusia')
 
-      UserProfile.objects.create(user=self.user_elemelek, phone_number='880 111 533')
-      self.user_profile_elemelek = UserProfile.objects.get(user=self.user_elemelek, phone_number='880 111 533')
+      ClientProfile.objects.create(user=self.user_elemelek, phone_number='880 111 533')
+      self.user_profile_elemelek = ClientProfile.objects.get(user=self.user_elemelek, phone_number='880 111 533')
 
       EmployeeProfile.objects.create(user=self.user_tabaluga, cinema=self.cinema_lato)
       self.user_profile_tabaluga = EmployeeProfile.objects.get(user=self.user_tabaluga, cinema=self.cinema_lato)
