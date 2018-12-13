@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
+# todo setting 112 etc. as client number shouldn't be possible
 PHONE_NUMBER_REGEX = r'(\d{2} ?\d{3}(?: ?\d{2}){2})|' \
                      r'(\d{3}(?: \d{3}){2})'
 """

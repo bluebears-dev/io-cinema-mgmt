@@ -2,7 +2,13 @@
 It sets up the example database so
 you don't have to write creations
 
-It also creates variables that are easy access to those records"""
+It also creates variables that are easy access to those records
+
+If OperationalError occurs when trying to run tests, try
+python manage.py makemigrations
+python manage.py migrate
+
+Then tests should come back to normal"""
 
 from django.core.files import File
 from django.test import TransactionTestCase
