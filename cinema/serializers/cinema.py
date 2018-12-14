@@ -27,11 +27,3 @@ class ShowingSerializer(serializers.ModelSerializer):
         fields = ('date', 'hour', 'movie', 'room', 'audio_type', 'picture_type')
         read_only_fields = fields
 
-# class CinemaMovieSerializer(serializers.ModelSerializer):
-#     movie = MovieSerializer(read_only=True)
-#     # room = RoomSerializer(read_only=True)
-#
-#     class Meta:
-#         model = Showing
-#         fields = ('movie',)
-#         read_only_fields = fields
