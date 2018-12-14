@@ -1,4 +1,4 @@
-from cinema.tests.models.base_for_tests import CinemaModelTest, NoTestOccuredException
+from cinema.tests.models.base_for_tests import CinemaModelTest, check_adding_model_instance_with_wrong_fields, NoTestOccuredException
 from cinema.tests.models.base_for_tests import User, ClientProfile, EmployeeProfile
 
 
@@ -7,24 +7,21 @@ class UserTest(CinemaModelTest):
 
         self.assertEqual(self.user_elemelek.__str__(), "elemelek")
         self.assertEqual(self.user_profile_elemelek.__str__(), "Dane kontaktowe")
-        # todo when you know the situation, uncomment the line below
-        # self.assertEqual(self.user_profile_tabaluga.__str__(), "Dane pracownika")
+        self.assertEqual(self.user_profile_tabaluga.__str__(), "Lato")
 
     def test_create_wrong_values(self):
 
         User.objects.create(username='okon', password='noko')
 
-        ###
-        try:
+        ClientProfile.objects.create(user=User.objects.get(username='okon', password='noko'), phone_number=None)
 
-            ClientProfile.objects.create(user=User.objects.get(username='okon', password='noko'), phone_number=None)
-
-            raise NoTestOccuredException()
-        except NoTestOccuredException as e:
-            print("Exception should occur but it hadn't when creating user profile without phone number")
-            raise e
-        except Exception as e:
-            print("Info: " + e.__str__())
+        # try adding a client profile without the phone number
+        check_adding_model_instance_with_wrong_fields(ClientProfile,
+                                                      "Exception should occur but it "
+                                                      "hadn't when creating user profile "
+                                                      "without phone number", user=User.objects.get(username='okon',
+                                                                                                    password='noko'),
+                                                      phone_number=None)
 
         ###
         try:
@@ -56,8 +53,8 @@ class UserTest(CinemaModelTest):
         except Exception as e:
             print("Info: " + e.__str__())
 
-        # ###
         # todo when this is done, uncomment the test
+        ###
         # try:
         #
         #   ClientProfile.objects.create(user=User.objects.get(username='okon', password='noko'),

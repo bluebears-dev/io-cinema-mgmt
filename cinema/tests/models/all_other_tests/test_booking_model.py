@@ -3,7 +3,6 @@ from cinema.tests.models.base_for_tests import CinemaModelTest, NoTestOccuredExc
 
 
 class BookingTest(CinemaModelTest):
-
     def test_str_representation(self):
 
         self.assertEqual(self.ticket_type_ulgowy.__str__(), "Ulgowy")

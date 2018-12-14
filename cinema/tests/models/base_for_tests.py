@@ -55,7 +55,7 @@ class CinemaModelTest(TransactionTestCase):
       # create some movie
       Movie.objects.create(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
                            description='You\'re a wizard, Harry',
-                           cover=File(open(BASE_DIR + '/cinema/tests/static/bohemian.jpg', 'rb')))
+                           cover=File(open(BASE_DIR + '/test/static/wspawielkanocna.jpg', 'rb')))
 
       self.movie_wizard = Movie.objects.get(title='Harry Potter', releaseDate='2017-02-12', length='123',
                                        producer='J. K. Rowling', description='You\'re a wizard, Harry')
@@ -110,11 +110,11 @@ class CinemaModelTest(TransactionTestCase):
   def tearDown(self):
 
     # generally cleaning the database is not necessary as it will be deleted right after the tests
-    # except: movies, which contains cover files that must be deleted
 
     try:
 
       # this loop should delete all the covers that were created during tests
+      # this is not done automatically when deleting the movies
       for file in os.listdir(MEDIA_ROOT + "/covers"):
         if file not in self.__been_there_before:
           os.unlink(MEDIA_ROOT + "/covers/" + file)
@@ -129,3 +129,19 @@ class CinemaModelTest(TransactionTestCase):
 class NoTestOccuredException(Exception):
   """Exception used when an exception should have occured but it haven't happen"""
   pass
+
+
+def check_adding_model_instance_with_wrong_fields(classname, error_message="", **kwargs):
+  """Function used to run model creation for models that shouldn't be allowed
+  in order to check if they are indeed not allowed"""
+  try:
+
+    classname.objects.create(kwargs)
+
+    raise NoTestOccuredException()
+  except NoTestOccuredException as e:
+    print(error_message)
+    raise e
+  except Exception as e:
+    # print("Expected error occured. Info: " + e.__str__() + "\n\n\n")
+    pass
