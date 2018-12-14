@@ -29,8 +29,7 @@ class ClientInline(admin.StackedInline):
 class ShowingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ShowingForm, self).__init__(*args, **kwargs)
-        print(self.user)
-        self.fields['room'].queryset = Room.objects.filter(cinema=1)
+        self.fields['room'].queryset = Room.objects.all()
 
     class Meta:
         model = Showing
