@@ -23,6 +23,11 @@ from cinema.models.user import ClientProfile, User, EmployeeProfile
 class CinemaModelTest(TransactionTestCase):
   def setUp(self):
 
+    if os.listdir(MEDIA_ROOT + "/covers"):
+      self.__been_there_before = os.listdir(MEDIA_ROOT + "/covers")
+    else:
+      self.__been_there_before = []
+
     try:
       # create cinemas
       Cinema.objects.create(name='Wiosna', city='Kraków', address='ul. Budryka 2', postal_code='32-300',
@@ -108,8 +113,11 @@ class CinemaModelTest(TransactionTestCase):
     # except: movies, which contains cover files that must be deleted
 
     try:
-      # delete movies
-      self.movie_wizard.delete()
+
+      # this loop should delete all the covers that were created during tests
+      for file in os.listdir(MEDIA_ROOT + "/covers"):
+        if file not in self.__been_there_before:
+          os.unlink(MEDIA_ROOT + "/covers/" + file)
 
 
     except Exception as e:
@@ -118,6 +126,7 @@ class CinemaModelTest(TransactionTestCase):
             'of the test class fields?\n'
             'But this means the tearDown() method was called so the tests passed\n\n'
             'Another possible source of this exception is that you\'ve tried duplicate tests')
+      print(e.__str__())
 
 
 class NoTestOccuredException(Exception):
