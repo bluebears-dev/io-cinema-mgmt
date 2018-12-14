@@ -1,5 +1,7 @@
 import cookie from '../utils/cookie'
 
+const weekDays = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So']
+
 const state = {
   currentCinema: Number(cookie.get('cinema').value),
   cinemas: [],
@@ -7,7 +9,7 @@ const state = {
   showings: [],
   ticketTypes: [],
   movieDetails: [],
-  selectedDate: (new Date()).toISOString().split('T')[0]
+  selectedDate: {title: weekDays[(new Date()).getDay() % 7], date: (new Date()).toISOString().split('T')[0]}
 }
 
 export default state

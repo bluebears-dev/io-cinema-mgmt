@@ -61,11 +61,6 @@
         type: Number
       }
     },
-    watch: {
-      createDate () {
-        this.$store.dispatch('requestShowings', this.id)
-      }
-    },
     computed: {
       imageWidth () {
         let breakpoint = this.$vuetify.breakpoint.name
@@ -90,10 +85,6 @@
         let weekDay = this.days[date.getDay()]
         return weekDay + ', ' + day + ' ' + month
       }
-    },
-    created () {
-      this.$store.dispatch('requestMovieDetails', this.id)
-      this.$store.dispatch('requestShowings', this.id)
     },
     data () {
       return {
@@ -124,6 +115,15 @@
           genres: ['Muzyczny', 'Biograficzny']
         }
       }
+    },
+    watch: {
+      createDate () {
+        this.$store.dispatch('requestShowings', this.id)
+      }
+    },
+    created () {
+      this.$store.dispatch('requestMovieDetails', this.id)
+      this.$store.dispatch('requestShowings', this.id)
     }
   }
 </script>

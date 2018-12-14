@@ -49,14 +49,11 @@
     },
     methods: {
       movies () {
-        console.log(this.$store.getters['getMovies'].length)
         return this.$store.getters['getMovies']
       }
     },
     created () {
-      if (!this.movies().length) {
-        this.$store.dispatch('requestMovies')
-      }
+      this.$store.dispatch('requestMovies')
     }
   }
 </script>
