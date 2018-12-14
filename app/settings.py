@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 from .config import Config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -126,7 +127,7 @@ USE_L10N = True
 USE_TZ = True
 
 # timeout session after 10 minutes
-TIME = 60 * 10
+TIME = 60 * 20
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
