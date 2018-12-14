@@ -13,7 +13,7 @@ Then tests should come back to normal"""
 from django.core.files import File
 from django.test import TransactionTestCase
 
-from app.settings import BASE_DIR
+from app.settings import BASE_DIR, MEDIA_ROOT, os
 from cinema.models.booking import TicketType, Ticket, Booking
 from cinema.models.cinema import Showing, Cinema, Room, Seat
 from cinema.models.movies import Movie
@@ -121,11 +121,8 @@ class CinemaModelTest(TransactionTestCase):
 
 
     except Exception as e:
-      print('Something went wrong when cleaning the test database.\n'
-            'Are you sure you haven\' called delete() method on any '
-            'of the test class fields?\n'
-            'But this means the tearDown() method was called so the tests passed\n\n'
-            'Another possible source of this exception is that you\'ve tried duplicate tests')
+      print('An exception occured while cleaning up after tests.'
+            '\nTake note, all tests run until now have passed.\n')
       print(e.__str__())
 
 
