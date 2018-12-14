@@ -85,3 +85,5 @@ venv
 
 .scannerwork
 cinema/migrations/0*.py
+
+test/chromedriver_linux64/
