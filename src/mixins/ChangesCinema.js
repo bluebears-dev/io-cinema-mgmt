@@ -10,13 +10,7 @@ export default {
   computed: {
     currentCinema: {
       get () {
-        let cinema = this.$store.getters['getCurrentCinema']
-        if (this.cinemas().map(v => v.id).indexOf(cinema) !== -1) {
-          return this.$store.getters['getCurrentCinema']
-        } else {
-          this.$cookie.remove('cinema')
-          return -1
-        }
+        return this.$store.getters['getCurrentCinema']
       },
       set (newValue) {
         this.$store.dispatch('setCurrentCinema', newValue)
@@ -25,5 +19,11 @@ export default {
   },
   created () {
     this.$store.dispatch('requestCinemas')
+      .then(() => {
+        if (this.cinemas().map(v => v.id).indexOf(this.currentCinema) === -1) {
+          this.$cookie.remove('cinema')
+          this.$router.replace({name: 'CinemaSelection'})
+        }
+      })
   }
 }
