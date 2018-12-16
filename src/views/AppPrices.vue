@@ -48,16 +48,11 @@
 </template>
 
 <script>
+  import UsesPrices from '../mixins/UsesPrices'
+
   export default {
     name: 'AppPrices',
-    computed: {
-      prices () {
-        return this.$store.getters['getTicketTypes']
-      }
-    },
-    created () {
-      this.$store.dispatch('requestTicketTypes')
-    }
+    mixins: [UsesPrices]
   }
 </script>
 
