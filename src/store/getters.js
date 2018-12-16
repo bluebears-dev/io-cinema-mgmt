@@ -16,6 +16,12 @@ const getters = {
   },
   getSelectedDate (state) {
     return state.selectedDate
+  },
+  getMovieDetails (state) {
+    return state.movieDetails
+  },
+  getShowings (state) {
+    return state.showings
   }
 }
 

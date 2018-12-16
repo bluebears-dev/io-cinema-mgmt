@@ -1,77 +1,81 @@
 <template>
-    <v-layout
-            justify-center
-            fill-height
-            row wrap
-            class="layout--align-fix"
-    >
-        <v-flex xs11 class="top__bar--padding">
-            <v-layout
-                    row wrap
-                    class="top__bar"
-            >
-                <v-flex xs12 sm12 md5 lg4>
-                    <v-select
-                            class="select--cinema"
-                            solo
-                            light
-                            flat
-                            hide-details
-                            dense
-                            color="gold"
-                            label="Kino"
-                            background-color="black"
-                            :items="cinemas()"
-                            item-text="name"
-                            item-value="id"
-                            :menu-props="{'content-class': 'select__menu--black elevation-0'}"
-                            v-model="currentCinema"
-                            @change="setCinemaCookie()"
-                    ></v-select>
-                </v-flex>
-                <v-flex xs12 sm12 md7 lg8 class="text-xs-center text-md-right">
-                    <v-btn
-                            v-for="day in days" :key="day.title"
-                            icon
-                            flat
-                            depressed
-                            :ripple="false"
-                            @click="setDate(day)"
-                            class="alegreya-sc--light text-capitalize day-button"
-                            :color="buttonDayColor(day.title)"
-                    >{{day.title}}
-                    </v-btn>
-                </v-flex>
-            </v-layout>
+  <v-layout
+      class="layout--align-fix"
+      fill-height
+      justify-center row
+      wrap
+  >
+    <v-flex class="top__bar--padding" xs11>
+      <v-layout
+          class="top__bar" row
+          wrap
+      >
+        <v-flex lg4 md5 sm12 xs12>
+          <v-select
+              :items="cinemas()"
+              :menu-props="{'content-class': 'select__menu--black elevation-0'}"
+              @change="setCinemaCookie()"
+              background-color="black"
+              class="select--cinema"
+              color="gold"
+              dense
+              flat
+              hide-details
+              item-text="name"
+              item-value="id"
+              label="Kino"
+              light
+              solo
+              v-model="currentCinema"
+          ></v-select>
         </v-flex>
-        <v-flex xs9>
-            <router-view/>
+        <v-flex class="text-xs-center text-md-right" lg8 md7 sm12 xs12>
+          <v-btn
+              :color="buttonDayColor(day.title)" :key="day.title"
+              :ripple="false"
+              @click="currentDate = day"
+              class="alegreya-sc--light text-capitalize day-button"
+              depressed
+              flat
+              icon
+              v-for="day in days"
+          >{{day.title}}
+          </v-btn>
         </v-flex>
-    </v-layout>
+      </v-layout>
+    </v-flex>
+    <v-flex xs9>
+      <router-view/>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
   import ChangesCinema from '../mixins/ChangesCinema'
 
-  let weekDays = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So']
+  const weekDays = ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So']
 
   export default {
     name: 'AppMovieList',
     mixins: [ChangesCinema],
     methods: {
       buttonDayColor (day) {
-        if (day === this.selectedDay) {
+        if (day === this.currentDate.title) {
           return 'gold'
         } else {
           return 'white'
         }
-      },
-      setDate (day) {
-        this.selectedDay = day.title
-        this.$store.commit('SET_SELECTED_DATE', day)
       }
     },
     computed: {
+      currentDate: {
+        get () {
+          return this.$store.getters['getSelectedDate']
+        },
+        set (newValue) {
+          this.$store.commit('SET_SELECTED_DATE', newValue)
+        }
+      },
       days () {
         let cinemaDays = []
         let date = new Date()
@@ -83,27 +87,22 @@
         }
         return cinemaDays
       }
-    },
-    data () {
-      return {
-        selectedDay: weekDays[(new Date()).getDay()]
-      }
     }
   }
 </script>
 
 <style scoped lang="stylus">
-    .top__bar
-        border-bottom: 1.5px solid var(--v-gold-base)
+  .top__bar
+    border-bottom: 1.5px solid var(--v-gold-base)
 
-        &--padding
-            padding-bottom: 40px
-            padding-top: 100px
+    &--padding
+      padding-bottom: 40px
+      padding-top: 100px
 
-    .day-button
-        font-size: 1.4rem
-        letter-spacing: 3px
+  .day-button
+    font-size: 1.4rem
+    letter-spacing: 3px
 
-        &::before
-            background-color: transparent !important
+    &::before
+      background-color: transparent !important
 </style>

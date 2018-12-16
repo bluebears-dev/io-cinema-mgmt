@@ -11,7 +11,7 @@
                     class="mx-auto"
                     width="240px"
             >
-                <router-link :to="{name: 'MovieDetails'}" class="router--link">
+              <router-link :to="{name: 'MovieDetails', params: {id: movie.id}}" class="router--link">
                     <v-img
                             :src="movie.cover"
                             class="image--style"
@@ -22,6 +22,12 @@
                     </div>
                 </router-link>
             </v-card>
+        </v-flex>
+        <v-flex
+                v-if="!movies().length"
+                class="alegreya-sc--light no--showings text-xs-center"
+        >
+            Brak seansów na wybrany dzień.
         </v-flex>
     </v-layout>
 </template>
@@ -47,9 +53,7 @@
       }
     },
     created () {
-      if (!this.movies().length) {
-        this.$store.dispatch('requestMovies')
-      }
+      this.$store.dispatch('requestMovies')
     }
   }
 </script>
@@ -73,4 +77,9 @@
 
     .router--link
         text-decoration none
+
+    .no--showings
+        color: var(--v-white-base)
+        font-size: 2rem
+        padding-top: 100px
 </style>

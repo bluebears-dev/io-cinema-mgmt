@@ -7,7 +7,7 @@ class Config:
             :param file: Path to .env file
         """
         self.file = file
-        self.config = dict()
+        self.configuration = dict()
         self.load()
 
     def __getitem__(self, key):
@@ -16,7 +16,7 @@ class Config:
             :param key: Name of configuration entry
             :return: Value of configuration entry selected by key
         """
-        return self.config[key]
+        return self.configuration[key]
 
     def load(self):
         """
@@ -29,4 +29,4 @@ class Config:
             for line in content:
                 match = re.match(pattern, line)
                 if match:
-                    self.config[match[1]] = match[2]
+                    self.configuration[match[1]] = match[2]
