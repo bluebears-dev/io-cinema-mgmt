@@ -1,56 +1,66 @@
 <template>
-  <v-layout
-      align-start justify-center
-      row
-      wrap
-  >
-    <v-flex xs12 class="md-constant movie--cover text-xs-center">
-      <div class="d-inline-block">
-        <v-img
-            :src="selectedMovie.cover"
-            :width="imageWidth"
-            class="image--style"
-        ></v-img>
-      </div>
-    </v-flex>
-    <v-flex xs12 class="md-flex movie--information">
-      <div class="movie--title alegreya-sc--regular">{{selectedMovie.title}}</div>
-      <div class="movie--details alegreya-sc--regular">
-        Data Premiery: {{selectedMovie.releaseDate}} &nbsp;&nbsp;|&nbsp;&nbsp; Reżyseria: {{selectedMovie.producer}}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        {{selectedMovie.length}} min
-      </div>
-      <div class="movie--details alegreya-sc--regular">
-        {{selectedMovie.genre.join(' &nbsp;&nbsp;| &nbsp;&nbsp;')}}
-      </div>
-      <div class="movie--description roboto--light">
-        {{selectedMovie.description}}
-      </div>
-    </v-flex>
-    <v-flex xs12>
-      <div class="movie--date alegreya-sc--regular">
-        {{createDate}}
-      </div>
-      <v-layout
-          row wrap
-      >
-        <v-btn
-            :key="showing.toString()" :ripple="false"
-            block
-            class="showing--button roboto--regular text-capitalize"
-            color="white"
-            flat
-            large
-            v-for="showing in movieShowings"
-        >
-          <div>
-            <div class="showing--time">{{showing.hour}} <br></div>
-            <div class="showing--type">{{showing.picture_type}} {{showing.audio_type}}</div>
+  <v-slide-y-reverse-transition hide-on-leave>
+    <v-layout
+        :key="id" align-start
+        justify-center
+        row
+        wrap
+    >
+      <v-flex class="md-constant movie--cover text-xs-center" xs12>
+        <div class="d-inline-block">
+          <v-img
+              :src="selectedMovie.cover"
+              :width="imageWidth"
+              class="image--style"
+          ></v-img>
+        </div>
+      </v-flex>
+      <v-flex class="md-flex movie--information" xs12>
+        <div class="movie--title alegreya-sc--regular">{{selectedMovie.title}}</div>
+        <div class="movie--details alegreya-sc--regular">
+          Data Premiery: {{selectedMovie.releaseDate}} &nbsp;&nbsp;|&nbsp;&nbsp; Reżyseria: {{selectedMovie.producer}}
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          {{selectedMovie.length}} min
+        </div>
+        <div class="movie--details alegreya-sc--regular">
+          {{selectedMovie.genre.join(' &nbsp;&nbsp;| &nbsp;&nbsp;')}}
+        </div>
+        <div class="movie--description roboto--light">
+          {{selectedMovie.description}}
+        </div>
+      </v-flex>
+      <v-flex xs12>
+        <v-slide-x-transition hide-on-leave>
+          <div :key="createDate"
+               class="movie--date alegreya-sc--regular">
+            {{createDate}}
           </div>
-        </v-btn>
-      </v-layout>
-    </v-flex>
-  </v-layout>
+        </v-slide-x-transition>
+        <v-slide-x-transition
+            class="row wrap"
+            group
+            hide-on-leave
+            tag="v-layout"
+        >
+          <v-btn
+              :key="Math.random() + movie.id + showing.hour"
+              :ripple="false"
+              block
+              class="showing--button roboto--regular text-capitalize"
+              color="white"
+              flat
+              large
+              v-for="showing in movieShowings"
+          >
+            <div>
+              <div class="showing--time">{{showing.hour}} <br></div>
+              <div class="showing--type">{{showing.picture_type}} {{showing.audio_type}}</div>
+            </div>
+          </v-btn>
+        </v-slide-x-transition>
+      </v-flex>
+    </v-layout>
+  </v-slide-y-reverse-transition>
 </template>
 
 <script>
@@ -58,7 +68,10 @@
     name: 'MovieDetails',
     props: {
       id: {
-        type: Number
+        required: true,
+        validator: v => {
+          return Number(v) > 0
+        }
       }
     },
     computed: {
@@ -73,7 +86,7 @@
         }
       },
       selectedMovie () {
-        return this.$store.getters['getMovieDetails'][0] || {}
+        return this.$store.getters['getMovieDetails'][0] || {genre: []}
       },
       movieShowings () {
         return this.$store.getters['getShowings']
@@ -124,12 +137,22 @@
     created () {
       this.$store.dispatch('requestMovieDetails', this.id)
       this.$store.dispatch('requestShowings', this.id)
+    },
+    beforeRouteUpdate (to, from, next) {
+      this.$store.dispatch('requestMovieDetails', to.params.id)
+      this.$store.dispatch('requestShowings', to.params.id)
+      next()
     }
   }
 </script>
 
 <style scoped lang="stylus">
   @import "~vuetify/src/stylus/settings/_variables.styl"
+
+  @media screen and (max-width: $grid-breakpoints.md)
+    .movie--information
+      padding-top: 40px
+
   @media screen and (min-width: $grid-breakpoints.md)
     .md-constant
       flex: 0 0 260px
@@ -139,10 +162,6 @@
 
     .md-flex
       flex: 1
-
-  @media screen and (max-width: $grid-breakpoints.md)
-    .movie--information
-      padding-top: 40px
 
   .image--style
     border: 1.6px solid var(--v-gold-base)
