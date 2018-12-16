@@ -136,12 +136,24 @@
     },
     created () {
       this.$store.dispatch('requestMovieDetails', this.id)
-      this.$store.dispatch('requestShowings', this.id)
+        .then(() => {
+          if (this.selectedMovie.id == null) {
+            this.$router.replace({name: '404'})
+          } else {
+            this.$store.dispatch('requestShowings', this.id)
+          }
+        })
     },
     beforeRouteUpdate (to, from, next) {
       this.$store.dispatch('requestMovieDetails', to.params.id)
-      this.$store.dispatch('requestShowings', to.params.id)
-      next()
+        .then(() => {
+          if (this.selectedMovie.id == null) {
+            this.$router.replace({name: '404'})
+          } else {
+            this.$store.dispatch('requestShowings', to.params.id)
+            next()
+          }
+        })
     }
   }
 </script>
