@@ -8,6 +8,7 @@
       <div class="d-inline-block">
         <v-img
             :src="selectedMovie.cover"
+            :lazy-src="selectedMovie.cover.replace('covers', 'thumbs')"
             :width="imageWidth"
             class="image--style"
         ></v-img>

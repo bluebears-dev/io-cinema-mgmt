@@ -1,10 +1,13 @@
 import os
 from uuid import uuid4
 
+from PIL import Image
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
+
+from app.settings import MEDIA_ROOT
 
 PATH = 'covers/'
 
@@ -64,6 +67,10 @@ class Movie(models.Model):
         try:
             movie = Movie.objects.get(id=self.id)
             movie.cover.delete(False)
+            thumb_path = os.path.join(MEDIA_ROOT + '/thumbs', os.path.basename(self.cover.name))
+            if os.path.exists(thumb_path):
+                os.remove(thumb_path)
+
         except ObjectDoesNotExist:
             pass
 
@@ -71,6 +78,14 @@ class Movie(models.Model):
              update_fields=None):
         self.delete_file()
         super(Movie, self).save()
+        image = Image.open(os.path.join(MEDIA_ROOT, self.cover.name))
+
+        image.thumbnail((600, 600), Image.BICUBIC)
+        image.save(os.path.join(MEDIA_ROOT, self.cover.name), 'JPEG', quality=90)
+
+        # Save image thumbnail
+        image.thumbnail((100, 100), Image.BILINEAR)
+        image.save(os.path.join(MEDIA_ROOT + '/thumbs', os.path.basename(self.cover.name)), 'JPEG', quality=90)
 
     def delete(self, using=None, keep_parents=False):
         self.delete_file()
