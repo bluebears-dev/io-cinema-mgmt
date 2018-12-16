@@ -136,7 +136,7 @@ def check_adding_model_instance_with_wrong_fields(classname, error_message="", *
   in order to check if they are indeed not allowed"""
   try:
 
-    classname.objects.create(kwargs)
+    classname.objects.create(**kwargs)
 
     raise NoTestOccuredException()
   except NoTestOccuredException as e:
