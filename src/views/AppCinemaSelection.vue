@@ -73,6 +73,7 @@
   .cinema--form
     background-color: var(--v-white-base)
     padding: 60px 20px
+    margin-top: 100px
 
   .form--text
     color: var(--v-charcoal-base)

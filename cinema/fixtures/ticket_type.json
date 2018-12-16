@@ -1,0 +1,29 @@
+[
+  {
+    "model": "cinema.tickettype",
+    "pk": 1,
+    "fields": {
+      "ticketType": "Ulgowy",
+      "price": "12.00",
+      "description": "Bilet dla os\u00f3b z legitymacj\u0105 uczniowsk\u0105 lub studenck\u0105."
+    }
+  },
+  {
+    "model": "cinema.tickettype",
+    "pk": 2,
+    "fields": {
+      "ticketType": "Normalny",
+      "price": "18.00",
+      "description": "Bilet dla os\u00f3b bez upowa\u017cnienia do ulgi."
+    }
+  },
+  {
+    "model": "cinema.tickettype",
+    "pk": 3,
+    "fields": {
+      "ticketType": "Dla dzieci",
+      "price": "7.00",
+      "description": "Bilet dla dzieci do lat 6."
+    }
+  }
+]

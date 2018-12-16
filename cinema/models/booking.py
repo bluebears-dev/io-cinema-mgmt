@@ -11,6 +11,8 @@ class TicketType(models.Model):
     """
         Type and price of a ticket
     """
+    # todo correct __str__ if there is time, especially for nested __str__ (when foreign keys) ex. rezerwacja for seans
+    # todo c.d. for movie <- such strings are produced in some of the models
     ticketType = models.CharField(verbose_name=_('Typ biletu'), max_length=20, unique=True, db_column='type')
     price = models.DecimalField(verbose_name=_('Cena'), max_digits=6, decimal_places=2)
     description = models.TextField(verbose_name=_('Opis'), max_length=200)

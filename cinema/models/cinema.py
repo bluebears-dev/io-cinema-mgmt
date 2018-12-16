@@ -1,10 +1,12 @@
 ##                                  ##
 ##   ALL MODELS RELATED TO CINEMA   ##
 ##                                  ##
-from django.contrib import admin
+import datetime
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext as _
+
 from .user import PHONE_NUMBER_REGEX
 
 POSTAL_CODE_REGEX = r'\d{2}-\d{3}'
@@ -73,13 +75,40 @@ class Showing(models.Model):
     audio_type = models.CharField(verbose_name=_('Przekład'), max_length=10, choices=AUDIO_CHOICES)
     picture_type = models.CharField(verbose_name=_('Typ obrazu'), max_length=2, choices=PICTURE_CHOICES)
 
+    def _check_collision(self, new_show):
+        """
+            Check if two showings are not colliding with each other
+        :param new_show: show added by user
+        :return:
+        """
+        from django.core.exceptions import ValidationError
+        new_show_start = datetime.datetime.combine(datetime.date.today(), new_show.hour)
+        show_start = datetime.datetime.combine(datetime.date.today(), self.hour)
+
+        if not (new_show_start + datetime.timedelta(minutes=new_show.movie.length) <= show_start
+                or show_start + datetime.timedelta(minutes=self.movie.length) <= new_show_start):
+            raise ValidationError(_('Dodawany seans koliduje z istniejącym ({0})'.format(new_show)))
+
+    def clean(self):
+        if hasattr(self, 'room') and hasattr(self, 'date') and hasattr(self, 'movie'):
+            showings = Showing.objects.filter(room=self.room, date=self.date)
+            for show in showings:
+                self._check_collision(show)
+        super().clean()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.full_clean()
+        super().save(force_insert=False, force_update=False, using=None,
+                     update_fields=None)
+
+    def __str__(self):
+        return _('{2} ({0} {1})'.format(self.date, self.hour, self.movie))
+
     class Meta:
         unique_together = ('room', 'hour', 'date')
         verbose_name = _('Seans')
         verbose_name_plural = _('Seanse')
-
-    def __str__(self):
-        return _('Seans {0} {1} : {2}'.format(self.date, self.hour, self.movie))
 
 
 class Room(models.Model):
@@ -95,18 +124,15 @@ class Room(models.Model):
         verbose_name_plural = _('Sale')
 
     def __str__(self):
-        return _('Sala {0} : {1}'.format(self.cinema, self.name))
+        return _('{1} ({0})'.format(self.cinema, self.name))
 
 
 class Seat(models.Model):  # details unknown yet
     room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
-    # row = models.SmallIntegerField(verbose_name=_('Rząd w reprezentacji do wyświetlania'))
-    # column = models.SmallIntegerField(verbose_name=_('Kolumna w reprezentacji do wyświetlania'))
     realRow = models.CharField(verbose_name=_('Numer rzędu'), max_length=2)
     realColumn = models.SmallIntegerField(verbose_name=_('Numer kolumny'))
 
     class Meta:
-        # unique_together = ('room', 'row', 'column', 'realRow', 'realColumn')
         verbose_name = _('Miejsce')
         verbose_name_plural = _('Miejsca')
 

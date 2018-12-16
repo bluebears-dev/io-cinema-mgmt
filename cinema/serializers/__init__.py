@@ -1,2 +1,2 @@
-from .cinema import CinemaSerializer
 from .booking import TicketTypeSerializer
+from .cinema import CinemaSerializer, ShowingSerializer
