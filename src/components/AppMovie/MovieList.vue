@@ -1,6 +1,7 @@
 <template>
   <v-slide-x-transition
-      class="layout row wrap align-start justify-center"
+      class="row wrap align-start justify-center"
+      tag="v-layout"
       group
       hide-on-leave
   >
