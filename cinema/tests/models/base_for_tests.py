@@ -16,7 +16,7 @@ from django.test import TransactionTestCase
 from app.settings import BASE_DIR, MEDIA_ROOT, os
 from cinema.models.booking import TicketType, Ticket, Booking
 from cinema.models.cinema import Showing, Cinema, Room, Seat
-from cinema.models.movies import Movie
+from cinema.models.movies import Movie, MovieGenre
 from cinema.models.user import ClientProfile, User, EmployeeProfile
 
 
@@ -29,6 +29,12 @@ class CinemaModelTest(TransactionTestCase):
       self.__been_there_before = []
 
     try:
+      # create movie genres
+      MovieGenre.objects.create(name="Horror")
+      MovieGenre.objects.create(name="Anime")
+      self.horro = MovieGenre.objects.get(name="Horror")
+      self.anime = MovieGenre.objects.get(name="Anime")
+
       # create cinemas
       Cinema.objects.create(name='Wiosna', city='Kraków', address='ul. Budryka 2', postal_code='32-300',
                             phone_number='880 591 332')

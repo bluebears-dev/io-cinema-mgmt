@@ -18,7 +18,7 @@ class BookingTest(CinemaModelTest):
         # try to add a ticket type that already exists
         check_adding_model_instance_with_wrong_fields(TicketType, "Exception should occur but it hadn't when creating "
                                                                   "ticket type with duplicate name",
-                                                      ticketType='Ulgowy', price=121.43, description="random letters")
+                                                      ticketType="Ulgowy", price=121.43, description="random letters")
 
         # try to add ticket type with too long price
         check_adding_model_instance_with_wrong_fields(TicketType, "Exception should occur but it hadn't when creating "
@@ -48,16 +48,10 @@ class BookingTest(CinemaModelTest):
                                                                "booking with None showing", user=self.user_elemelek,
                                                       showing=None, state=Booking.INITIATED)
 
-        # try to add booking with state taken out of nowhere
+        # try to add booking without a showing
         check_adding_model_instance_with_wrong_fields(Booking, "Exception should occur but it hadn't when creating "
-                                                               "booking with state of different type",
-                                                      user=self.user_elemelek, showing=self.showing_wizard1,
-                                                      state=Booking.CHOICES_FOR_STATE)
-
-        check_adding_model_instance_with_wrong_fields(Booking, "Exception should occur but it hadn't when creating "
-                                                               "booking with state of different type",
-                                                      user=self.user_elemelek, showing=self.showing_wizard1,
-                                                      state="Something random")
+                                                               "booking with None showing", user=self.user_elemelek,
+                                                      showing=self.showing_wizard1, state=None)
 
     def test_adding_wrong_value_of_ticket(self):
 

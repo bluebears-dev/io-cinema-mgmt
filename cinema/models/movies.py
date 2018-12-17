@@ -81,7 +81,7 @@ class MovieGenre(models.Model):
     """
         Model for movie genres
     """
-    name = models.CharField(verbose_name=_('Nazwa gatunku'), max_length=30)
+    name = models.CharField(verbose_name=_('Nazwa gatunku'), max_length=30, unique=True)
 
     class Meta:
         verbose_name = _('Gatunek')
