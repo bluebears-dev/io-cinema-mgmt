@@ -13,6 +13,7 @@ class MovieTest(CinemaModelTest):
     Movie.objects.create(title='Black clover', releaseDate='2011-02-22', length=1200, producer="Przemysław Indyka",
                          description="5 leave clover and great mystery of the future",
                          cover=File(open(BASE_DIR + '/test/static/wspawielkanocna.jpg', 'rb')))
+    picturee = Movie.objects.get(title="Black clover").cover
 
     # try to add a movie with a duplicate name
     check_adding_model_instance_with_wrong_fields(Movie, "Exception should occur but it hadn't when creating movie "
@@ -61,6 +62,18 @@ class MovieTest(CinemaModelTest):
                                                   releaseDate='2011-02-23', length=123, producer="elemelek",
                                                   description=None,
                                                   cover=File(open(BASE_DIR + '/test/static/wspawielkanocna.jpg', 'rb')))
+
+    # delete created movie and check if the cover file was deleted
+    Movie.objects.get(title="Black clover").delete()
+    try:
+      f = File(open(picturee))
+      raise NoTestOccuredException()
+    except NoTestOccuredException as e:
+      print("The cover file was not deleted after deletion of a movie model")
+      raise e
+    except Exception as ee:
+      # print("Expected exception info: " + e.__str__())
+      pass
 
   def test_movie_genre(self):
     # try to add a movie genre without a name
