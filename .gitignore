@@ -86,4 +86,5 @@ venv
 .scannerwork
 cinema/migrations/0*.py
 
-test/chromedriver_linux64/
+# all kinds of selenium webdrivers
+test/selenium_webdriver/*

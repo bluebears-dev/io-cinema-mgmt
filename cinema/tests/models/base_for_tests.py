@@ -2,22 +2,44 @@
 It sets up the example database so
 you don't have to write creations
 
-It also creates variables that are easy access to those records"""
+It also creates variables that are easy access to those records
+
+If OperationalError occurs when trying to run tests, try
+python manage.py makemigrations
+python manage.py migrate
+
+Then tests should come back to normal"""
 
 from django.core.files import File
 from django.test import TransactionTestCase
 
-from app.settings import BASE_DIR
+from app.settings import BASE_DIR, MEDIA_ROOT, os
 from cinema.models.booking import TicketType, Ticket, Booking
 from cinema.models.cinema import Showing, Cinema, Room, Seat
-from cinema.models.movies import Movie
+from cinema.models.movies import Movie, MovieGenre
 from cinema.models.user import ClientProfile, User, EmployeeProfile
 
 
 class CinemaModelTest(TransactionTestCase):
   def setUp(self):
 
+    if os.listdir(MEDIA_ROOT + "/covers"):
+      self.__been_there_before = os.listdir(MEDIA_ROOT + "/covers")
+    else:
+      self.__been_there_before = []
+
+    if os.listdir(MEDIA_ROOT + "/thumbs"):
+      self.__thumb_there_before = os.listdir(MEDIA_ROOT + "/thumbs")
+    else:
+      self.__thumb_there_before = []
+
     try:
+      # create movie genres
+      MovieGenre.objects.create(name="Horror")
+      MovieGenre.objects.create(name="Anime")
+      self.horro = MovieGenre.objects.get(name="Horror")
+      self.anime = MovieGenre.objects.get(name="Anime")
+
       # create cinemas
       Cinema.objects.create(name='Wiosna', city='Kraków', address='ul. Budryka 2', postal_code='32-300',
                             phone_number='880 591 332')
@@ -44,7 +66,7 @@ class CinemaModelTest(TransactionTestCase):
       # create some movie
       Movie.objects.create(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
                            description='You\'re a wizard, Harry',
-                           cover=File(open(BASE_DIR + '/cinema/tests/static/bohemian.jpg', 'rb')))
+                           cover=File(open(BASE_DIR + '/test/static/wspawielkanocna.jpg', 'rb')))
 
       self.movie_wizard = Movie.objects.get(title='Harry Potter', releaseDate='2017-02-12', length='123',
                                        producer='J. K. Rowling', description='You\'re a wizard, Harry')
@@ -99,21 +121,44 @@ class CinemaModelTest(TransactionTestCase):
   def tearDown(self):
 
     # generally cleaning the database is not necessary as it will be deleted right after the tests
-    # except: movies, which contains cover files that must be deleted
 
     try:
-      # delete movies
-      self.movie_wizard.delete()
+
+      # this loop should delete all the covers that were created during tests
+      # this is not done automatically when deleting the movies
+      for file in os.listdir(MEDIA_ROOT + "/covers"):
+        if file not in self.__been_there_before:
+          os.unlink(MEDIA_ROOT + "/covers/" + file)
+
+      # this loop should delete all the thumbnails that were created during tests
+      # this is not done automatically when deleting the movies
+      for file in os.listdir(MEDIA_ROOT + "/thumbs"):
+        if file not in self.__thumb_there_before:
+          os.unlink(MEDIA_ROOT + "/thumbs/" + file)
 
 
     except Exception as e:
-      print('Something went wrong when cleaning the test database.\n'
-            'Are you sure you haven\' called delete() method on any '
-            'of the test class fields?\n'
-            'But this means the tearDown() method was called so the tests passed\n\n'
-            'Another possible source of this exception is that you\'ve tried duplicate tests')
+      print('An exception occured while cleaning up after tests.'
+            '\nTake note, all tests run until now have passed.\n')
+      print(e.__str__())
 
 
 class NoTestOccuredException(Exception):
   """Exception used when an exception should have occured but it haven't happen"""
   pass
+
+
+def check_adding_model_instance_with_wrong_fields(classname, error_message="", **kwargs):
+  """Function used to run model creation for models that shouldn't be allowed
+  in order to check if they are indeed not allowed"""
+  try:
+
+    classname.objects.create(**kwargs)
+
+    raise NoTestOccuredException()
+  except NoTestOccuredException as e:
+    print(error_message)
+    raise e
+  except Exception as e:
+    # print("Expected error occured. Info: " + e.__str__() + "\n\n\n")
+    pass
