@@ -73,6 +73,14 @@ const router = new Router({
           next({name: 'Movies'})
         }
       }
+    },
+    {
+      path: '*',
+      name: '404',
+      components: {
+        default: require('@/views/AppNotFound.vue').default,
+        toolbar
+      }
     }
   ]
 })

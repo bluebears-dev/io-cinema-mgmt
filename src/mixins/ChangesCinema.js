@@ -19,5 +19,11 @@ export default {
   },
   created () {
     this.$store.dispatch('requestCinemas')
+      .then(() => {
+        if (this.cinemas().map(v => v.id).indexOf(this.currentCinema) === -1) {
+          this.$cookie.remove('cinema')
+          this.$router.replace({name: 'CinemaSelection'})
+        }
+      })
   }
 }
