@@ -28,6 +28,11 @@ class CinemaModelTest(TransactionTestCase):
     else:
       self.__been_there_before = []
 
+    if os.listdir(MEDIA_ROOT + "/thumbs"):
+      self.__thumb_there_before = os.listdir(MEDIA_ROOT + "/thumbs")
+    else:
+      self.__thumb_there_before = []
+
     try:
       # create movie genres
       MovieGenre.objects.create(name="Horror")
@@ -124,6 +129,12 @@ class CinemaModelTest(TransactionTestCase):
       for file in os.listdir(MEDIA_ROOT + "/covers"):
         if file not in self.__been_there_before:
           os.unlink(MEDIA_ROOT + "/covers/" + file)
+
+      # this loop should delete all the thumbnails that were created during tests
+      # this is not done automatically when deleting the movies
+      for file in os.listdir(MEDIA_ROOT + "/thumbs"):
+        if file not in self.__thumb_there_before:
+          os.unlink(MEDIA_ROOT + "/thumbs/" + file)
 
 
     except Exception as e:

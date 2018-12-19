@@ -1,6 +1,4 @@
-from cinema.tests.models.base_for_tests import CinemaModelTest, NoTestOccuredException, Movie,\
-  File, BASE_DIR, check_adding_model_instance_with_wrong_fields, MovieGenre
-
+from cinema.tests.models.base_for_tests import CinemaModelTest
 
 class MovieTest(CinemaModelTest):
 
