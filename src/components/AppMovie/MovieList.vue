@@ -13,9 +13,10 @@
             >
               <router-link :to="{name: 'MovieDetails', params: {id: movie.id}}" class="router--link">
                     <v-img
-                            :src="movie.cover"
-                            class="image--style"
-                            height="340px"
+                        :src="movie.cover"
+                        :lazy-src="movie.cover.replace('covers', 'thumbs')"
+                        class="image--style"
+                        height="340px"
                     ></v-img>
                     <div class="alegreya-sc--light movie--title">
                         {{movie.title}}
