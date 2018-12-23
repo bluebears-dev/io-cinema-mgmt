@@ -1,9 +1,5 @@
-import re
-
-from django.core import validators
 from django.core.exceptions import ValidationError
-from django.forms import Field, NumberInput
-from django.utils import formats
+from django.forms import Field
 from django.utils.translation import gettext as _
 
 from cinema.widgets import LayoutWidget
@@ -32,20 +28,23 @@ def get_col_label(col_index):
 
 
 class LayoutField(Field):
+    """
+        Represents dynamic layout field used by room.
+    """
     rows = 0
     cols = 0
     widget = LayoutWidget
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(LayoutField, self).__init__(**kwargs)
 
     def validate(self, value):
         """
             Check if list contains only numbers and is not none.
         """
-        if len(value) == 0:
-            raise ValidationError(_('Sala musi posiadać siedzenia'))
         try:
+            if len(value) == 0:
+                raise ValidationError(_('Sala musi posiadać siedzenia'))
             for num in value:
                 index = num['index']
                 if index[0] > self.rows or index[1] > self.cols or index[0] < 0 or index[1] < 0:
@@ -67,7 +66,7 @@ class LayoutField(Field):
             return None
 
         # Get minimal values to remove the offset
-        min_row_index = min(map(lambda v: int(v) // self.rows, raw_layout))
+        min_row_index = min(map(lambda v: int(v) // self.cols, raw_layout))
         min_col_index = min(map(lambda v: int(v) % self.cols, raw_layout))
 
         layout = list()
@@ -76,7 +75,7 @@ class LayoutField(Field):
                 # Convert to int
                 value = int(pos)
                 # Get indices without offset
-                row = value // self.rows + 1 - min_row_index
+                row = value // self.cols + 1 - min_row_index
                 col = value % self.cols + 1 - min_col_index
                 # Create dict with real indices and labels
                 layout.append({
@@ -86,5 +85,5 @@ class LayoutField(Field):
             except ValueError or TypeError:
                 layout.append(None)
 
-        layout = super().to_python(layout)
+        layout = super(LayoutField, self).to_python(layout)
         return layout
