@@ -1,6 +1,8 @@
+import json
+
 from django.contrib import admin
 
-from cinema.forms import ShowingForm
+from cinema.forms import ShowingForm, RoomForm
 from cinema.models import Cinema, Showing, Room
 
 
@@ -24,6 +26,20 @@ class ShowingAdmin(admin.ModelAdmin):
         return queryset
 
 
+class RoomAdmin(admin.ModelAdmin):
+    """
+        Room admin panel form and display
+    """
+    form = RoomForm
+
+    def save_model(self, request, obj, form, change):
+        obj.json_layout = json.dumps(form.cleaned_data.get('layout'))
+        # Recalculate rows and columns because of offset removing
+        obj.rows = max(map(lambda v: v['index'][0], form.cleaned_data.get('layout')))
+        obj.cols = max(map(lambda v: v['index'][1], form.cleaned_data.get('layout')))
+        super().save_model(request, obj, form, change)
+
+
 admin.site.register(Cinema)
-admin.site.register(Room)
+admin.site.register(Room, RoomAdmin)
 admin.site.register(Showing, ShowingAdmin)
