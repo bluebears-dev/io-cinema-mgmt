@@ -128,7 +128,6 @@ USE_TZ = True
 
 # timeout session after 10 minutes
 TIME = 60 * 20
-
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = TIME
