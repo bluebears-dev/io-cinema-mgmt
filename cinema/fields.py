@@ -46,8 +46,7 @@ class LayoutField(Field):
             if len(value) == 0:
                 raise ValidationError(_('Sala musi posiadać siedzenia'))
             for num in value:
-                index = num['index']
-                if index[0] > self.rows or index[1] > self.cols or index[0] < 0 or index[1] < 0:
+                if num[0] > self.rows or num[1] > self.cols or num[0] < 0 or num[1] < 0:
                     raise ValidationError(_('Zaznaczono miejsce nie objemowane przez rozkład sali'))
         except TypeError:
             raise ValidationError(_('Niepoprawne wartości lub rozmiar sali'))
@@ -58,7 +57,7 @@ class LayoutField(Field):
             If it cannot be done change value to None.
             If list is empty or invalid return None.
         """
-        print(value)
+        # print(value)
         raw_layout = value[0]
         self.rows = int(value[1])
         self.cols = int(value[2])
@@ -78,10 +77,7 @@ class LayoutField(Field):
                 row = value // self.cols + 1 - min_row_index
                 col = value % self.cols + 1 - min_col_index
                 # Create dict with real indices and labels
-                layout.append({
-                    'label': (get_row_label(row), get_col_label(col)),
-                    'index': (row, col)
-                })
+                layout.append((row, col))
             except ValueError or TypeError:
                 layout.append(None)
 

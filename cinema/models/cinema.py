@@ -133,9 +133,8 @@ class Room(models.Model):
     def layout(self):
         """
             Return parsed array representing layout.
-            Its a list of dictionaries containing two tuples:
-                label: (row, col)
-                index: (row, col)
+            Its a list containing tuples:
+                (row, col)
         """
         try:
             layout = json.loads(self.json_layout)
@@ -150,8 +149,7 @@ class Room(models.Model):
         """
         layout = self.layout
         cols = self.cols
-        raw_data = map(lambda v: (v['index'][0] - 1) * cols + v['index'][1] - 1, layout)
-        print(raw_data)
+        raw_data = map(lambda v: (v[0] - 1) * cols + v[1] - 1, layout)
         return list(raw_data)
 
     class Meta:

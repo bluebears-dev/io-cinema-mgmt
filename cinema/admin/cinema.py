@@ -35,8 +35,8 @@ class RoomAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.json_layout = json.dumps(form.cleaned_data.get('layout'))
         # Recalculate rows and columns because of offset removing
-        obj.rows = max(map(lambda v: v['index'][0], form.cleaned_data.get('layout')))
-        obj.cols = max(map(lambda v: v['index'][1], form.cleaned_data.get('layout')))
+        obj.rows = max(map(lambda v: v[0], form.cleaned_data.get('layout')))
+        obj.cols = max(map(lambda v: v[1], form.cleaned_data.get('layout')))
         super().save_model(request, obj, form, change)
 
 
