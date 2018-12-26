@@ -12,11 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
-from .config import Config
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIGURATION = Config(file=os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -27,7 +24,7 @@ SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [CONFIGURATION['HOST']]
+ALLOWED_HOSTS = [os.environ.get('HOST')]
 
 # Application definition
 
@@ -88,11 +85,11 @@ MEDIA_URL = '/static/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': CONFIGURATION['POSTGRES_DB'],
-        'USER': CONFIGURATION['POSTGRES_USER'],
-        'PASSWORD': CONFIGURATION['POSTGRES_PASSWORD'],
-        'HOST': CONFIGURATION['HOST'],
-        'PORT': CONFIGURATION['PORT'],
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('HOST'),
+        'PORT': os.environ.get('PORT'),
     }
 }
 
