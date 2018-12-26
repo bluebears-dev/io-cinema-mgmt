@@ -16,7 +16,6 @@ from .config import Config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIGURATION = Config(file=os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -27,7 +26,7 @@ SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [CONFIGURATION['HOST']]
+ALLOWED_HOSTS = [os.environ.get('HOST')]
 
 # Application definition
 
@@ -88,11 +87,11 @@ MEDIA_URL = '/static/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': CONFIGURATION['POSTGRES_DB'],
-        'USER': CONFIGURATION['POSTGRES_USER'],
-        'PASSWORD': CONFIGURATION['POSTGRES_PASSWORD'],
-        'HOST': CONFIGURATION['HOST'],
-        'PORT': CONFIGURATION['PORT'],
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('HOST'),
+        'PORT': os.environ.get('PORT'),
     }
 }
 
@@ -128,7 +127,6 @@ USE_TZ = True
 
 # timeout session after 10 minutes
 TIME = 60 * 20
-
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = TIME
