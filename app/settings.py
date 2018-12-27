@@ -11,12 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
-from .config import Config
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIGURATION = Config(file=os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -25,9 +23,9 @@ CONFIGURATION = Config(file=os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [CONFIGURATION['HOST']]
+ALLOWED_HOSTS = [os.environ.get('HOST')]
 
 # Application definition
 
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,7 +52,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'app.middleware.SessionTimeoutMiddleware'
 ]
-
 ROOT_URLCONF = 'app.urls'
 
 REST_FRAMEWORK = {
@@ -80,19 +78,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
-MEDIA_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': CONFIGURATION['POSTGRES_DB'],
-        'USER': CONFIGURATION['POSTGRES_USER'],
-        'PASSWORD': CONFIGURATION['POSTGRES_PASSWORD'],
-        'HOST': CONFIGURATION['HOST'],
-        'PORT': CONFIGURATION['PORT'],
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_URL'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -128,7 +126,6 @@ USE_TZ = True
 
 # timeout session after 10 minutes
 TIME = 60 * 20
-
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = TIME
@@ -139,12 +136,14 @@ SESSION_TIMEOUT = TIME
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 # Where collectstatic looks for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dist'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'public')
-STATIC_URL = '/public/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/'
 
 # Webpack integration
 WEBPACK_LOADER = {
@@ -153,3 +152,6 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+if os.environ.get('DYNO'):
+    django_heroku.settings(locals(), staticfiles=False)
