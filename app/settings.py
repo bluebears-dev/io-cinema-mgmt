@@ -155,4 +155,4 @@ WEBPACK_LOADER = {
 }
 
 if os.environ.get('DYNO'):
-    django_heroku.settings(locals())
+    django_heroku.settings(locals(), staticfiles=False)
