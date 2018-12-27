@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: python manage.py runserver 0.0.0.0:80
+web: web: gunicorn io-cinema-mgmt.wsgi --log-file -
