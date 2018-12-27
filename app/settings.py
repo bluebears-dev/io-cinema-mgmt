@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [os.environ.get('HOST')]
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -50,7 +52,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'app.middleware.SessionTimeoutMiddleware'
 ]
-
 ROOT_URLCONF = 'app.urls'
 
 REST_FRAMEWORK = {
@@ -77,8 +78,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
-MEDIA_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -88,8 +89,8 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('HOST'),
-        'PORT': os.environ.get('PORT'),
+        'HOST': os.environ.get('DATABASE_URL'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -135,12 +136,14 @@ SESSION_TIMEOUT = TIME
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 # Where collectstatic looks for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dist'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'public')
-STATIC_URL = '/public/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/'
 
 # Webpack integration
 WEBPACK_LOADER = {
@@ -149,3 +152,6 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+if os.environ.get('DYNO'):
+    django_heroku.settings(locals(), staticfiles=False)
