@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,7 +53,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'app.middleware.SessionTimeoutMiddleware'
 ]
-
 ROOT_URLCONF = 'app.urls'
 
 REST_FRAMEWORK = {
@@ -137,6 +137,8 @@ SESSION_TIMEOUT = TIME
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 # Where collectstatic looks for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dist'),
 )
