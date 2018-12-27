@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,8 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static').replace('\\', '/')
-MEDIA_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -143,8 +143,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dist'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'public')
-STATIC_URL = '/public/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
 # Webpack integration
 WEBPACK_LOADER = {
@@ -155,4 +155,4 @@ WEBPACK_LOADER = {
 }
 
 if os.environ.get('DYNO'):
-    django_heroku.settings(locals(), staticfiles=False)
+    django_heroku.settings(locals())
