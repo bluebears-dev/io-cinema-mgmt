@@ -1,7 +1,8 @@
 .DS_Store
 node_modules/
 webpack-stats.json
-/public/
+/dist/
+/media/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
