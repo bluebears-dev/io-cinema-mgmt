@@ -2,6 +2,10 @@
 
 eval $(docker-machine env)
 case $1 in
+    "build")
+        docker-compose down
+        docker-compose build
+    ;;
     "test")
         docker-compose exec django true
         if [[ $? -ne 0 ]]
