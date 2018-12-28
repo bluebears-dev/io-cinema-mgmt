@@ -1,0 +1,17 @@
+Django==2.1.2
+django-rest-framework==0.1.0
+django-webpack-loader==0.6.0
+djangorestframework==3.9.0
+pdfkit==0.6.1
+psycopg2==2.7.5
+pytz==2018.6
+schedule==0.5.0
+selenium==3.14.1
+urllib3==1.24
+coreapi==2.3.3
+markdown==3.0.1
+Pillow==5.3.0
+coverage==4.5.2
+django-dotenv==1.4.2
+django-heroku==0.3.1
+gunicorn==19.9.0
