@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,8 +25,7 @@ SECRET_KEY = 'jz-69%wst9_i2tb#k1ng5alrpewb0tb@50ybx&6(_46u1#166+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = [os.environ.get('HOST')]
+ALLOWED_HOSTS = [os.environ.get('HOST'), 'localhost']
 
 # Application definition
 
@@ -145,13 +145,14 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/'
 
-# Webpack integration
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': '',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+if not os.environ.get('PRODUCTION'):
+    # Webpack integration
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': '',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        }
     }
-}
 
-if os.environ.get('DYNO'):
+if os.environ.get('PRODUCTION'):
     django_heroku.settings(locals(), staticfiles=False)

@@ -4,5 +4,5 @@ set -e
 
 # wait for postgres to boot up
 # it's really "naive" way to "sync"
-sleep 5
+sleep 2
 exec $@

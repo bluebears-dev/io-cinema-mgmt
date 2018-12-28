@@ -1,0 +1,42 @@
+<table id="id_layout">
+
+</table>
+
+<script>
+  let row_input = document.getElementById('id_rows')
+  let col_input = document.getElementById('id_cols')
+  let table = document.getElementById('id_layout')
+
+  row_input.addEventListener('change', render, false)
+  col_input.addEventListener('change', render, false)
+  let init = {{ widget.value | safe }}
+
+  render(null, init)
+
+  function render (e, initial=[]) {
+    let rows = row_input.value
+    let cols = col_input.value
+    if (rows && cols) {
+      while (table.firstChild) {
+        table.removeChild(table.firstChild)
+      }
+      for (let row = 0; row < rows; row++) {
+        let tr = document.createElement('tr')
+        for (let col = 0; col < cols; col++) {
+          let td = document.createElement('td')
+          td.style.padding = '2px'
+          let value = row * cols + col
+          let isNotChecked = initial.find(v => v === value) == null
+          if (initial.length === 0 || !isNotChecked) {
+            td.innerHTML += `<input checked type="{{ widget.type }}" name="{{ widget.name }}" value="${value}">`
+          }
+          else if (isNotChecked) {
+            td.innerHTML += `<input type="{{ widget.type }}" name="{{ widget.name }}" value="${value}">`
+          }
+          tr.appendChild(td)
+        }
+        table.appendChild(tr)
+      }
+    }
+  }
+</script>

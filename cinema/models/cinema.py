@@ -1,7 +1,8 @@
-##                                  ##
-##   ALL MODELS RELATED TO CINEMA   ##
-##                                  ##
+#                                  #
+#   ALL MODELS RELATED TO CINEMA   #
+#                                  #
 import datetime
+import json
 
 from django.core.validators import RegexValidator
 from django.db import models
@@ -111,12 +112,45 @@ class Showing(models.Model):
         verbose_name_plural = _('Seanse')
 
 
+def max_or_value(arr, val):
+    if arr and len(arr):
+        return max(arr)
+    else:
+        return val
+
+
 class Room(models.Model):
     """
         Represents specific room in the cinema
     """
     name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
     cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
+    rows = models.IntegerField()
+    cols = models.IntegerField()
+    json_layout = models.TextField()
+
+    @property
+    def layout(self):
+        """
+            Return parsed array representing layout.
+            Its a list containing tuples:
+                (row, col)
+        """
+        try:
+            layout = json.loads(self.json_layout)
+            return layout
+        except TypeError:
+            return None
+
+    @property
+    def raw_layout(self):
+        """
+            Returns flattened indices of layout matrix
+        """
+        layout = self.layout
+        cols = self.cols
+        raw_data = map(lambda v: (v[0] - 1) * cols + v[1] - 1, layout)
+        return list(raw_data)
 
     class Meta:
         unique_together = (('name', 'cinema'),)
