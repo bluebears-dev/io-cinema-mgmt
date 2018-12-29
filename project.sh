@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-eval $(docker-machine env)
 case $1 in
     "build")
+        docker-machine start
+        eval $(docker-machine env)
         docker-compose down
         docker-compose build
     ;;
     "test")
+        eval $(docker-machine env)
         docker-compose exec django true
         if [[ $? -ne 0 ]]
         then
