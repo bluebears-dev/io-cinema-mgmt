@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'webpack_loader',
-    'rest_framework',
-    'storages'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
