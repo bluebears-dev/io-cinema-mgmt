@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'webpack_loader',
-    'rest_framework'
+    'rest_framework',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ TEMPLATES = [
 ]
 
 AWS_STORAGE_BUCKET_NAME = 'io-cinema-mgmt'
-AWS_DEFAULT_REGION = 'us-east-1'
+AWS_S3_REGION_NAME = 'eu-west-3'
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_SESSION_TOKEN = os.environ.get('AWS_SESSION_TOKEN')
