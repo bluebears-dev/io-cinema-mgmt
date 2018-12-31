@@ -1,9 +1,11 @@
 import os
 from functools import partial
+from io import BytesIO
 from uuid import uuid4
 
 from PIL import Image
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -82,10 +84,15 @@ class Movie(models.Model):
         cover_file.close()
 
         filename = os.path.split(self.cover.name)[-1]
-        thumb_file = default_storage.open(os.path.join('thumbs', filename), 'wb')
-        # Save image thumbnail
+        content = BytesIO()
         image.thumbnail((100, 100), Image.BILINEAR)
-        image.save(thumb_file, "JPEG", quality=90)
+        image.save(content, "JPEG", quality=90)
+        content.seek(0)
+
+        # Save image thumbnail
+        thumb_file = default_storage.open(os.path.join('thumbs', filename), 'wb')
+        thumb_file.write(content.getvalue())
+        thumb_file.close()
 
     def delete(self, using=None, keep_parents=False):
         self.delete_file()
