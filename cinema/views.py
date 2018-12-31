@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -59,4 +61,7 @@ class ShowingView(APIView):
 
 
 def index(request):
-    return render(request, 'index.html')
+    if os.environ.get('PRODUCTION'):
+        return render(request, 'static/index.html')
+    else:
+        return render(request, 'index.html')

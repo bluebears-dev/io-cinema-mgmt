@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'webpack_loader',
     'rest_framework'
@@ -145,14 +146,13 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/'
 
-if not os.environ.get('PRODUCTION'):
-    # Webpack integration
-    WEBPACK_LOADER = {
-        'DEFAULT': {
-            'BUNDLE_DIR_NAME': '',
-            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-        }
+# Webpack integration
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': '',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
+}
 
 if os.environ.get('PRODUCTION'):
     django_heroku.settings(locals(), staticfiles=False)

@@ -1,27 +1,28 @@
 import os
+from functools import partial
+from io import BytesIO
 from uuid import uuid4
 
 from PIL import Image
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.images import ImageFile
+from django.core.files.storage import default_storage
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
-from app.settings import MEDIA_ROOT
-
-PATH = 'covers/'
+COVER_PATH = 'covers/'
 
 
-def image_filename(instance, filename):
+def image_filename(instance, filename, catalog):
     """
-        Generates a function that returns path with random filename for image
-
-    :param path: Special path inside static/ folder
-    :return: Function for upload_to that returns path of the image
+        Function that returns path with random filename for image.
+        Image will be created at /media/{catalog}/ path.
+        It should be used together with partial for catalog setting.
     """
     extension = filename.split('.')[-1]
     filename = '{0}.{1}'.format(uuid4().hex, extension)
-    return os.path.join(PATH, filename)
+    return os.path.join(catalog, filename)
 
 
 class Movie(models.Model):
@@ -39,7 +40,7 @@ class Movie(models.Model):
     cover = models.ImageField(
         verbose_name=_('Okładka'),
         unique=True,
-        upload_to=image_filename
+        upload_to=partial(image_filename, catalog=COVER_PATH)
     )
 
     class Meta:
@@ -66,26 +67,32 @@ class Movie(models.Model):
         """
         try:
             movie = Movie.objects.get(id=self.id)
+            filename = os.path.split(movie.cover.name)[-1]
             movie.cover.delete(False)
-            thumb_path = os.path.join(MEDIA_ROOT + '/thumbs', os.path.basename(self.cover.name))
-            if os.path.exists(thumb_path):
-                os.remove(thumb_path)
-
-        except ObjectDoesNotExist:
+            default_storage.delete(os.path.join('thumbs', filename))
+        except ObjectDoesNotExist or FileNotFoundError:
             pass
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.delete_file()
         super(Movie, self).save()
-        image = Image.open(os.path.join(MEDIA_ROOT, self.cover.name))
-
+        cover_file = default_storage.open(self.cover.name, 'r+b')
+        image = Image.open(cover_file)
         image.thumbnail((600, 600), Image.BICUBIC)
-        image.save(os.path.join(MEDIA_ROOT, self.cover.name), 'JPEG', quality=90)
+        image.save(cover_file, 'JPEG', quality=90)
+        cover_file.close()
+
+        filename = os.path.split(self.cover.name)[-1]
+        content = BytesIO()
+        image.thumbnail((100, 100), Image.BILINEAR)
+        image.save(content, "JPEG", quality=90)
+        content.seek(0)
 
         # Save image thumbnail
-        image.thumbnail((100, 100), Image.BILINEAR)
-        image.save(os.path.join(MEDIA_ROOT + '/thumbs', os.path.basename(self.cover.name)), 'JPEG', quality=90)
+        thumb_file = default_storage.open(os.path.join('thumbs', filename), 'wb')
+        thumb_file.write(content.getvalue())
+        thumb_file.close()
 
     def delete(self, using=None, keep_parents=False):
         self.delete_file()

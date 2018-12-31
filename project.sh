@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+docker-machine start
 eval $(docker-machine env)
 case $1 in
     "build")
@@ -16,23 +17,15 @@ case $1 in
         fi
     ;;
     "run")
-        docker-machine start
-        eval $(docker-machine env)
         docker-compose up postgres django
     ;;
     "rund")
-        docker-machine start
-        eval $(docker-machine env)
         docker-compose up -d postgres django
     ;;
     "sonar")
-        docker-machine start
-        eval $(docker-machine env)
         docker-compose up -d sonarqube sonardata
     ;;
     "all")
-        docker-machine start
-        eval $(docker-machine env)
         docker-compose up -d sonarqube sonardata
         docker-compose up postgres django
     ;;
