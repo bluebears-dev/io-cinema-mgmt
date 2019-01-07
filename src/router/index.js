@@ -56,6 +56,14 @@ const router = new Router({
       }
     },
     {
+      path: '/formularz',
+      name: 'BookingForm',
+      components: {
+        default: require('@/views/AppBookingForm.vue').default,
+        toolbar
+      }
+    },
+    {
       path: '/kontakt',
       name: 'Contact',
       components: {
