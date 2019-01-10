@@ -11,9 +11,9 @@
   col_input.addEventListener('change', render, false)
   let init = {{ widget.value | safe }}
 
-  render(null, init)
+    render(null, init)
 
-  function render (e, initial=[]) {
+  function render (e, initial = []) {
     let rows = row_input.value
     let cols = col_input.value
     if (rows && cols) {
@@ -26,11 +26,10 @@
           let td = document.createElement('td')
           td.style.padding = '2px'
           let value = row * cols + col
-          let isNotChecked = initial.find(v => v === value) == null
-          if (initial.length === 0 || !isNotChecked) {
+          let isChecked = initial.find(v => String(v) === String(value)) != null
+          if (initial.length === 0 || isChecked) {
             td.innerHTML += `<input checked type="{{ widget.type }}" name="{{ widget.name }}" value="${value}">`
-          }
-          else if (isNotChecked) {
+          } else if (!isChecked) {
             td.innerHTML += `<input type="{{ widget.type }}" name="{{ widget.name }}" value="${value}">`
           }
           tr.appendChild(td)
