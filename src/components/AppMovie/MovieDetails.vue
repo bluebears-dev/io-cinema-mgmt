@@ -1,5 +1,5 @@
 <template>
-  <v-slide-y-reverse-transition hide-on-leave>
+  <v-slide-x-transition hide-on-leave>
     <v-layout
         :key="id" align-start
         justify-center
@@ -61,7 +61,7 @@
         </v-slide-x-transition>
       </v-flex>
     </v-layout>
-  </v-slide-y-reverse-transition>
+  </v-slide-x-transition>
 </template>
 
 <script>
