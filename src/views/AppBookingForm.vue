@@ -277,6 +277,12 @@
 <script>
   export default {
     name: 'AppBookingForm',
+    props: {
+      id: {
+        type: Number,
+        required: true
+      }
+    },
     data () {
       return {
         stepTwoFormState: false,
@@ -344,6 +350,7 @@
     created () {
       this.$store.dispatch('requestTicketTypes')
       this.$store.dispatch('requestCinemas')
+      this.$store.dispatch('requestShowings', this.id)
     }
   }
 </script>

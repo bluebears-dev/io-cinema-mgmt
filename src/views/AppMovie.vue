@@ -32,7 +32,7 @@
         <v-flex class="text-xs-center text-md-right" lg8 md7 sm12 xs12>
           <v-btn
               :color="buttonDayColor(day.title)" :key="day.title"
-              @click="setDate(day)"
+              @click="currentDate = day"
               depressed
               flat
               :ripple="false"

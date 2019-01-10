@@ -22,6 +22,6 @@ class ShowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Showing
-        fields = ('date', 'hour', 'movie', 'room', 'audio_type', 'picture_type')
+        fields = ('id', 'date', 'hour', 'movie', 'room', 'audio_type', 'picture_type')
         read_only_fields = fields
 

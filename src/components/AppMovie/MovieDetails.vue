@@ -51,6 +51,7 @@
               flat
               large
               v-for="showing in movieShowings"
+              @click="$router.push({name: 'BookingForm', params: {id: showing.id}})"
           >
             <div>
               <div class="showing--time">{{showing.hour}} <br></div>

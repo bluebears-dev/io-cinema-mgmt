@@ -1,6 +1,10 @@
 import axios from 'axios'
 
 const actions = {
+  setCurrentCinema ({commit, dispatch}, cinema) {
+    commit('SET_CURRENT_CINEMA', cinema)
+    dispatch('requestMovies', cinema)
+  },
   requestCinemas ({state, commit}) {
     if (state.cinemas.length === 0) {
       return axios.get('cinema/')

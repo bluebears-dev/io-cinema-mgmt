@@ -56,11 +56,15 @@ const router = new Router({
       }
     },
     {
-      path: '/formularz',
+      path: '/rezerwuj/:id',
       name: 'BookingForm',
       components: {
         default: require('@/views/AppBookingForm.vue').default,
         toolbar
+      },
+      props: {
+        default: true,
+        toolbar: false
       }
     },
     {
