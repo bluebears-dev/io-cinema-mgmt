@@ -4,216 +4,272 @@
       justify-center row
       wrap
   >
-    <v-flex class="cinema--name alegreya-sc--light" xs10>
-      {{cinemaDetails.name}}
+    <v-flex class="hidden-sm-and-down" xs12>
+      <v-layout justify-center>
+        <v-flex class="cinema--name alegreya-sc--light margin text-xs-center" lg3 md4>
+          {{cinemaDetails.name}}
+        </v-flex>
+        <v-flex md5/>
+      </v-layout>
     </v-flex>
-    <v-flex class="booking--information" md3>
-      <v-flex class="section">
-        <div class="section--name alegreya-sc--light">Seans</div>
-        <div class="section--information roboto--regular">
-          {{showing.name}} <br> {{showing.pictureType}}, {{showing.audioType}} <br> {{showing.date}} - {{showing.start}}
-          <br> Sala: {{showing.room}}
-        </div>
-      </v-flex>
-      <v-flex class="section" v-if="formStep>1">
-        <div class="section--name alegreya-sc--light">Miejsca</div>
-        <div class="section--information roboto--regular">{{ticketAmount}}</div>
-      </v-flex>
-      <v-flex class="section" v-if="formStep>2">
-        <div class="section--name alegreya-sc--light">Bilety</div>
-        <div :key="price"
-             class="section--information roboto--regular"
-             v-for="price in prices"
-             v-if="ticketTypesAmount[price.id-1]>0">
-          {{ticketTypesAmount[price.id-1]}}x {{price.ticketType}}
-        </div>
-      </v-flex>
-      <v-flex class="section last--section" v-if="formStep>3">
-        <div class="section--name alegreya-sc--light">Dane Osobowe</div>
-        <div class="section--information roboto--regular">
-          {{customerName}} {{customerSurname}} <br> {{customerEmail}} <br> {{customerPhone}}
-        </div>
-      </v-flex>
-    </v-flex>
-    <v-flex class="booking--form" md5>
-      <v-stepper class="form--height" v-model="formStep">
-        <v-stepper-header>
-          <v-stepper-step :complete="formStep > 1" color="gold" step="1"></v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :complete="formStep > 2" color="gold" step="2"></v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :complete="formStep > 3" color="gold" step="3"></v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step :complete="formStep > 4" color="gold" step="4"></v-stepper-step>
-        </v-stepper-header>
+    <v-flex xs12>
+      <v-layout justify-center>
+        <v-flex class="booking--information hidden-sm-and-down" lg3 md4>
+          <v-fade-transition group>
+            <v-flex class="section" key="1">
+              <div class="section--name alegreya-sc--light">Seans</div>
+              <div class="section--information roboto--regular">
+                {{showing.name}} <br> {{showing.pictureType}}, {{showing.audioType}} <br> {{showing.date}} -
+                {{showing.start}}
+                <br> Sala: {{showing.room}}
+              </div>
+            </v-flex>
+            <v-flex class="section" key="2" v-if="formStep>1">
+              <div class="section--name alegreya-sc--light">Miejsca</div>
+              <div class="section--information roboto--regular">{{ticketAmount}}</div>
+            </v-flex>
+            <v-flex class="section" key="3" v-if="formStep>2">
+              <div class="section--name alegreya-sc--light">Bilety</div>
+              <div :key="price"
+                   class="section--information roboto--regular"
+                   v-for="price in prices"
+                   v-if="ticketTypesAmount[price.ticketType]>0">
+                {{ticketTypesAmount[price.ticketType]}}x {{price.ticketType}}
+              </div>
+            </v-flex>
+            <v-flex class="section last--section" key="4" v-if="formStep>3">
+              <div class="section--name alegreya-sc--light">Dane Osobowe</div>
+              <div class="section--information roboto--regular">
+                {{customerName}} {{customerSurname}} <br> {{customerEmail}} <br> {{customerPhone}}
+              </div>
+            </v-flex>
+          </v-fade-transition>
+        </v-flex>
+        <v-flex class="booking--form" md5>
+          <v-stepper v-model="formStep">
+            <v-stepper-header>
+              <v-stepper-step :complete="formStep > 1" color="gold" step="1"></v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="formStep > 2" color="gold" step="2"></v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="formStep > 3" color="gold" step="3"></v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="formStep > 4" color="gold" step="4"></v-stepper-step>
+            </v-stepper-header>
 
-        <v-stepper-items>
-          <v-stepper-content class="form--height" step="1">
-            <v-flex xs12>
-              <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
-            </v-flex>
-            <v-text-field
-                color="gold"
-                label="Ilość biletów"
-                min="0"
-                type="number"
-                v-model="ticketAmount"
-            ></v-text-field>
-            <v-btn
-                :disabled="ticketAmount<=0"
-                @click="formStep = 2"
-                class="alegreya-sc--regular text-capitalize form--button"
-                color=gold
-            >
-              Dalej
-            </v-btn>
-            <v-btn
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Anuluj
-            </v-btn>
-          </v-stepper-content>
-          <v-stepper-content class="form--height" step="2">
-            <v-flex xs12>
-              <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Typ Biletów</div>
-            </v-flex>
-            <v-flex
-                :key="price.id"
-                v-for="(price, i) in prices"
-            >
-              <v-layout
-                  justify-center
-              >
-                <v-flex
-                    class="ticket--type" md4 sm4
-                    xs7
+            <v-stepper-items>
+              <v-stepper-content class="form--height" step="1">
+                <v-layout class="layout--fill" column>
+                  <v-flex>
+                    <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
+                    <v-text-field
+                        color="gold"
+                        label="Ilość biletów"
+                        min="0"
+                        type="number"
+                        v-model="ticketAmount"
+                    ></v-text-field>
+                  </v-flex>
+
+                  <v-flex>
+                    <v-layout
+                        align-end
+                        fill-height row
+                        wrap
+                    >
+                      <v-btn
+                          :disabled="ticketAmount<=0"
+                          @click="formStep = 2"
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          color=gold
+                      >
+                        Dalej
+                      </v-btn>
+                      <v-spacer/>
+                      <v-btn
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          flat
+                      >
+                        Anuluj
+                      </v-btn>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-stepper-content>
+              <v-stepper-content class="form--height" step="2">
+                <v-layout class="layout--fill" column>
+                  <v-flex xs12>
+                    <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Typ Biletów</div>
+                  </v-flex>
+                  <v-form
+                      ref="stepTwoForm"
+                      v-model="stepTwoFormState"
+                  >
+                    <v-flex
+                        :key="price.id"
+                        v-for="price in prices"
+                        xs12
+                    >
+                      <v-layout justify-center row wrap>
+                        <v-flex
+                            class="ticket--type"
+                            md5 sm4 xs7
+                        >
+                          <div class="alegreya-sc--regular text-capitalize form--button">
+                            {{price.ticketType}}
+                          </div>
+                        </v-flex>
+                        <v-flex md3 sm4 xs4>
+                          <v-text-field
+                              :min="0"
+                              :rules="[
+                            v => (Number(v) >= 0 || v == null) || 'Niepoprawna wartość',
+                            validateTicketsAmount
+                          ]"
+                              color="gold"
+                              label="Ilość"
+                              type="number"
+                              v-model="ticketTypesAmount[price.ticketType]"
+                          ></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                  </v-form>
+                  <v-flex>
+                    <v-layout
+                        align-end
+                        fill-height row
+                        wrap
+                    >
+                      <v-btn
+                          :disabled="!stepTwoFormState"
+                          @click="nextStep('stepTwoForm', 3)"
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          color=gold
+                      >
+                        Dalej
+                      </v-btn>
+                      <v-btn
+                          @click="formStep = 1"
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          flat
+                      >
+                        Wstecz
+                      </v-btn>
+                      <v-spacer/>
+                      <v-btn
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          flat
+                      >
+                        Anuluj
+                      </v-btn>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-stepper-content>
+              <v-stepper-content class="form--height" step="3">
+                <v-layout class="layout--fill" column>
+                  <v-layout
+                      justify-center
+                      row wrap
+                  >
+                    <v-flex xs12>
+                      <div class="alegreya-sc--regular text-capitalize step--title">Wprowadź Dane Osobowe</div>
+                    </v-flex>
+                    <v-flex class="margin"
+                            xs5
+                    >
+                      <v-text-field
+                          :rules="[validateName(customerName)]"
+                          color="gold"
+                          label="Imię"
+                          placeholder="Imię"
+                          v-model="customerName"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs5>
+                      <v-text-field
+                          :rules="[validateName(customerSurname)]"
+                          color="gold"
+                          label="Nazwisko"
+                          placeholder="Nazwisko"
+                          v-model="customerSurname"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex class="margin"
+                            xs5
+                    >
+                      <v-text-field
+                          :rules="[validateEmail]"
+                          color="gold"
+                          label="E-mail"
+                          placeholder="E-mail"
+                          v-model="customerEmail"
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs5>
+                      <v-text-field
+                          :rules="[validatePhone]"
+                          color="gold"
+                          label="Numer telefonu"
+                          placeholder="Numer telefonu"
+                          v-model="customerPhone"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                  <v-flex>
+
+                    <v-layout
+                        align-end
+                        fill-height row
+                        wrap
+                    >
+                      <v-btn
+                          :disabled="!validateAll"
+                          @click="formStep = 4"
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          color=gold
+                      >
+                        Dalej
+                      </v-btn>
+                      <v-btn
+                          @click="formStep = 2"
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          flat
+                      >
+                        Wstecz
+                      </v-btn>
+                      <v-spacer/>
+                      <v-btn
+                          class="alegreya-sc--regular text-capitalize form--button"
+                          flat
+                      >
+                        Anuluj
+                      </v-btn>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-stepper-content>
+              <v-stepper-content class="form--height" step="4">
+
+                <v-btn
+                    @click="formStep = 3"
+                    class="alegreya-sc--regular text-capitalize form--button"
+                    flat
                 >
-                  <div class="alegreya-sc--regular text-capitalize form--button">{{price.ticketType}}</div>
-                </v-flex>
-                <v-flex md2 sm3 xs3>
-                  <v-text-field
-                      color="gold"
-                      label="ilość"
-                      min="0"
-                      type="number"
-                      v-model="ticketTypesAmount[i]"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-            <v-btn
-                :disabled="!validateTicketsAmount"
-                @click="formStep = 3"
-                class="alegreya-sc--regular text-capitalize form--button"
-                color=gold
-
-            >
-              Dalej
-            </v-btn>
-            <v-btn
-                @click="formStep = 1"
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Wstecz
-            </v-btn>
-            <v-btn
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Anuluj
-            </v-btn>
-          </v-stepper-content>
-          <v-stepper-content class="form--height" step="3">
-            <v-layout
-                justify-center
-                row wrap
-            >
-              <v-flex xs12>
-                <div class="alegreya-sc--regular text-capitalize step--title">Wprowadź Dane Osobowe</div>
-              </v-flex>
-              <v-flex class="margin"
-                      xs5
-              >
-                <v-text-field
-                    :rules="[validateName(customerName)]"
-                    color="gold"
-                    label="Imię"
-                    placeholder="Imię"
-                    v-model="customerName"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs5>
-                <v-text-field
-                    :rules="[validateName(customerSurname)]"
-                    color="gold"
-                    label="Nazwisko"
-                    placeholder="Nazwisko"
-                    v-model="customerSurname"
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="margin"
-                      xs5
-              >
-                <v-text-field
-                    :rules="[validateEmail]"
-                    color="gold"
-                    label="E-mail"
-                    placeholder="E-mail"
-                    v-model="customerEmail"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs5>
-                <v-text-field
-                    :rules="[validatePhone]"
-                    color="gold"
-                    label="Numer telefonu"
-                    placeholder="Numer telefonu"
-                    v-model="customerPhone"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-btn
-                :disabled="!validateAll"
-                @click="formStep = 4"
-                class="alegreya-sc--regular text-capitalize form--button"
-                color=gold
-            >
-              Dalej
-            </v-btn>
-            <v-btn
-                @click="formStep = 2"
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Wstecz
-            </v-btn>
-            <v-btn
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Anuluj
-            </v-btn>
-          </v-stepper-content>
-          <v-stepper-content class="form--height" step="4">
-
-            <v-btn
-                @click="formStep = 3"
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Wstecz
-            </v-btn>
-            <v-btn
-                class="alegreya-sc--regular text-capitalize form--button"
-                flat
-            >
-              Anuluj
-            </v-btn>
-          </v-stepper-content>
-        </v-stepper-items>
-      </v-stepper>
+                  Wstecz
+                </v-btn>
+                <v-btn
+                    class="alegreya-sc--regular text-capitalize form--button"
+                    flat
+                >
+                  Anuluj
+                </v-btn>
+              </v-stepper-content>
+            </v-stepper-items>
+          </v-stepper>
+        </v-flex>
+      </v-layout>
     </v-flex>
   </v-layout>
 </template>
@@ -223,9 +279,10 @@
     name: 'AppBookingForm',
     data () {
       return {
+        stepTwoFormState: false,
         formStep: 0,
         ticketAmount: 0,
-        ticketTypesAmount: [],
+        ticketTypesAmount: {},
         showing: {
           name: 'Bohemian Rhapsody',
           room: 'A',
@@ -240,20 +297,17 @@
         customerPhone: ''
       }
     },
-
-    created () {
-      this.$store.dispatch('requestTicketTypes')
-    },
     computed: {
       prices () {
         return this.$store.getters['getTicketTypes']
       },
       cinemaDetails () {
-        return this.$store.getters['getCinemaDetails']
+        return this.$store.getters['getCinemaDetails'] || {}
       },
       validateTicketsAmount () {
-        let totalAmount = this.ticketTypesAmount.reduce((a, b) => Number(a) + Number(b), 0)
-        return Number(this.ticketAmount) === totalAmount
+        let values = Object.values(this.ticketTypesAmount)
+        let totalAmount = values.reduce((a, b) => Number(a) + Number(b), 0)
+        return Number(this.ticketAmount) === totalAmount || 'Ilość biletów się niezgadza'
       },
       validateEmail () {
         if (this.customerEmail == null || this.customerEmail === '') {
@@ -280,7 +334,16 @@
         } else {
           return true
         }
+      },
+      nextStep (ref, step) {
+        if (this.$refs[ref].validate()) {
+          this.formStep = step
+        }
       }
+    },
+    created () {
+      this.$store.dispatch('requestTicketTypes')
+      this.$store.dispatch('requestCinemas')
     }
   }
 </script>
@@ -335,4 +398,7 @@
     margin-left: 20px
     margin-top: 15px
     margin-bottom: 5px
+
+  .layout--fill
+    min-height: inherit
 </style>
