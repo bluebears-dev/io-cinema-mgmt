@@ -45,7 +45,7 @@
             </v-flex>
           </v-fade-transition>
         </v-flex>
-        <v-flex class="booking--form" md5>
+        <v-flex class="booking--form" md7>
           <v-stepper v-model="formStep">
             <v-stepper-header>
               <v-stepper-step :complete="formStep > 1" color="gold" step="1"></v-stepper-step>
@@ -62,32 +62,28 @@
                 <v-layout class="layout--fill" column>
                   <v-flex>
                     <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
-                    <v-text-field
-                        color="gold"
-                        label="Ilość biletów"
-                        min="0"
-                        type="number"
-                        v-model="ticketAmount"
-                    ></v-text-field>
+                    <BookingFormRoomLayout
+                        :showingId="id"
+                        v-model="selectedSeats"
+                    />
                   </v-flex>
-
                   <v-flex>
                     <v-layout
-                        align-end
+                        align-content-end
                         fill-height row
                         wrap
                     >
                       <v-btn
                           :disabled="ticketAmount<=0"
                           @click="formStep = 2"
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
                         Dalej
                       </v-btn>
-                      <v-spacer/>
+                      <v-spacer class="hidden-xs-only"/>
                       <v-btn
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
                         Anuluj
@@ -137,28 +133,28 @@
                   </v-form>
                   <v-flex>
                     <v-layout
-                        align-end
+                        align-content-end
                         fill-height row
                         wrap
                     >
                       <v-btn
                           :disabled="!stepTwoFormState"
                           @click="nextStep('stepTwoForm', 3)"
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
                         Dalej
                       </v-btn>
                       <v-btn
                           @click="formStep = 1"
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
                         Wstecz
                       </v-btn>
-                      <v-spacer/>
+                      <v-spacer class="hidden-xs-only"/>
                       <v-btn
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
                         Anuluj
@@ -218,30 +214,29 @@
                     </v-flex>
                   </v-layout>
                   <v-flex>
-
                     <v-layout
-                        align-end
+                        align-content-end
                         fill-height row
                         wrap
                     >
                       <v-btn
                           :disabled="!validateAll"
                           @click="formStep = 4"
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
                         Dalej
                       </v-btn>
                       <v-btn
                           @click="formStep = 2"
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
                         Wstecz
                       </v-btn>
-                      <v-spacer/>
+                      <v-spacer class="hidden-xs-only"/>
                       <v-btn
-                          class="alegreya-sc--regular text-capitalize form--button"
+                          class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
                         Anuluj
@@ -251,20 +246,28 @@
                 </v-layout>
               </v-stepper-content>
               <v-stepper-content class="form--height" step="4">
-
-                <v-btn
-                    @click="formStep = 3"
-                    class="alegreya-sc--regular text-capitalize form--button"
-                    flat
-                >
-                  Wstecz
-                </v-btn>
-                <v-btn
-                    class="alegreya-sc--regular text-capitalize form--button"
-                    flat
-                >
-                  Anuluj
-                </v-btn>
+                <v-layout class="layout--fill" column>
+                  <v-layout
+                      align-content-end
+                      fill-height row
+                      wrap
+                  >
+                    <v-btn
+                        @click="formStep = 3"
+                        class="alegreya-sc--regular text-capitalize form--button block-xs-only"
+                        flat
+                    >
+                      Wstecz
+                    </v-btn>
+                    <v-spacer class="hidden-xs-only"/>
+                    <v-btn
+                        class="alegreya-sc--regular text-capitalize form--button block-xs-only"
+                        flat
+                    >
+                      Anuluj
+                    </v-btn>
+                  </v-layout>
+                </v-layout>
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
@@ -275,8 +278,11 @@
 </template>
 
 <script>
+  import BookingFormRoomLayout from '../components/AppBookingForm/BookingFormRoomLayout'
+
   export default {
     name: 'AppBookingForm',
+    components: {BookingFormRoomLayout},
     props: {
       id: {
         type: Number,
@@ -285,6 +291,7 @@
     },
     data () {
       return {
+        selectedSeats: [],
         stepTwoFormState: false,
         formStep: 0,
         ticketAmount: 0,
@@ -356,6 +363,13 @@
 </script>
 
 <style scoped lang="stylus">
+  @import "~vuetify/src/stylus/settings/_variables.styl"
+
+  @media screen and (max-width: $grid-breakpoints.sm)
+    .block-xs-only
+      width: 100%
+      display: block
+
   .booking--information
     border: 1px solid var(--v-gold-base)
     margin-right: 20px
@@ -408,4 +422,5 @@
 
   .layout--fill
     min-height: inherit
+    overflow-x: auto
 </style>
