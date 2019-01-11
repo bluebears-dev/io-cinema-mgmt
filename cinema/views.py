@@ -1,8 +1,12 @@
 import os
+from datetime import datetime
 
+import coreapi
+import coreschema
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
 from cinema.serializers import RoomSerializer
@@ -32,38 +36,132 @@ class TicketTypeView(APIView):
 
 
 class MoviesView(APIView):
-    def get(self, request, cinema, date, format=None):
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name='cinema_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the cinema'
+                )
+            ),
+            coreapi.Field(
+                name='date',
+                required=True,
+                location='path',
+                schema=coreschema.String(
+                    description='Date in format %Y-%m-%d'
+                )
+            ),
+        ]
+    )
+
+    def get(self, request, cinema_id, date, format=None):
         """
-            Returns list of all showings in given cinema during given day
+            Returns list of all movies showed in given cinema during given day
         """
-        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema, date=date).distinct('movie').all()
+        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema_id, date=date).distinct(
+            'movie').all()
         serializer = MovieSerializer(map(lambda v: v.movie, showing), many=True)
         return Response(serializer.data)
 
 
 class MovieDetailsView(APIView):
-    def get(self, request, id, format=None):
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name='movie_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the movie'
+                )
+            ),
+        ]
+    )
+
+    def get(self, request, movie_id, format=None):
         """
             Returns details of the movie with given id
         """
-        movie = Movie.objects.prefetch_related().filter(id=id).all()
+        movie = Movie.objects.prefetch_related().filter(id=movie_id).all()
         serializer = MovieDetailsSerializer(movie, many=True)
         return Response(serializer.data)
 
 
 class ShowingView(APIView):
-    def get(self, request, id, date, cinema, format=None):
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name='date',
+                required=True,
+                location='path',
+                schema=coreschema.String(
+                    description='Date in format %Y-%m-%d'
+                )
+            ),
+            coreapi.Field(
+                name='cinema_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the cinema'
+                )
+            ),
+            coreapi.Field(
+                name='movie_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the movie'
+                )
+            ),
+        ]
+    )
+
+    def get(self, request, movie_id, date, cinema_id, format=None):
         """
             Returns list of all showings for given movie id and given day
         """
-        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema, movie__id=id,
-                                                            date=date).all().order_by('hour')
+        datetime_date = datetime.strptime(date, '%Y-%m-%d').date()
+        if datetime_date < datetime.now().date():
+            return Response([])
+        elif datetime_date == datetime.now().date():
+            showing = Showing.objects \
+                .prefetch_related() \
+                .filter(room__cinema__id=cinema_id,
+                        movie__id=movie_id,
+                        date=date,
+                        hour__gt=datetime.now()) \
+                .all() \
+                .order_by('hour')
+        else:
+            showing = Showing.objects \
+                .prefetch_related() \
+                .filter(room__cinema__id=cinema_id,
+                        movie__id=movie_id,
+                        date=date) \
+                .all() \
+                .order_by('hour')
         serializer = ShowingSerializer(showing, many=True)
         return Response(serializer.data)
 
 
 class RoomView(APIView):
     CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name='showing_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the showing'
+                )
+            ),
+        ]
+    )
 
     @staticmethod
     def _map_number_to_char(number):
@@ -99,6 +197,9 @@ class RoomView(APIView):
         return layout
 
     def get(self, request, showing_id):
+        """
+            Returns details of the room for given showing
+        """
         showing = Showing.objects.filter(id=showing_id)
         if len(showing) == 1:
             room = showing[0].room

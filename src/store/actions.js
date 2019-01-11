@@ -7,14 +7,14 @@ const actions = {
   },
   requestCinemas ({state, commit}) {
     if (state.cinemas.length === 0) {
-      return axios.get('cinema/')
+      return axios.get('cinemas/')
         .then((response) => {
           commit('SET_CINEMAS', response.data)
         })
     }
   },
   requestMovies ({state, commit}) {
-    return axios.get('movies/' + state.currentCinema + '/' + state.selectedDate.date)
+    return axios.get(state.currentCinema + '/' + state.selectedDate.date + '/movies')
       .then((response) => {
         commit('SET_MOVIES', response.data)
       })
@@ -28,13 +28,13 @@ const actions = {
     }
   },
   requestMovieDetails ({state, commit}, id) {
-    return axios.get('movie/' + id)
+    return axios.get('movies/' + id)
       .then(response => {
         commit('SET_MOVIE_DETAILS', response.data)
       })
   },
   requestShowings ({state, commit}, id) {
-    return axios.get('showings/' + state.currentCinema + '/' + id + '/' + state.selectedDate.date)
+    return axios.get(state.currentCinema + '/' + id + '/' + state.selectedDate.date + '/showings')
       .then(response => {
         commit('SET_SHOWINGS', response.data)
       })
