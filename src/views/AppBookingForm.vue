@@ -19,9 +19,9 @@
             <v-flex class="section" key="1">
               <div class="section--name alegreya-sc--light">Seans</div>
               <div class="section--information roboto--regular">
-                {{showing.name}} <br> {{showing.pictureType}}, {{showing.audioType}} <br> {{showing.date}} -
-                {{showing.start}}
-                <br> Sala: {{showing.room}}
+                {{movieDetails.title}} <br> {{showing.picture_type}}, {{showing.audio_type}} <br> {{convertedDate}} -
+                {{showing.hour}}
+                <br> Sala: {{room.name}}
               </div>
             </v-flex>
             <v-flex class="section" key="2" v-if="formStep>1">
@@ -296,14 +296,6 @@
         formStep: 0,
         ticketAmount: 0,
         ticketTypesAmount: {},
-        showing: {
-          name: 'Bohemian Rhapsody',
-          room: 'A',
-          audioType: 'Napisy',
-          pictureType: '2D',
-          date: '09.11.2018',
-          start: '18:00'
-        },
         customerName: '',
         customerSurname: '',
         customerEmail: '',
@@ -316,6 +308,18 @@
       },
       cinemaDetails () {
         return this.$store.getters['getCinemaDetails'] || {}
+      },
+      movieDetails () {
+        return this.$store.getters['getMovieDetails'][0] || { genre: [] }
+      },
+      showing () {
+        return this.$store.getters['getShowings'].filter(v => v.id === this.id)[0]
+      },
+      room () {
+        return this.$store.getters['getRoom']
+      },
+      convertedDate () {
+        return this.showing.date.split('-').reverse().join('.')
       },
       validateTicketsAmount () {
         let values = Object.values(this.ticketTypesAmount)
@@ -357,7 +361,6 @@
     created () {
       this.$store.dispatch('requestTicketTypes')
       this.$store.dispatch('requestCinemas')
-      this.$store.dispatch('requestShowings', this.id)
     }
   }
 </script>
