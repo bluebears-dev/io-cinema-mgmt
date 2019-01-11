@@ -95,8 +95,8 @@
     background: aqua
 
   .selected
-    border: 1px solid var(--v-sand-base)
-    background: var(--v-sand-base)
+    border: 1px solid var(--v-gold-base)
+    background: var(--v-gold-base)
     color: black !important
     cursor: pointer
 
@@ -126,7 +126,7 @@
     padding-right: 20px
 
   .screen
-    background: var(--v-sand-base)
+    background: #e0e0e0
     line-height: 25px
     height: 25px
 
