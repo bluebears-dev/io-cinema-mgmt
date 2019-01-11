@@ -92,7 +92,7 @@ class Showing(models.Model):
 
     def clean(self):
         if hasattr(self, 'room') and hasattr(self, 'date') and hasattr(self, 'movie'):
-            showings = Showing.objects.filter(room=self.room, date=self.date)
+            showings = Showing.objects.filter(room=self.room, date=self.date).exclude(id=self.id)
             for show in showings:
                 self._check_collision(show)
         super().clean()
