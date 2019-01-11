@@ -9,7 +9,7 @@
         <v-flex class="cinema--name alegreya-sc--light margin text-xs-center" lg3 md4>
           {{cinemaDetails.name}}
         </v-flex>
-        <v-flex md5/>
+        <v-flex md7/>
       </v-layout>
     </v-flex>
     <v-flex xs12>
@@ -60,8 +60,8 @@
             <v-stepper-items>
               <v-stepper-content class="form--height" step="1">
                 <v-layout class="layout--fill" column>
+                  <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
                   <v-flex>
-                    <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
                     <BookingFormRoomLayout
                         :showingId="id"
                         v-model="selectedSeats"
@@ -309,7 +309,7 @@
         return this.$store.getters['getCinemaDetails'] || {}
       },
       movieDetails () {
-        return this.$store.getters['getMovieDetails'][0] || { genre: [] }
+        return this.$store.getters['getMovieDetails'][0] || {genre: []}
       },
       showing () {
         return this.$store.getters['getShowings'].filter(v => v.id === this.id)[0]
@@ -395,10 +395,10 @@
     padding-bottom: 20px
 
   .form--height
-    min-height: 450px
+    min-height: 530px
 
   .form--layout
-    padding-top: 110px
+    padding-top: 100px
 
   .cinema--name
     color: var(--v-gold-base)
@@ -425,5 +425,4 @@
 
   .layout--fill
     min-height: inherit
-    overflow-x: auto
 </style>

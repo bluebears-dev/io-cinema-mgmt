@@ -1,45 +1,40 @@
 <template>
-  <div class="width--static">
-    <v-flex
-        class="row wrap justify-center"
-        mb-3
-        mt-4
-        xs12
-    >
-      <v-flex
-          class="screen text-xs-center alegreya-sc--regular spacing"
-          lg10
-          md12
-          sm10
-          xs12
-      >
-        Ekran
-      </v-flex>
-    </v-flex>
-    <v-flex
-        :key="Math.random() + row"
-        v-for="row in room.layout"
-        xs12
-    >
-      <div class="row" v-if="row != null">
-        <div class="column label text-xs-center alegreya-sc--bold">{{row.row}}</div>
+  <div>
+    <div class="screen text-xs-center alegreya-sc--regular spacing mt-2 mx-auto">
+      Ekran
+    </div>
+    <div class="overflow pt-2">
+      <div :class="hasLayoutLoaded ? '' : 'hidden'" class="wrapper--layout">
         <div
-            :class="isSelected(seat) ? 'selected' : 'free'"
-            :key="Math.random() + seat"
-            @click="toggleSeat(seat)"
-            class="column seat text-xs-center roboto--regular"
-            v-for="seat in row.seats"
-            v-if="seat"
+            :key="Math.random() + row"
+            class="row--wrapper"
+            v-for="row in room.layout"
         >
-          {{seat.col}}
+          <div class="row" v-if="row != null">
+            <div
+                class="column label text-xs-center alegreya-sc--bold"
+            >
+              {{row.row}}
+            </div>
+            <div
+                :class="(isSelected(row.seats[i]) ? 'selected' : 'free')"
+                :key="Math.random() + row.seats[i]"
+                @click="toggleSeat({row_label: row.row, col_label: row.seats[i].col, seat: row.seats[i].seat})"
+                class="column seat text-xs-center roboto--regular"
+                v-for="i in room.cols"
+                v-if="row.seats[i]"
+            >
+              {{row.seats[i].col}}
+            </div>
+            <div
+                class="column"
+                v-else
+            ></div>
+          </div>
+          <div class="row" v-else></div>
         </div>
-        <div
-            class="column"
-            v-else
-        ></div>
       </div>
-      <div class="row" v-else></div>
-    </v-flex>
+    </div>
   </div>
 </template>
 
@@ -52,12 +47,16 @@
         required: true
       },
       selectedSeats: {
-        type: Array,
-        required: true
+        type: Array
       }
     },
     model: {
       prop: 'selectedSeats'
+    },
+    data () {
+      return {
+        hasLayoutLoaded: false
+      }
     },
     computed: {
       room () {
@@ -74,22 +73,34 @@
         }
       },
       isSelected (seat) {
-        return this.selectedSeats.indexOf(seat) !== -1
+        return this.selectedSeats.filter(v => v.seat === seat.seat).length === 1
       }
     },
     created () {
       this.$store.dispatch('requestRoom', this.showingId)
+        .then(() => {
+          this.hasLayoutLoaded = true
+        })
     }
   }
 </script>
 
 <style scoped lang="stylus">
+  $seat-size = 20px
+  $row-spacing = 3px
+  $seat-spacing = 2px
+
   .row
+    display: inline-flex
+    white-space: nowrap
+    height: $seat-size
+    margin: $row-spacing 0
+
+  .row--wrapper
     display: flex
-    height: 20px
+    flex-direction: row
+    flex-wrap: wrap
     justify-content: center
-    align-items: center
-    margin: 1px 0
 
   .occupied
     background: aqua
@@ -108,11 +119,11 @@
   .column
     box-sizing: border-box
     display: inline-block
-    height: 15px
-    width: 15px
-    margin: 2px
-    line-height: 14px
-    font-size: 0.7rem
+    margin: $seat-spacing
+    height: $seat-size
+    width: $seat-size
+    line-height: $seat-size * 0.8
+    font-size: 0.8rem
 
     &.seat
       color: transparent
@@ -123,17 +134,24 @@
 
   .label
     font-size: 0.9rem
-    padding-right: 20px
 
   .screen
     background: #e0e0e0
     line-height: 25px
     height: 25px
-
-  .width--static
-    min-width: 810px
-    overflow-x: auto
+    width: 90%
 
   .spacing
     letter-spacing: 2px
+
+  .wrapper--layout
+    display: inline-grid
+    width: 100%
+
+  .overflow
+    height: 400px
+    overflow: auto
+
+  .hidden
+    opacity: 0
 </style>
