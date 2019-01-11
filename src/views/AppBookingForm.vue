@@ -326,7 +326,8 @@
         return Number(this.selectedSeats.length) === totalAmount || 'Ilość biletów się nie zgadza się'
       },
       validateEmail () {
-        if (this.customerEmail == null || this.customerEmail === '') {
+        let emailRegex = /\S+@\S+\.\S+/
+        if (this.customerEmail == null || this.customerEmail === '' || !emailRegex.test(this.customerEmail)) {
           return 'Proszę wprowadzić poprawne dane'
         } else {
           return true
