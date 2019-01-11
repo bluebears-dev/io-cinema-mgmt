@@ -26,7 +26,7 @@
             </v-flex>
             <v-flex class="section" key="2" v-if="formStep>1">
               <div class="section--name alegreya-sc--light">Miejsca</div>
-              <div class="section--information roboto--regular">{{ticketAmount}}</div>
+              <div class="section--information roboto--regular">{{selectedSeats.length}}</div>
             </v-flex>
             <v-flex class="section" key="3" v-if="formStep>2">
               <div class="section--name alegreya-sc--light">Bilety</div>
@@ -74,7 +74,7 @@
                         wrap
                     >
                       <v-btn
-                          :disabled="ticketAmount<=0"
+                          :disabled="selectedSeats.length<=0"
                           @click="formStep = 2"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
@@ -294,7 +294,6 @@
         selectedSeats: [],
         stepTwoFormState: false,
         formStep: 0,
-        ticketAmount: 0,
         ticketTypesAmount: {},
         customerName: '',
         customerSurname: '',
@@ -324,7 +323,7 @@
       validateTicketsAmount () {
         let values = Object.values(this.ticketTypesAmount)
         let totalAmount = values.reduce((a, b) => Number(a) + Number(b), 0)
-        return Number(this.ticketAmount) === totalAmount || 'Ilość biletów się niezgadza'
+        return Number(this.selectedSeats.length) === totalAmount || 'Ilość biletów się nie zgadza się'
       },
       validateEmail () {
         if (this.customerEmail == null || this.customerEmail === '') {
