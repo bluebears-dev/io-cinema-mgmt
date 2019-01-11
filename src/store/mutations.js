@@ -19,6 +19,9 @@ const mutations = {
   },
   SET_SHOWINGS (state, showings) {
     state.showings = showings
+  },
+  SET_ROOM (state, room) {
+    state.room = room
   }
 }
 

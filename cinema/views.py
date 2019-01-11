@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import coreapi
 import coreschema
@@ -51,7 +51,7 @@ class MoviesView(APIView):
                 required=True,
                 location='path',
                 schema=coreschema.String(
-                    description='Date in format %Y-%m-%d'
+                    description='Date in format YYYY-MM-DD'
                 )
             ),
         ]
@@ -98,7 +98,7 @@ class ShowingView(APIView):
                 required=True,
                 location='path',
                 schema=coreschema.String(
-                    description='Date in format %Y-%m-%d'
+                    description='Date in format YYYY-MM-DD'
                 )
             ),
             coreapi.Field(
@@ -133,7 +133,7 @@ class ShowingView(APIView):
                 .filter(room__cinema__id=cinema_id,
                         movie__id=movie_id,
                         date=date,
-                        hour__gt=datetime.now()) \
+                        hour__gt=datetime.now() + timedelta(minutes=15)) \
                 .all() \
                 .order_by('hour')
         else:
@@ -174,7 +174,7 @@ class RoomView(APIView):
     def _transform_row(row):
         previous_seat = [0, 0]
         result = []
-        for seat, column in zip(row, range(1, len(row))):
+        for seat, column in zip(row, range(1, len(row) + 1)):
             result += [None for _ in range(seat[1] - previous_seat[1] - 1)]
             result.append({'col': column, 'seat': seat})
             previous_seat = seat

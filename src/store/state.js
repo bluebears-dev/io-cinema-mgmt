@@ -9,7 +9,8 @@ const state = {
   showings: [],
   ticketTypes: [],
   movieDetails: [],
-  selectedDate: {title: weekDays[(new Date()).getDay() % 7], date: (new Date()).toISOString().split('T')[0]}
+  selectedDate: {title: weekDays[(new Date()).getDay() % 7], date: (new Date()).toISOString().split('T')[0]},
+  room: {}
 }
 
 export default state
