@@ -26,7 +26,9 @@
             </v-flex>
             <v-flex class="section" key="2" v-if="formStep>1">
               <div class="section--name alegreya-sc--light">Miejsca</div>
-              <div class="section--information roboto--regular">{{selectedSeats.length}}</div>
+              <div class="section--information roboto--regular">
+                <span>{{selectedSeats.map(v => v.row_label + v.col_label).join(', ')}}</span>
+              </div>
             </v-flex>
             <v-flex class="section" key="3" v-if="formStep>2">
               <div class="section--name alegreya-sc--light">Bilety</div>
