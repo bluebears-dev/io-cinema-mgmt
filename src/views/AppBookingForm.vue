@@ -87,6 +87,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
                       </v-btn>
@@ -158,6 +159,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
                       </v-btn>
@@ -240,6 +242,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
                       </v-btn>
@@ -265,6 +268,7 @@
                     <v-btn
                         class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                         flat
+                        :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                     >
                       Anuluj
                     </v-btn>
