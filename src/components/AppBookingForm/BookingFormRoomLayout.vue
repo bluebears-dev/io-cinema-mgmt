@@ -65,7 +65,7 @@
     },
     methods: {
       toggleSeat (seat) {
-        let index = this.selectedSeats.indexOf(seat)
+        let index = this.selectedSeats.findIndex(v => v.seat === seat.seat)
         if (index === -1) {
           this.selectedSeats.push(seat)
         } else {
