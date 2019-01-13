@@ -87,8 +87,9 @@ const router = new Router({
       }
     },
     {
-      path: '*',
-      name: '404',
+      path: '/404',
+      alias: '*',
+      name: 'NotFound',
       components: {
         default: require('@/views/AppNotFound.vue').default,
         toolbar

@@ -22,6 +22,11 @@ const mutations = {
   },
   SET_ROOM (state, room) {
     state.room = room
+  },
+  ADD_SHOWING (state, showing) {
+    if (state.showings && state.showings.findIndex(v => v.id === showing.id) === -1) {
+      state.showings.push(showing)
+    }
   }
 }
 

@@ -3,12 +3,14 @@ from datetime import datetime, timedelta
 
 import coreapi
 import coreschema
-from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
+from cinema.models import Room
 from cinema.serializers import RoomSerializer
 from cinema.serializers.movies import MovieSerializer, MovieDetailsSerializer
 from .models import Cinema, TicketType, Showing, Movie
@@ -53,7 +55,7 @@ class MoviesView(APIView):
                 schema=coreschema.String(
                     description='Date in format YYYY-MM-DD'
                 )
-            ),
+            )
         ]
     )
 
@@ -77,7 +79,7 @@ class MovieDetailsView(APIView):
                 schema=coreschema.Integer(
                     description='Identifier of the movie'
                 )
-            ),
+            )
         ]
     )
 
@@ -91,6 +93,36 @@ class MovieDetailsView(APIView):
 
 
 class ShowingView(APIView):
+    schema = AutoSchema(
+        manual_fields=[
+            coreapi.Field(
+                name='showing_id',
+                required=True,
+                location='path',
+                schema=coreschema.Integer(
+                    description='Identifier of the showing'
+                )
+            ),
+        ]
+    )
+
+    def get(self, request, showing_id):
+        """
+            Returns details about specific showing
+        """
+        try:
+            showing = Showing.objects.get(pk=showing_id)
+            if showing.date < datetime.today().date() or datetime.combine(datetime.today(),
+                                                                          showing.hour) <= datetime.now() + timedelta(
+                    minutes=15):
+                raise Http404
+            serializer = ShowingSerializer(showing)
+            return Response(serializer.data)
+        except ObjectDoesNotExist:
+            raise Http404
+
+
+class ShowingListView(APIView):
     schema = AutoSchema(
         manual_fields=[
             coreapi.Field(
@@ -153,11 +185,11 @@ class RoomView(APIView):
     schema = AutoSchema(
         manual_fields=[
             coreapi.Field(
-                name='showing_id',
+                name='room_id',
                 required=True,
                 location='path',
                 schema=coreschema.Integer(
-                    description='Identifier of the showing'
+                    description='Identifier of the room'
                 )
             ),
         ]
@@ -196,20 +228,19 @@ class RoomView(APIView):
                 empty += 1
         return layout
 
-    def get(self, request, showing_id):
+    def get(self, request, room_id):
         """
             Returns details of the room for given showing
         """
-        showing = Showing.objects.filter(id=showing_id)
-        if len(showing) == 1:
-            room = showing[0].room
+        try:
+            room = Room.objects.get(pk=room_id)
             serializer = RoomSerializer(room)
             layout = self._transform_layout(serializer.data['rows'], serializer.data['layout'])
             data = serializer.data
             data['layout'] = layout
             return Response(data)
-        else:
-            return HttpResponse(status=404)
+        except ObjectDoesNotExist:
+            raise Http404
 
 
 def index(request):

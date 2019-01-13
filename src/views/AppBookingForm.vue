@@ -63,7 +63,7 @@
                   <div class="alegreya-sc--regular text-capitalize step--title">Wybierz Miejsca</div>
                   <v-flex>
                     <BookingFormRoomLayout
-                        :showingId="id"
+                        :roomId="showing.room"
                         v-model="selectedSeats"
                     />
                   </v-flex>
@@ -312,7 +312,7 @@
         return this.$store.getters['getMovieDetails'][0] || {genre: []}
       },
       showing () {
-        return this.$store.getters['getShowings'].filter(v => v.id === this.id)[0]
+        return this.$store.getters['getShowings'].filter(v => v.id === Number(this.id))[0]
       },
       room () {
         return this.$store.getters['getRoom']
@@ -361,6 +361,26 @@
     created () {
       this.$store.dispatch('requestTicketTypes')
       this.$store.dispatch('requestCinemas')
+      this.$store.dispatch('requestShowingDetails', this.id)
+        .then(() => {
+          this.$store.dispatch('requestRoom', this.showing.room)
+        })
+        .catch(() => {
+          this.$router.replace({name: 'NotFound'})
+        })
+    },
+    beforeRouteUpdate (to, from, next) {
+      this.$store.dispatch('requestTicketTypes')
+      this.$store.dispatch('requestCinemas')
+      this.$store.dispatch('requestShowingDetails', to.params.id)
+        .then(() => {
+          let showing = this.$store.getters['getShowings'].filter(v => v.id === Number(to.params.id))[0]
+          this.$store.dispatch('requestRoom', showing.room)
+          next()
+        })
+        .catch(() => {
+          this.$router.replace({name: 'NotFound'})
+        })
     }
   }
 </script>

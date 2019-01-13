@@ -69,10 +69,7 @@
     name: 'MovieDetails',
     props: {
       id: {
-        required: true,
-        validator: v => {
-          return Number(v) > 0
-        }
+        required: true
       }
     },
     computed: {
@@ -136,20 +133,26 @@
       }
     },
     created () {
+      if (isNaN(Number(this.id))) {
+        this.$router.replace({name: 'NotFound'})
+      }
       this.$store.dispatch('requestMovieDetails', this.id)
         .then(() => {
           if (this.selectedMovie.id == null) {
-            this.$router.replace({name: '404'})
+            this.$router.replace({name: 'NotFound'})
           } else {
             this.$store.dispatch('requestShowings', this.id)
           }
         })
     },
     beforeRouteUpdate (to, from, next) {
+      if (isNaN(Number(to.params.id))) {
+        this.$router.replace({name: 'NotFound'})
+      }
       this.$store.dispatch('requestMovieDetails', to.params.id)
         .then(() => {
           if (this.selectedMovie.id == null) {
-            this.$router.replace({name: '404'})
+            this.$router.replace({name: 'NotFound'})
           } else {
             this.$store.dispatch('requestShowings', to.params.id)
             next()

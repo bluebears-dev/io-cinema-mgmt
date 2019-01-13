@@ -42,7 +42,7 @@
   export default {
     name: 'BookingFormRoomLayout',
     props: {
-      showingId: {
+      roomId: {
         type: Number,
         required: true
       },
@@ -55,7 +55,7 @@
     },
     data () {
       return {
-        hasLayoutLoaded: false
+        hasLayoutLoaded: true
       }
     },
     computed: {
@@ -75,12 +75,6 @@
       isSelected (seat) {
         return this.selectedSeats.filter(v => v.seat === seat.seat).length === 1
       }
-    },
-    created () {
-      this.$store.dispatch('requestRoom', this.showingId)
-        .then(() => {
-          this.hasLayoutLoaded = true
-        })
     }
   }
 </script>
