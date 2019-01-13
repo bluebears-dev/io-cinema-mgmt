@@ -291,7 +291,6 @@
     components: {BookingFormRoomLayout},
     props: {
       id: {
-        type: Number,
         required: true
       }
     },

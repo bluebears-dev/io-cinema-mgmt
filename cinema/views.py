@@ -6,11 +6,13 @@ import coreschema
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import authentication_classes, permission_classes, api_view, schema
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
-from cinema.models import Room
+from cinema.models import Room, Booking
 from cinema.serializers import RoomSerializer
 from cinema.serializers.movies import MovieSerializer, MovieDetailsSerializer
 from .models import Cinema, TicketType, Showing, Movie
@@ -106,15 +108,13 @@ class ShowingView(APIView):
         ]
     )
 
-    def get(self, request, showing_id):
+    def get(self, request, showing_id, format=None):
         """
             Returns details about specific showing
         """
         try:
             showing = Showing.objects.get(pk=showing_id)
-            if showing.date < datetime.today().date() or datetime.combine(datetime.today(),
-                                                                          showing.hour) <= datetime.now() + timedelta(
-                    minutes=15):
+            if datetime.combine(showing.date, showing.hour) <= datetime.now() + timedelta(minutes=15):
                 raise Http404
             serializer = ShowingSerializer(showing)
             return Response(serializer.data)
@@ -228,7 +228,7 @@ class RoomView(APIView):
                 empty += 1
         return layout
 
-    def get(self, request, room_id):
+    def get(self, request, room_id, format=None):
         """
             Returns details of the room for given showing
         """

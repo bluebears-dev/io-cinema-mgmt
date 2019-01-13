@@ -43,7 +43,7 @@
             tag="v-layout"
         >
           <v-btn
-              :key="Math.random() + movie.id + showing.hour"
+              :key="Math.random() + selectedMovie.id + showing.hour"
               :ripple="false"
               block
               class="showing--button roboto--regular text-capitalize"
@@ -121,10 +121,7 @@
           'Czwartek',
           'Piątek',
           'Sobota'
-        ],
-        movie: {
-          genres: ['Muzyczny', 'Biograficzny']
-        }
+        ]
       }
     },
     watch: {
