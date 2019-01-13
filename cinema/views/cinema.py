@@ -1,22 +1,15 @@
-import os
 from datetime import datetime, timedelta
 
 import coreapi
 import coreschema
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.decorators import authentication_classes, permission_classes, api_view, schema
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
-from cinema.models import Room, Booking
-from cinema.serializers import RoomSerializer
-from cinema.serializers.movies import MovieSerializer, MovieDetailsSerializer
-from .models import Cinema, TicketType, Showing, Movie
-from .serializers import CinemaSerializer, TicketTypeSerializer, ShowingSerializer
+from cinema.models import Room, Cinema, Showing
+from cinema.serializers import RoomSerializer, CinemaSerializer, ShowingSerializer
 
 
 class CinemaListView(APIView):
@@ -26,71 +19,6 @@ class CinemaListView(APIView):
         """
         cinema = Cinema.objects.all()
         serializer = CinemaSerializer(cinema, many=True)
-        return Response(serializer.data)
-
-
-class TicketTypeView(APIView):
-    def get(self, request, format=None):
-        """
-            Returns list of all types of tickets in the system (with details)
-        """
-        ticket_type = TicketType.objects.all()
-        serializer = TicketTypeSerializer(ticket_type, many=True)
-        return Response(serializer.data)
-
-
-class MoviesView(APIView):
-    schema = AutoSchema(
-        manual_fields=[
-            coreapi.Field(
-                name='cinema_id',
-                required=True,
-                location='path',
-                schema=coreschema.Integer(
-                    description='Identifier of the cinema'
-                )
-            ),
-            coreapi.Field(
-                name='date',
-                required=True,
-                location='path',
-                schema=coreschema.String(
-                    description='Date in format YYYY-MM-DD'
-                )
-            )
-        ]
-    )
-
-    def get(self, request, cinema_id, date, format=None):
-        """
-            Returns list of all movies showed in given cinema during given day
-        """
-        showing = Showing.objects.prefetch_related().filter(room__cinema__id=cinema_id, date=date).distinct(
-            'movie').all()
-        serializer = MovieSerializer(map(lambda v: v.movie, showing), many=True)
-        return Response(serializer.data)
-
-
-class MovieDetailsView(APIView):
-    schema = AutoSchema(
-        manual_fields=[
-            coreapi.Field(
-                name='movie_id',
-                required=True,
-                location='path',
-                schema=coreschema.Integer(
-                    description='Identifier of the movie'
-                )
-            )
-        ]
-    )
-
-    def get(self, request, movie_id, format=None):
-        """
-            Returns details of the movie with given id
-        """
-        movie = Movie.objects.prefetch_related().filter(id=movie_id).all()
-        serializer = MovieDetailsSerializer(movie, many=True)
         return Response(serializer.data)
 
 
@@ -241,10 +169,3 @@ class RoomView(APIView):
             return Response(data)
         except ObjectDoesNotExist:
             raise Http404
-
-
-def index(request):
-    if os.environ.get('PRODUCTION'):
-        return render(request, 'static/index.html')
-    else:
-        return render(request, 'index.html')

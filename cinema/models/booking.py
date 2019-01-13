@@ -1,7 +1,6 @@
 ##                                    ##
 ##   ALL MODELS RELATED TO BOOKINGS   ##
 ##                                    ##
-import secrets
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -27,12 +26,13 @@ class TicketType(models.Model):
 
 class Ticket(models.Model):
     booking = models.ForeignKey(verbose_name=_('Rezerwacja'), to='Booking', on_delete=models.CASCADE)
-    # seat = models.ForeignKey(verbose_name=_('Miejsce'), to='Seat', on_delete=models.CASCADE)
-    ticketType = models.ForeignKey(verbose_name=_('Typ biletu'), to='TicketType', on_delete=models.CASCADE,
-                                   db_column='type')
+    row = models.CharField(max_length=2)
+    column = models.CharField(max_length=2)
+    ticketType = models.ForeignKey(verbose_name=_('Typ biletu'), to='TicketType', db_column='type', null=True,
+                                   on_delete=models.SET_NULL)
 
     class Meta:
-        unique_together = ('booking',)
+        unique_together = ('booking', 'row', 'column')
         verbose_name = _('Bilet')
         verbose_name_plural = _('Bilety')
 
@@ -54,13 +54,13 @@ class Booking(models.Model):
         (PAID, 'Opłacona'),
     )
 
-    user = models.ForeignKey(verbose_name=_('Klient'), to=User, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(verbose_name=_('Klient'), to=User, on_delete=models.CASCADE, null=True)
     showing = models.ForeignKey(verbose_name=_('Seans'), to='Showing', on_delete=models.CASCADE)
     state = models.CharField(verbose_name=_('Stan rezerwacji'), max_length=20, choices=CHOICES_FOR_STATE,
                              default=INITIATED)
     finished = models.BooleanField(default=False)
-    token = models.CharField(max_length=256, default=secrets.token_urlsafe(64))
-    total_cost = models.DecimalField(verbose_name=_('Całkowity koszt'), max_digits=10, decimal_places=2)
+    token = models.CharField(max_length=256)
+    total_cost = models.DecimalField(verbose_name=_('Całkowity koszt'), max_digits=10, decimal_places=2, default=0)
 
     class Meta:
         verbose_name = _('Rezerwacja')
