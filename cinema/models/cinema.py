@@ -3,6 +3,7 @@
 #                                  #
 import datetime
 import json
+import re
 
 from django.core.validators import RegexValidator
 from django.db import models
@@ -119,51 +120,9 @@ def max_or_value(arr, val):
         return val
 
 
-class Room(models.Model):
-    """
-        Represents specific room in the cinema
-    """
-    name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
-    cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
-    rows = models.IntegerField()
-    cols = models.IntegerField()
-    json_layout = models.TextField()
-
-    @property
-    def layout(self):
-        """
-            Return parsed array representing layout.
-            Its a list containing tuples:
-                (row, col)
-        """
-        try:
-            layout = json.loads(self.json_layout)
-            return layout
-        except TypeError:
-            return None
-
-    @property
-    def raw_layout(self):
-        """
-            Returns flattened indices of layout matrix
-        """
-        layout = self.layout
-        cols = self.cols
-        raw_data = map(lambda v: (v[0] - 1) * cols + v[1] - 1, layout)
-        return list(raw_data)
-
-    class Meta:
-        unique_together = (('name', 'cinema'),)
-        verbose_name = _('Sala')
-        verbose_name_plural = _('Sale')
-
-    def __str__(self):
-        return _('{1} ({0})'.format(self.cinema, self.name))
-
-
 class Seat(models.Model):  # details unknown yet
     room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
-    realRow = models.CharField(verbose_name=_('Numer rzędu'), max_length=2)
+    realRow = models.SmallIntegerField(verbose_name=_('Numer rzędu'))
     realColumn = models.SmallIntegerField(verbose_name=_('Numer kolumny'))
 
     class Meta:
@@ -172,3 +131,54 @@ class Seat(models.Model):  # details unknown yet
 
     def __str__(self):
         return _('Rząd {0}, kolumna {1}'.format(self.realRow, self.realColumn))
+
+
+class Room(models.Model):
+  """
+      Represents specific room in the cinema
+  """
+  name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
+  cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
+  rows = models.IntegerField()
+  cols = models.IntegerField()
+  json_layout = models.TextField(default="[[1, 1]]")
+
+  @property
+  def layout(self):
+    """
+        Return parsed array representing layout.
+        Its a list containing tuples:
+            (row, col)
+    """
+    try:
+      layout = json.loads(self.json_layout)
+      return layout
+    except TypeError:
+      return None
+
+  @property
+  def raw_layout(self):
+    """
+        Returns flattened indices of layout matrix
+    """
+    layout = self.layout
+    cols = self.cols
+    raw_data = map(lambda v: (v[0] - 1) * cols + v[1] - 1, layout)
+    return list(raw_data)
+
+  def save(self, *args, **kwargs):
+    super().save(*args, **kwargs)
+
+    for str in re.findall(r"\[.*?]", self.json_layout):
+      patt = re.search(r"\[([0-9]+), ([0-9]+)]", str)
+      row = patt.group(1)
+      col = patt.group(2)
+      Seat.objects.create(room=self, realRow=int(row), realColumn=int(col))
+
+  class Meta:
+    unique_together = (('name', 'cinema'),)
+    verbose_name = _('Sala')
+    verbose_name_plural = _('Sale')
+
+  def __str__(self):
+    return _('{1} ({0})'.format(self.cinema, self.name))
