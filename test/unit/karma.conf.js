@@ -13,27 +13,22 @@ module.exports = function karmaConfig (config) {
     // 2. add it to the `browsers` array below.
     browsers: ['Firefox'],
     colors: true,
-    customLaunchers: {
-      FirefoxHeadless: {
-        base: 'Firefox',
-        flags: ['-headless']
-      }
-    },
     frameworks: ['mocha', 'sinon-chai'],
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
-      './index.js': ['webpack', 'sourcemap']
+      './index.js': ['webpack', 'sourcemap'],
+      'src/**/*.js': ['coverage']
     },
     webpack: webpackConfig,
     webpackMiddleware: {
       noInfo: true
     },
     coverageReporter: {
-      dir: '/coverage',
+      dir: './../../coverage',
+      file: '',
       reporters: [
-        {type: 'lcov', subdir: '.'},
-        {type: 'text-summary'}
+        {type: 'lcovonly', subdir: '.', file: 'coverage-js.info'}
       ]
     },
     plugins: [
