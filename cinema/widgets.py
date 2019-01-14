@@ -1,4 +1,3 @@
-import json
 import os
 
 from django.forms.widgets import Input
@@ -31,9 +30,11 @@ class LayoutWidget(Input):
             Return value to template.
             Checks if its value after failed validation of from model.
         """
-        if len(value) and isinstance(value[0], list):
+        # Check if value comes after validation failure (value_from_datadict format)
+        if value and isinstance(value, list) and isinstance(value[0], list):
             return value[0]
-        return value
+        # Return model value or empty list if creating new one (value == None)
+        return value or []
 
     def value_from_datadict(self, data, files, name):
         """
