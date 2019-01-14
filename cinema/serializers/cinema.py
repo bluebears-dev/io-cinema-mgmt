@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cinema.models import Cinema, Showing, Room
+from cinema.models import Cinema, Showing, Room, Ticket
 
 
 class CinemaSerializer(serializers.ModelSerializer):
@@ -25,3 +25,18 @@ class ShowingSerializer(serializers.ModelSerializer):
         fields = ('id', 'date', 'hour', 'movie', 'room', 'audio_type', 'picture_type')
         read_only_fields = fields
 
+
+class BookedSeatsSerializer(serializers.ModelSerializer):
+    seat = serializers.SerializerMethodField('get_seats')
+
+    class Meta:
+        model = Ticket
+        fields = ('seat',)
+
+    def get_seats(self, obj):
+        """
+
+        :param obj:
+        :return: list containing coordinates of booked seat
+        """
+        return [obj.row, obj.column]

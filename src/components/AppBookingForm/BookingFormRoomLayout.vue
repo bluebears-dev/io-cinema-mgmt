@@ -17,17 +17,23 @@
               {{row.row}}
             </div>
             <div
+                :key="Math.random() + row.seats[i]"
+                class="column occupied"
+                v-for="i in room.cols"
+                v-if="row.seats[i] && isOccupied(row.seats[i].seat)"
+            ></div>
+            <div
                 :class="(isSelected(row.seats[i]) ? 'selected' : 'free')"
                 :key="Math.random() + row.seats[i]"
                 @click="toggleSeat({row_label: row.row, col_label: row.seats[i].col, seat: row.seats[i].seat})"
                 class="column seat text-xs-center roboto--regular"
-                v-for="i in room.cols"
-                v-if="row.seats[i]"
+                v-else-if="row.seats[i]"
             >
               {{row.seats[i].col}}
             </div>
             <div
                 class="column"
+                :key="Math.random()"
                 v-else
             ></div>
           </div>
@@ -43,7 +49,6 @@
     name: 'BookingFormRoomLayout',
     props: {
       roomId: {
-        type: Number,
         required: true
       },
       selectedSeats: {
@@ -64,6 +69,9 @@
       }
     },
     methods: {
+      isOccupied (seat) {
+        return this.room.occupied.findIndex(v => v[0] === seat[0] && v[1] === seat[1]) !== -1
+      },
       toggleSeat (seat) {
         let index = this.selectedSeats.findIndex(v => v.seat === seat.seat)
         if (index === -1) {
@@ -97,7 +105,7 @@
     justify-content: center
 
   .occupied
-    background: aqua
+    background: #e0e0e0
 
   .selected
     border: 1px solid var(--v-gold-base)

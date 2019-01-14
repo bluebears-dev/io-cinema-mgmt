@@ -317,13 +317,17 @@
         return this.$store.getters['getMovieDetails'][0] || {genre: []}
       },
       showing () {
-        return this.$store.getters['getShowings'].filter(v => v.id === Number(this.id))[0]
+        return this.$store.getters['getShowings'].filter(v => v.id === Number(this.id))[0] || {}
       },
       room () {
         return this.$store.getters['getRoom']
       },
       convertedDate () {
-        return this.showing.date.split('-').reverse().join('.')
+        let date = ''
+        if (this.showing.date) {
+          date = this.showing.date.split('-').reverse().join('.')
+        }
+        return date
       },
       validateTicketsAmount () {
         let values = Object.values(this.ticketTypesAmount)
@@ -364,23 +368,27 @@
       }
     },
     created () {
-      this.$store.dispatch('requestTicketTypes')
-      this.$store.dispatch('requestCinemas')
       this.$store.dispatch('requestShowingDetails', this.id)
         .then(() => {
+          this.$store.dispatch('requestTicketTypes')
+          this.$store.dispatch('requestCinemas')
           this.$store.dispatch('requestRoom', this.showing.room)
+          this.$store.dispatch('requestOccupiedSeats', this.id)
+          this.$store.dispatch('requestMovieDetails', this.showing.movie)
         })
         .catch(() => {
           this.$router.replace({name: 'NotFound'})
         })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.dispatch('requestTicketTypes')
-      this.$store.dispatch('requestCinemas')
       this.$store.dispatch('requestShowingDetails', to.params.id)
         .then(() => {
           let showing = this.$store.getters['getShowings'].filter(v => v.id === Number(to.params.id))[0]
+          this.$store.dispatch('requestTicketTypes')
+          this.$store.dispatch('requestCinemas')
           this.$store.dispatch('requestRoom', showing.room)
+          this.$store.dispatch('requestOccupiedSeats', to.params.id)
+          this.$store.dispatch('requestMovieDetails', showing.movie)
           next()
         })
         .catch(() => {

@@ -21,12 +21,17 @@ const mutations = {
     state.showings = showings
   },
   SET_ROOM (state, room) {
+    let occupied = state.room.occupied || []
     state.room = room
+    state.room.occupied = occupied
   },
   ADD_SHOWING (state, showing) {
     if (state.showings && state.showings.findIndex(v => v.id === showing.id) === -1) {
       state.showings.push(showing)
     }
+  },
+  SET_OCCUPIED_SEATS (state, seats) {
+    state.room.occupied = seats.map(v => v.seat)
   }
 }
 

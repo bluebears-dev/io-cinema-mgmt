@@ -4,12 +4,13 @@ import coreapi
 import coreschema
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from rest_framework.decorators import api_view, schema
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
 from rest_framework.views import APIView
 
-from cinema.models import Room, Cinema, Showing
-from cinema.serializers import RoomSerializer, CinemaSerializer, ShowingSerializer
+from cinema.models import Room, Cinema, Showing, Ticket
+from cinema.serializers import RoomSerializer, CinemaSerializer, ShowingSerializer, BookedSeatsSerializer
 
 
 class CinemaListView(APIView):
@@ -169,3 +170,23 @@ class RoomView(APIView):
             return Response(data)
         except ObjectDoesNotExist:
             raise Http404
+
+
+@api_view(['GET'])
+@schema(AutoSchema(manual_fields=[
+    coreapi.Field(
+        name='showing_id',
+        required=True,
+        location='path',
+        schema=coreschema.Integer(
+            description='Identifier of the showing'
+        )
+    )
+]))
+def get_booked_seats(request, showing_id, format=None):
+    """
+        Returns all booked seats for specific showing
+    """
+    tickets = Ticket.objects.prefetch_related().filter(booking__showing_id=showing_id).all()
+    serializer = BookedSeatsSerializer(tickets, many=True)
+    return Response(serializer.data)

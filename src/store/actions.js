@@ -50,6 +50,12 @@ const actions = {
       .then(response => {
         commit('SET_ROOM', response.data)
       })
+  },
+  requestOccupiedSeats ({state, commit}, showingId) {
+    return axios.get(`showings/${showingId}/occupied/seats`)
+      .then(response => {
+        commit('SET_OCCUPIED_SEATS', response.data)
+      })
   }
 }
 
