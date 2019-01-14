@@ -28,6 +28,12 @@ task = Thread(target=worker)
 task.start()
 
 
+def cancel(booking_id):
+    booking = Booking.objects.get(pk=booking_id)
+    booking.delete()
+    print("Canceled: {}".format(booking_id))
+
+
 def check_booking_token(booking_instance, token):
     if booking_instance.finished and booking_instance.token != token:
         raise PermissionError
@@ -53,10 +59,8 @@ def book_showing(request, showing_id, format=None):
     try:
         showing = Showing.objects.get(pk=showing_id)
         booking = Booking.objects.create(showing=showing, token=secrets.token_urlsafe(64))
-        booking_scheduler.enter(settings.BOOKING_CANCELLATION_TIMEOUT, 1, cancel_booking, kwargs={
-            'request': None,
+        booking_scheduler.enter(settings.BOOKING_CANCELLATION_TIMEOUT, 1, cancel, kwargs={
             'booking_id': booking.id,
-            'token': booking.token
         })
         return Response(
             data={
