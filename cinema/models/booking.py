@@ -3,6 +3,7 @@
 ##                                    ##
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -26,10 +27,30 @@ class TicketType(models.Model):
 
 class Ticket(models.Model):
     booking = models.ForeignKey(verbose_name=_('Rezerwacja'), to='Booking', on_delete=models.CASCADE)
-    row = models.CharField(max_length=2)
-    column = models.CharField(max_length=2)
-    ticketType = models.ForeignKey(verbose_name=_('Typ biletu'), to='TicketType', db_column='type', null=True,
-                                   on_delete=models.SET_NULL)
+    row = models.PositiveSmallIntegerField()
+    column = models.PositiveSmallIntegerField()
+    ticket_type = models.ForeignKey(verbose_name=_('Typ biletu'), to='TicketType', db_column='type', blank=True,
+                                    null=True, on_delete=models.SET_NULL)
+
+    def clean(self):
+        showing = self.booking.showing
+        layout = showing.room.layout
+        if not [self.row, self.column] in layout:
+            raise ValidationError(_("Wskazane miejsce nieistnieje na sali"))
+        colliding_tickets = Ticket.objects.prefetch_related().filter(
+            booking__showing__id=self.booking.showing.id,
+            row=self.row,
+            column=self.column
+        ).all()
+        if len(colliding_tickets) > 0:
+            raise ValidationError(_("Miejsce jest już zarezerwowane"))
+        super().clean()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.full_clean()
+        super().save(force_insert=False, force_update=False, using=None,
+                     update_fields=None)
 
     class Meta:
         unique_together = ('booking', 'row', 'column')

@@ -14,5 +14,6 @@ urlpatterns = [
     path('movies/<int:movie_id>/', views.MovieDetailsView.as_view()),
     path('rooms/<int:room_id>/', views.RoomView.as_view()),
     path('showings/<int:showing_id>/book/', views.book_showing),
-    path('bookings/<int:booking_id>', views.cancel_booking)
+    path('bookings/<int:booking_id>', views.cancel_booking),
+    path('bookings/<int:booking_id>/tickets', views.replace_tickets)
 ]

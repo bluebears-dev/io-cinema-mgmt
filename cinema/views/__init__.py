@@ -2,7 +2,7 @@ import os
 
 from django.shortcuts import render
 
-from .booking import book_showing, cancel_booking
+from .booking import book_showing, cancel_booking, replace_tickets
 from .cinema import CinemaListView, RoomView, ShowingListView, ShowingView
 from .movies import MovieDetailsView, MoviesView, TicketTypeView
 
