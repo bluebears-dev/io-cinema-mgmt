@@ -17,14 +17,14 @@
               {{row.row}}
             </div>
             <div
-                :key="Math.random() + row.seats[i]"
+                :key="row.row + row.seats[i].col + refresh"
                 class="column occupied"
                 v-for="i in room.cols"
                 v-if="row.seats[i] && isOccupied(row.seats[i].seat)"
             ></div>
             <div
                 :class="(isSelected(row.seats[i]) ? 'selected' : 'free')"
-                :key="Math.random() + row.seats[i]"
+                :key="row.row + row.seats[i].col + refresh"
                 @click="toggleSeat({row_label: row.row, col_label: row.seats[i].col, seat: row.seats[i].seat})"
                 class="column seat text-xs-center roboto--regular"
                 v-else-if="row.seats[i]"
@@ -33,7 +33,7 @@
             </div>
             <div
                 class="column"
-                :key="Math.random()"
+                :key="row.row + refresh"
                 v-else
             ></div>
           </div>
@@ -53,6 +53,9 @@
       },
       selectedSeats: {
         type: Array
+      },
+      refresh: {
+        type: Number
       }
     },
     model: {

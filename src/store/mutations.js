@@ -31,7 +31,7 @@ const mutations = {
     }
   },
   SET_OCCUPIED_SEATS (state, seats) {
-    state.room.occupied = seats.map(v => v.seat)
+    state.room.occupied = seats
   }
 }
 

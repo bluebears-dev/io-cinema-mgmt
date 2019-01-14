@@ -54,8 +54,17 @@ const actions = {
   requestOccupiedSeats ({state, commit}, showingId) {
     return axios.get(`showings/${showingId}/occupied/seats`)
       .then(response => {
-        commit('SET_OCCUPIED_SEATS', response.data)
+        commit('SET_OCCUPIED_SEATS', response.data.map(v => v.seat))
       })
+  },
+  createBooking ({state, commit}, showingId) {
+    return axios.post(`showings/${showingId}/book/`)
+  },
+  bookTickets ({state, commit}, {bookingId, token, tickets}) {
+    return axios.put(`bookings/${bookingId}/tickets`, {
+      token: token,
+      tickets: tickets
+    })
   }
 }
 

@@ -67,6 +67,7 @@
                     <BookingFormRoomLayout
                         :roomId="showing.room"
                         v-model="selectedSeats"
+                        :refresh="forceLayoutRefresh"
                     />
                   </v-flex>
                   <v-flex>
@@ -77,7 +78,7 @@
                     >
                       <v-btn
                           :disabled="selectedSeats.length<=0"
-                          @click="formStep = 2"
+                          @click="goToStepTwo()"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
@@ -142,14 +143,14 @@
                     >
                       <v-btn
                           :disabled="!stepTwoFormState"
-                          @click="nextStep('stepTwoForm', 3)"
+                          @click="goToStepThree()"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
                         Dalej
                       </v-btn>
                       <v-btn
-                          @click="formStep = 1"
+                          @click="backToStepOne()"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
                       >
@@ -285,10 +286,12 @@
 
 <script>
   import BookingFormRoomLayout from '../components/AppBookingForm/BookingFormRoomLayout'
+  import UsesPrices from '../mixins/UsesPrices'
 
   export default {
     name: 'AppBookingForm',
     components: {BookingFormRoomLayout},
+    mixins: [UsesPrices],
     props: {
       id: {
         required: true
@@ -303,12 +306,20 @@
         customerName: '',
         customerSurname: '',
         customerEmail: '',
-        customerPhone: ''
+        customerPhone: '',
+        token: null,
+        bookingId: null,
+        forceLayoutRefresh: 0
       }
     },
     computed: {
-      prices () {
-        return this.$store.getters['getTicketTypes']
+      convertedSelectedSeats () {
+        return this.selectedSeats.map(v => {
+          return {
+            row: v.seat[0],
+            column: v.seat[1]
+          }
+        })
       },
       cinemaDetails () {
         return this.$store.getters['getCinemaDetails'] || {}
@@ -361,16 +372,60 @@
           return true
         }
       },
-      nextStep (ref, step) {
-        if (this.$refs[ref].validate()) {
-          this.formStep = step
+      bookTickets (bookingId, token, tickets) {
+        return this.$store.dispatch('bookTickets', {
+          bookingId,
+          token,
+          tickets
+        })
+      },
+      goToStepTwo () {
+        let promise = null
+        if (!this.bookingId) {
+          promise = this.$store.dispatch('createBooking', this.id)
+            .then(response => {
+              this.token = response.data.token
+              this.bookingId = response.data.id
+              return this.bookTickets(this.bookingId, this.token, this.convertedSelectedSeats)
+            })
+        } else {
+          promise = this.bookTickets(this.bookingId, this.token, this.convertedSelectedSeats)
+        }
+        promise.then(() => {
+          this.formStep = 2
+        })
+      },
+      backToStepOne () {
+        this.$store.dispatch('requestOccupiedSeats', this.id)
+          .then(() => {
+            let selected = this.selectedSeats.map(v => JSON.stringify(v.seat))
+            let occupied = this.room.occupied.filter(v => selected.indexOf(JSON.stringify(v)) === -1)
+            this.$store.commit('SET_OCCUPIED_SEATS', occupied)
+            this.forceLayoutRefresh++
+            this.formStep = 1
+          })
+      },
+      goToStepThree () {
+        if (this.$refs['stepTwoForm'].validate()) {
+          let tickets = this.convertedSelectedSeats
+          let types = Object.entries(this.ticketTypesAmount)
+          let currentType = types.pop()
+          for (let ticket of tickets) {
+            ticket.ticket_type = this.prices.find(v => v.ticketType === currentType[0]).id
+            currentType[1] = Number(currentType[1]) - 1
+            if (!currentType[1]) {
+              currentType = types.pop()
+            }
+          }
+          this.bookTickets(this.bookingId, this.token, tickets).then(() => {
+            this.formStep = 3
+          })
         }
       }
     },
     created () {
       this.$store.dispatch('requestShowingDetails', this.id)
         .then(() => {
-          this.$store.dispatch('requestTicketTypes')
           this.$store.dispatch('requestCinemas')
           this.$store.dispatch('requestRoom', this.showing.room)
           this.$store.dispatch('requestOccupiedSeats', this.id)
@@ -384,7 +439,6 @@
       this.$store.dispatch('requestShowingDetails', to.params.id)
         .then(() => {
           let showing = this.$store.getters['getShowings'].filter(v => v.id === Number(to.params.id))[0]
-          this.$store.dispatch('requestTicketTypes')
           this.$store.dispatch('requestCinemas')
           this.$store.dispatch('requestRoom', showing.room)
           this.$store.dispatch('requestOccupiedSeats', to.params.id)
