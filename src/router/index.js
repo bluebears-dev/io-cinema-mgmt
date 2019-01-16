@@ -87,6 +87,18 @@ const router = new Router({
       }
     },
     {
+      path: '/bilet/:transactionId',
+      name: 'Ticket',
+      components: {
+        default: require('@/views/AppTicket.vue').default,
+        toolbar
+      },
+      props: {
+        default: true,
+        toolbar: false
+      }
+    },
+    {
       path: '/404',
       alias: '*',
       name: 'NotFound',
