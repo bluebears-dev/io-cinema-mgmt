@@ -16,7 +16,7 @@
 
   export default {
     name: 'App',
-    components: { AppToolbar }
+    components: {AppToolbar}
   }
 </script>
 
