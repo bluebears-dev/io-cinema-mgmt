@@ -56,6 +56,18 @@ const router = new Router({
       }
     },
     {
+      path: '/rezerwuj/:id',
+      name: 'BookingForm',
+      components: {
+        default: require('@/views/AppBookingForm.vue').default,
+        toolbar
+      },
+      props: {
+        default: true,
+        toolbar: false
+      }
+    },
+    {
       path: '/kontakt',
       name: 'Contact',
       components: {
@@ -75,8 +87,21 @@ const router = new Router({
       }
     },
     {
-      path: '*',
-      name: '404',
+      path: '/bilet/:bookingId/:token',
+      name: 'Ticket',
+      components: {
+        default: require('@/views/AppTicket.vue').default,
+        toolbar
+      },
+      props: {
+        default: true,
+        toolbar: false
+      }
+    },
+    {
+      path: '/404',
+      alias: '*',
+      name: 'NotFound',
       components: {
         default: require('@/views/AppNotFound.vue').default,
         toolbar
