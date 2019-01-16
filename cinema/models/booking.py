@@ -1,6 +1,8 @@
 ##                                    ##
 ##   ALL MODELS RELATED TO BOOKINGS   ##
 ##                                    ##
+import os
+from uuid import uuid4
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -13,7 +15,7 @@ class TicketType(models.Model):
         Type and price of a ticket
     """
 
-    ticketType = models.CharField(verbose_name=_('Typ biletu'), max_length=20, unique=True, db_column='type')
+    name = models.CharField(verbose_name=_('Typ biletu'), max_length=20, unique=True)
     price = models.DecimalField(verbose_name=_('Cena'), max_digits=6, decimal_places=2)
     description = models.TextField(verbose_name=_('Opis'), max_length=200)
 
@@ -22,7 +24,7 @@ class TicketType(models.Model):
         verbose_name_plural = _('Typy biletów')
 
     def __str__(self):
-        return _('{0}'.format(self.ticketType))
+        return _('{0}'.format(self.name))
 
 
 class Ticket(models.Model):
@@ -61,6 +63,15 @@ class Ticket(models.Model):
         return _('Bilet na {0}'.format(self.booking))
 
 
+def ticket_path(instance, filename):
+    """
+        Function returns a path with random filename for a ticket.
+    """
+    extension = filename.split('.')[-1]
+    filename = '{0}.{1}'.format(uuid4().hex, extension)
+    return os.path.join('tickets', filename)
+
+
 class Booking(models.Model):
     """
         Represents client's bookings and their states
@@ -82,6 +93,8 @@ class Booking(models.Model):
     finished = models.BooleanField(default=False)
     token = models.CharField(max_length=256)
     total_cost = models.DecimalField(verbose_name=_('Całkowity koszt'), max_digits=10, decimal_places=2, default=0)
+    transaction_id = models.CharField(max_length=256, null=True)
+    pdf_file = models.FileField(upload_to=ticket_path, null=True)
 
     class Meta:
         verbose_name = _('Rezerwacja')

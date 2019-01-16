@@ -32,11 +32,13 @@
             </v-flex>
             <v-flex class="section" key="3" v-if="formStep>2">
               <div class="section--name alegreya-sc--light">Bilety</div>
-              <div :key="price"
-                   class="section--information roboto--regular"
-                   v-for="price in prices"
-                   v-if="ticketTypesAmount[price.ticketType]>0">
-                {{ticketTypesAmount[price.ticketType]}}x {{price.ticketType}}
+              <div
+                  :key="price.id"
+                  class="section--information roboto--regular"
+                  v-for="price in prices"
+                  v-if="ticketTypesAmount[price.name]>0"
+              >
+                {{ticketTypesAmount[price.name]}}x {{price.name}}
               </div>
             </v-flex>
             <v-flex class="section last--section" key="4" v-if="formStep>3">
@@ -78,7 +80,7 @@
                     >
                       <v-btn
                           :disabled="selectedSeats.length<=0"
-                          @click="goToStepTwo()"
+                          @click="nextStep(2)"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
@@ -88,6 +90,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          @click="cancelBooking()"
                           :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
@@ -116,7 +119,7 @@
                             md5 sm4 xs7
                         >
                           <div class="alegreya-sc--regular text-capitalize form--button">
-                            {{price.ticketType}}
+                            {{price.name}}
                           </div>
                         </v-flex>
                         <v-flex md3 sm4 xs4>
@@ -129,7 +132,7 @@
                               color="gold"
                               label="Ilość"
                               type="number"
-                              v-model="ticketTypesAmount[price.ticketType]"
+                              v-model="ticketTypesAmount[price.name]"
                           ></v-text-field>
                         </v-flex>
                       </v-layout>
@@ -143,7 +146,7 @@
                     >
                       <v-btn
                           :disabled="!stepTwoFormState"
-                          @click="goToStepThree()"
+                          @click="nextStep(3)"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
@@ -160,6 +163,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          @click="cancelBooking()"
                           :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
@@ -226,7 +230,7 @@
                     >
                       <v-btn
                           :disabled="!validateAll"
-                          @click="formStep = 4"
+                          @click="nextStep(4)"
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           color=gold
                       >
@@ -243,6 +247,7 @@
                       <v-btn
                           class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                           flat
+                          @click="cancelBooking()"
                           :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                       >
                         Anuluj
@@ -254,10 +259,56 @@
               <v-stepper-content class="form--height" step="4">
                 <v-layout class="layout--fill" column>
                   <v-layout
+                      justify-center
+                      row wrap
+                  >
+                    <v-flex xs12>
+                      <div class="alegreya-sc--regular text-capitalize step--title">Wybierz metodę płatności</div>
+                    </v-flex>
+                    <v-flex xs10>
+                      <v-radio-group v-model="payu.chosen_method">
+                        <v-radio
+                            class="py-1"
+                            color="gold"
+                            value="no-payment"
+                        >
+                          <span class="roboto--light title black--text ml-3" slot="label">Płacę przy kasie</span>
+                        </v-radio>
+                        <v-radio
+                            :key="method.value"
+                            :value="method"
+                            class="py-1"
+                            color="gold"
+                            v-for="method in payu.pay_methods.payByLinks"
+                            v-if="method.status === 'ENABLED'"
+                        >
+                          <img :src="method.brandImageUrl" class="ml-3" height="30" slot="label"/>
+                        </v-radio>
+                      </v-radio-group>
+                    </v-flex>
+                  </v-layout>
+                  <v-layout
                       align-content-end
                       fill-height row
                       wrap
                   >
+                    <v-btn
+                        @click="finish(false)"
+                        class="alegreya-sc--regular text-capitalize form--button block-xs-only"
+                        color=gold
+                        v-if="payu.chosen_method === 'no-payment'"
+                    >
+                      Zakończ
+                    </v-btn>
+                    <v-btn
+                        :disabled="!validatePaymentMethod()"
+                        @click="finish(true)"
+                        class="alegreya-sc--regular text-capitalize form--button block-xs-only"
+                        color=gold
+                        v-else
+                    >
+                      Płać
+                    </v-btn>
                     <v-btn
                         @click="formStep = 3"
                         class="alegreya-sc--regular text-capitalize form--button block-xs-only"
@@ -269,6 +320,7 @@
                     <v-btn
                         class="alegreya-sc--regular text-capitalize form--button block-xs-only"
                         flat
+                        @click="cancelBooking()"
                         :to="{name: 'MovieDetails', params: {id: movieDetails.id}}"
                     >
                       Anuluj
@@ -281,6 +333,29 @@
         </v-flex>
       </v-layout>
     </v-flex>
+    <v-dialog v-model="isDialogVisible" width="450">
+      <v-card>
+        <v-card-title class="error" primary-title>
+          <h3 class="headline alegreya--regular mb-0">{{dialogTitle}}</h3>
+        </v-card-title>
+
+        <v-card-text>
+          <p class="roboto--light dialog--text">
+            {{dialogText}}
+          </p>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+              @click="refreshView()"
+              class="alegreya-sc--regular text-capitalize form--button block-xs-only"
+              flat
+          >
+            Odśwież
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -301,7 +376,7 @@
       return {
         selectedSeats: [],
         stepTwoFormState: false,
-        formStep: 0,
+        formStep: 1,
         ticketTypesAmount: {},
         customerName: '',
         customerSurname: '',
@@ -309,7 +384,15 @@
         customerPhone: '',
         token: null,
         bookingId: null,
-        forceLayoutRefresh: 0
+        forceLayoutRefresh: 0,
+        isDialogVisible: false,
+        dialogTitle: '',
+        dialogText: '',
+        payu: {
+          access_token: null,
+          pay_methods: [],
+          chosen_method: null
+        }
       }
     },
     computed: {
@@ -386,17 +469,29 @@
             .then(response => {
               this.token = response.data.token
               this.bookingId = response.data.id
+              this.$store.dispatch('bookingTimeoutWebhook', {
+                bookingId: this.bookingId,
+                token: this.token
+              }).catch(error => {
+                if (error.response.status === 404) {
+                  this.bookingId = null
+                  this.isDialogVisible = true
+                  this.dialogTitle = 'Rezerwacja wygasła'
+                  this.dialogText = 'Niestety ale twoja rezerwacja wygasła.' +
+                    'Aby zacząć rezerwację od nowa proszę wcisnąć poniższy przycisk.'
+                }
+              })
               return this.bookTickets(this.bookingId, this.token, this.convertedSelectedSeats)
             })
         } else {
           promise = this.bookTickets(this.bookingId, this.token, this.convertedSelectedSeats)
         }
-        promise.then(() => {
+        return promise.then(() => {
           this.formStep = 2
         })
       },
       backToStepOne () {
-        this.$store.dispatch('requestOccupiedSeats', this.id)
+        return this.$store.dispatch('requestOccupiedSeats', this.id)
           .then(() => {
             let selected = this.selectedSeats.map(v => JSON.stringify(v.seat))
             let occupied = this.room.occupied.filter(v => selected.indexOf(JSON.stringify(v)) === -1)
@@ -411,14 +506,81 @@
           let types = Object.entries(this.ticketTypesAmount)
           let currentType = types.pop()
           for (let ticket of tickets) {
-            ticket.ticket_type = this.prices.find(v => v.ticketType === currentType[0]).id
+            ticket.ticket_type = this.prices.find(v => v.name === currentType[0]).id
             currentType[1] = Number(currentType[1]) - 1
             if (!currentType[1]) {
               currentType = types.pop()
             }
           }
-          this.bookTickets(this.bookingId, this.token, tickets).then(() => {
+          return this.bookTickets(this.bookingId, this.token, tickets).then(() => {
             this.formStep = 3
+          })
+        }
+      },
+      gotToStepFour () {
+        return this.$store.dispatch('updateClientData', {
+          bookingId: this.bookingId,
+          token: this.token,
+          firstName: this.customerName,
+          lastName: this.customerSurname,
+          email: this.customerEmail,
+          phoneNumber: this.customerPhone
+        }).then(() => {
+          this.formStep = 4
+        })
+      },
+      nextStep (n) {
+        let promise = null
+        if (n === 2) promise = this.goToStepTwo()
+        if (n === 3) promise = this.goToStepThree()
+        if (n === 4) promise = this.gotToStepFour()
+        if (promise) {
+          promise.catch(error => {
+            if (error.response.status !== 400) {
+              this.isDialogVisible = true
+              this.dialogTitle = 'Wystąpił błąd podczas rezerwacji'
+              this.dialogText = 'Podczas przetwarzania twojej rezerwacji wystąpił błąd.\n' +
+                'Aby zacząć rezerwację od nowa proszę wcisnąć poniższy przycisk.'
+            }
+          })
+        }
+      },
+      cancelBooking () {
+        if (this.bookingId) {
+          return this.$store.dispatch('cancelBooking', {
+            bookingId: this.bookingId,
+            token: this.token
+          })
+        }
+      },
+      refreshView () {
+        this.cancelBooking()
+        location.reload()
+      },
+      validatePaymentMethod () {
+        return this.payu.chosen_method
+      },
+      finish (payment) {
+        if (payment) {
+          this.$store.dispatch('finalizeBooking', {
+            bookingId: this.bookingId,
+            token: this.token
+          }).then(() => {
+            this.$store.dispatch('createOrder', {
+              bookingId: this.bookingId,
+              token: this.token,
+              method: this.payu.chosen_method.value,
+              oauth: this.payu.access_token
+            }).then(response => {
+              window.location.href = response.data.redirectUri
+            })
+          })
+        } else {
+          this.$store.dispatch('finalizeBooking', {
+            bookingId: this.bookingId,
+            token: this.token
+          }).then(() => {
+            this.$router.push({name: 'MovieList'})
           })
         }
       }
@@ -433,6 +595,18 @@
         })
         .catch(() => {
           this.$router.replace({name: 'NotFound'})
+        })
+      this.$store.dispatch('requestOAuthToken')
+        .then(token => {
+          this.payu.access_token = token
+          this.$store.dispatch('requestPayMethods', this.payu.access_token)
+            .then(response => {
+              let index = response.data.payByLinks.findIndex(v => v.value === 'dp')
+              response.data.payByLinks.splice(index, 1)
+              index = response.data.payByLinks.findIndex(v => v.value === 'ai')
+              response.data.payByLinks.splice(index, 1)
+              this.payu.pay_methods = response.data
+            })
         })
     },
     beforeRouteUpdate (to, from, next) {
@@ -512,4 +686,7 @@
 
   .layout--fill
     min-height: inherit
+
+  .dialog--text
+    font-size: 1.2rem
 </style>

@@ -33,7 +33,7 @@
             </div>
             <div
                 class="column"
-                :key="row.row + refresh"
+                :key="row.row + refresh + Math.random()"
                 v-else
             ></div>
           </div>

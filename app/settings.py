@@ -160,7 +160,7 @@ WEBPACK_LOADER = {
 }
 
 # Time after the booking automatically timeouts when its not finished
-BOOKING_CANCELLATION_TIMEOUT = 15 * 60
+BOOKING_CANCELLATION_TIMEOUT = 5 * 60
 
 if os.environ.get('PRODUCTION'):
     django_heroku.settings(locals(), staticfiles=False)

@@ -60,11 +60,70 @@ const actions = {
   createBooking ({state, commit}, showingId) {
     return axios.post(`showings/${showingId}/book/`)
   },
+  cancelBooking ({state, commit}, {bookingId, token}) {
+    return axios.delete(`bookings/${bookingId}`, {
+      token: token
+    })
+  },
   bookTickets ({state, commit}, {bookingId, token, tickets}) {
     return axios.put(`bookings/${bookingId}/tickets`, {
       token: token,
       tickets: tickets
     })
+  },
+  updateClientData ({state, commit}, data) {
+    return axios.put(`bookings/${data.bookingId}/client`, {
+      token: data.token,
+      client_data: {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone_number: data.phoneNumber
+      }
+    })
+  },
+  bookingTimeoutWebhook ({state, commit}, {bookingId, token}) {
+    return axios.post(`webhook/bookings/${bookingId}/timeout/`, {
+      token: token
+    })
+  },
+  requestOAuthToken ({state, commit}) {
+    return axios.post(
+      'payment/oauth',
+      {
+        client_id: state.payuOAuthClientId,
+        client_secret: state.payuOAuthClientSecret
+      }
+    ).then(response => response.data.access_token)
+  },
+  requestPayMethods ({state, commit}, oauth) {
+    return axios.get(
+      'payment/paymethods',
+      {
+        headers: {
+          'X-AUTHORIZATION': `Bearer ${oauth}`
+        }
+      }
+    )
+  },
+  finalizeBooking ({state, commit}, {bookingId, token}) {
+    return axios.post(`bookings/${bookingId}/finish`, {
+      token: token
+    })
+  },
+  createOrder ({state, commit}, {bookingId, token, method, oauth}) {
+    return axios.post(
+      `payment/order/${bookingId}`,
+      {
+        token,
+        method
+      },
+      {
+        headers: {
+          'X-AUTHORIZATION': `Bearer ${oauth}`
+        }
+      }
+    )
   }
 }
 

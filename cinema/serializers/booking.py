@@ -7,14 +7,14 @@ from cinema.models import TicketType, Booking, Ticket
 class TicketTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TicketType
-        fields = ('id', 'ticketType', 'price', 'description')
+        fields = ('id', 'name', 'price', 'description')
         read_only_fields = fields
 
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = ('id', 'showing')
+        fields = ('id', 'showing', 'state', 'total_cost', 'pdf_file')
 
 
 class TicketListSerializer(serializers.ListSerializer):

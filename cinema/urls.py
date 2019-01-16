@@ -16,5 +16,12 @@ urlpatterns = [
     path('movies/<int:movie_id>/', views.MovieDetailsView.as_view()),
     path('rooms/<int:room_id>/', views.RoomView.as_view()),
     path('bookings/<int:booking_id>', views.cancel_booking),
-    path('bookings/<int:booking_id>/tickets', views.replace_tickets)
+    path('bookings/<int:booking_id>/tickets', views.replace_tickets),
+    path('bookings/<int:booking_id>/client', views.replace_client_data),
+    path('bookings/<int:booking_id>/finish', views.finalize_booking),
+    path('webhook/bookings/<int:booking_id>/timeout/', views.booking_timeout_webhook),
+    path('payment/oauth', views.get_payu_oauth_token),
+    path('payment/paymethods', views.get_pay_methods),
+    path('payment/order/<int:booking_id>', views.create_order),
+    path('payment/transaction/<str:transaction_id>', views.get_transaction_details)
 ]
