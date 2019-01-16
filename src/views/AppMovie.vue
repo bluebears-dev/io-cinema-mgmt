@@ -12,32 +12,32 @@
       >
         <v-flex lg4 md5 sm12 xs12>
           <v-select
+              class="select--cinema"
               :items="cinemas()"
               :menu-props="{'content-class': 'select__menu--black elevation-0'}"
-              @change="setCinemaCookie()"
-              background-color="black"
-              class="select--cinema"
-              color="gold"
-              dense
               flat
               hide-details
+              @change="setCinemaCookie()"
+              background-color="black"
+              color="gold"
+              dense
+              label="Kino"
               item-text="name"
               item-value="id"
-              label="Kino"
               light
-              solo
               v-model="currentCinema"
+              solo
           ></v-select>
         </v-flex>
         <v-flex class="text-xs-center text-md-right" lg8 md7 sm12 xs12>
           <v-btn
               :color="buttonDayColor(day.title)" :key="day.title"
-              :ripple="false"
               @click="currentDate = day"
-              class="alegreya-sc--light text-capitalize day-button"
               depressed
               flat
+              :ripple="false"
               icon
+              class="alegreya-sc--light text-capitalize day-button"
               v-for="day in days"
           >{{day.title}}
           </v-btn>

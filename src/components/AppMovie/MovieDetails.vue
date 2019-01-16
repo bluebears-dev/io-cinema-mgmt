@@ -1,5 +1,5 @@
 <template>
-  <v-slide-y-reverse-transition hide-on-leave>
+  <v-slide-x-transition hide-on-leave>
     <v-layout
         :key="id" align-start
         justify-center
@@ -43,7 +43,7 @@
             tag="v-layout"
         >
           <v-btn
-              :key="Math.random() + movie.id + showing.hour"
+              :key="Math.random() + selectedMovie.id + showing.hour"
               :ripple="false"
               block
               class="showing--button roboto--regular text-capitalize"
@@ -51,6 +51,7 @@
               flat
               large
               v-for="showing in movieShowings"
+              @click="$router.push({name: 'BookingForm', params: {id: showing.id}})"
           >
             <div>
               <div class="showing--time">{{showing.hour}} <br></div>
@@ -60,7 +61,7 @@
         </v-slide-x-transition>
       </v-flex>
     </v-layout>
-  </v-slide-y-reverse-transition>
+  </v-slide-x-transition>
 </template>
 
 <script>
@@ -68,10 +69,7 @@
     name: 'MovieDetails',
     props: {
       id: {
-        required: true,
-        validator: v => {
-          return Number(v) > 0
-        }
+        required: true
       }
     },
     computed: {
@@ -123,10 +121,7 @@
           'Czwartek',
           'Piątek',
           'Sobota'
-        ],
-        movie: {
-          genres: ['Muzyczny', 'Biograficzny']
-        }
+        ]
       }
     },
     watch: {
@@ -135,20 +130,26 @@
       }
     },
     created () {
+      if (isNaN(Number(this.id))) {
+        this.$router.replace({name: 'NotFound'})
+      }
       this.$store.dispatch('requestMovieDetails', this.id)
         .then(() => {
           if (this.selectedMovie.id == null) {
-            this.$router.replace({name: '404'})
+            this.$router.replace({name: 'NotFound'})
           } else {
             this.$store.dispatch('requestShowings', this.id)
           }
         })
     },
     beforeRouteUpdate (to, from, next) {
+      if (isNaN(Number(to.params.id))) {
+        this.$router.replace({name: 'NotFound'})
+      }
       this.$store.dispatch('requestMovieDetails', to.params.id)
         .then(() => {
           if (this.selectedMovie.id == null) {
-            this.$router.replace({name: '404'})
+            this.$router.replace({name: 'NotFound'})
           } else {
             this.$store.dispatch('requestShowings', to.params.id)
             next()

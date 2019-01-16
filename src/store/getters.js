@@ -22,6 +22,9 @@ const getters = {
   },
   getShowings (state) {
     return state.showings
+  },
+  getRoom (state) {
+    return state.room
   }
 }
 

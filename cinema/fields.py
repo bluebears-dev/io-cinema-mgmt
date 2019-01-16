@@ -81,5 +81,4 @@ class LayoutField(Field):
             except ValueError or TypeError:
                 raise ValidationError(_('Niepoprawne wartości.'))
 
-        # layout = super(LayoutField, self).to_python(layout)
         return layout

@@ -2,11 +2,12 @@ from django.contrib import admin
 
 from cinema.models import TicketType, Booking
 
+
 class TicketTypeAdmin(admin.ModelAdmin):
     """
         TicketType list display
     """
-    list_display = ('ticketType', 'price')
+    list_display = ('name', 'price')
 
 
 class BookingAdmin(admin.ModelAdmin):
