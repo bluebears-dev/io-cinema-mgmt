@@ -6,7 +6,7 @@ from .booking import book_showing, cancel_booking, replace_tickets, replace_clie
     finalize_booking
 from .cinema import CinemaListView, RoomView, ShowingListView, ShowingView, get_booked_seats
 from .movies import MovieDetailsView, MoviesView, TicketTypeView
-from .payment import get_payu_oauth_token, get_pay_methods, create_order, get_transaction_details
+from .payment import get_payu_oauth_token, get_pay_methods, create_order, get_order_details
 
 
 def index(request):

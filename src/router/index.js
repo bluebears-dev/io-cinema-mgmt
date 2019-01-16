@@ -87,7 +87,7 @@ const router = new Router({
       }
     },
     {
-      path: '/bilet/:transactionId',
+      path: '/bilet/:bookingId/:token',
       name: 'Ticket',
       components: {
         default: require('@/views/AppTicket.vue').default,

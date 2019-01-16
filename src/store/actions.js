@@ -124,6 +124,16 @@ const actions = {
         }
       }
     )
+  },
+  getTransaction ({state, commit}, {bookingId, token, oauth}) {
+    return axios.get(
+      `payment/order/${bookingId}/${token}`,
+      {
+        headers: {
+          'X-AUTHORIZATION': `Bearer ${oauth}`
+        }
+      }
+    )
   }
 }
 

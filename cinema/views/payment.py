@@ -1,4 +1,5 @@
 import os
+import time
 
 import coreapi
 import coreschema
@@ -110,9 +111,8 @@ def create_order(request, booking_id, format=None):
         if booking.token != request.data.get('token'):
             raise PermissionError
         payu_data = {
-            'notifyUrl': 'https://io-cinema-mgmt.herokuapp.com',
-            'continueUrl': 'http://{}/'.format(os.environ.get('HOST')),
-            'customerIp': '127.0.0.1',
+            'continueUrl': 'http://{}/#/bilet/{}/{}'.format(os.environ.get('HOST'), booking.id, booking.token),
+            'customerIp': os.environ.get('HOST'),
             'merchantPosId': '348348',
             'description': 'Kinio KAPPA',
             'currencyCode': 'PLN',
@@ -163,40 +163,54 @@ def create_order(request, booking_id, format=None):
 @api_view(['GET'])
 @schema(AutoSchema(manual_fields=[
     coreapi.Field(
-        name='transaction_id',
+        name='booking_id',
         required=True,
         location='path',
         schema=coreschema.String(
-            description='Identifier of the transaction'
+            description='Identifier of the booking'
         )
-    )
+    ),
+    coreapi.Field(
+        name='token',
+        required=True,
+        location='path',
+        schema=coreschema.String(
+            description='Temporary authorization token assigned during booking'
+        )
+    ),
 ]))
 @permission_classes(())
 @authentication_classes(())
-def get_transaction_details(request, transaction_id, format=None):
-    print(transaction_id)
+def get_order_details(request, booking_id, token, format=None):
+    """
+        Proxy request to PayU order information. Returns information about booking and sets status.
+        Requires passing X-Authorization header with OAuth token for PayU.
+    """
     try:
         headers = {
             'Authorization': request.META.get('HTTP_X_AUTHORIZATION'),
             'Content-Type': "application/json",
         }
 
-        booking = Booking.objects.get(transaction_id=transaction_id)
+        booking = Booking.objects.get(pk=booking_id)
+        if booking.token != token:
+            raise PermissionError
+        time.sleep(2)
         data = requests.get(
-            'https://secure.snd.payu.com/api/v2_1/orders/{}'.format(transaction_id),
+            'https://secure.snd.payu.com/api/v2_1/orders/{}'.format(booking.transaction_id),
             headers=headers
         )
         json_data = data.json()
         order_status = json_data['orders'][0]['status']
         if order_status == 'CANCELED':
             booking.delete()
-            raise ObjectDoesNotExist
+            return Response()
         elif order_status == 'COMPLETED':
             booking.state = Booking.PAID
             booking.save()
         serializer = BookingSerializer(booking)
         return Response(data=serializer.data)
-    except ObjectDoesNotExist:
+    except ObjectDoesNotExist or PermissionError:
         return Response(
             data={'detail': 'Booking not found or canceled'},
             status=status.HTTP_404_NOT_FOUND

@@ -23,5 +23,5 @@ urlpatterns = [
     path('payment/oauth', views.get_payu_oauth_token),
     path('payment/paymethods', views.get_pay_methods),
     path('payment/order/<int:booking_id>', views.create_order),
-    path('payment/transaction/<str:transaction_id>', views.get_transaction_details)
+    path('payment/order/<int:booking_id>/<str:token>', views.get_order_details)
 ]
