@@ -17,19 +17,19 @@
               {{row.row}}
             </div>
             <div
-                :key="row.row + row.seats[i].col + refresh"
+                :key="row.row + row.seats[i-1].col + refresh"
                 class="column occupied"
                 v-for="i in room.cols"
-                v-if="row.seats[i] && isOccupied(row.seats[i].seat)"
+                v-if="row.seats[i-1] && isOccupied(row.seats[i-1].seat)"
             ></div>
             <div
-                :class="(isSelected(row.seats[i]) ? 'selected' : 'free')"
-                :key="row.row + row.seats[i].col + refresh"
-                @click="toggleSeat({row_label: row.row, col_label: row.seats[i].col, seat: row.seats[i].seat})"
+                :class="(isSelected(row.seats[i-1]) ? 'selected' : 'free')"
+                :key="row.row + row.seats[i-1].col + refresh"
+                @click="toggleSeat({row_label: row.row, col_label: row.seats[i-1].col, seat: row.seats[i-1].seat})"
                 class="column seat text-xs-center roboto--regular"
-                v-else-if="row.seats[i]"
+                v-else-if="row.seats[i-1]"
             >
-              {{row.seats[i].col}}
+              {{row.seats[i-1].col}}
             </div>
             <div
                 class="column"
