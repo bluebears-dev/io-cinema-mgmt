@@ -35,7 +35,7 @@ cinema_add_address_locator = (By.CSS_SELECTOR, "input[name='address']")
 cinema_add_postal_code_locator = (By.CSS_SELECTOR, "input[name='postal_code']")
 cinema_add_phone_number_locator = (By.CSS_SELECTOR, "input[name='phone_number']")
 
-ticket_type_add_type_locator = (By.CSS_SELECTOR, "input[name='ticketType']")
+ticket_type_add_type_locator = (By.CSS_SELECTOR, "input[name='name']")
 ticket_type_add_price_locator = (By.CSS_SELECTOR, "input[name='price']")
 ticket_type_add_description_locator = (By.CSS_SELECTOR, "textarea[name='description']")
 
