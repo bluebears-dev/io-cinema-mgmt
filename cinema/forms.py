@@ -42,7 +42,7 @@ class RoomForm(forms.ModelForm):
     """
         Room form definition
     """
-    rows = forms.IntegerField(label=_('Ilość rzędów'), min_value=1, max_value=70, initial=1)
+    rows = forms.IntegerField(label=_('Ilość rzędów'), min_value=1, max_value=26, initial=1)
     cols = forms.IntegerField(label=_('Ilość kolumn'), min_value=1, max_value=70, initial=1)
     layout = LayoutField(label=_('Rozkład sali'))
 

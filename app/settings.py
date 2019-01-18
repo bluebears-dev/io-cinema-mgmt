@@ -151,6 +151,7 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 26 * 70 + 6
 # Webpack integration
 WEBPACK_LOADER = {
     'DEFAULT': {

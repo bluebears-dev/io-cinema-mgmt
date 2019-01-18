@@ -5,28 +5,6 @@ from django.utils.translation import gettext as _
 from cinema.widgets import LayoutWidget
 
 
-def get_row_label(row_index):
-    row_symbols = "ABCDEFGHIJKLMNOPQRSTUWVXYZ"
-    label = []
-    number = row_index - 1
-
-    if number == 0:
-        label.append(0)
-    else:
-        while number > 0:
-            modulo = number % len(row_symbols)
-            number = (number - modulo) // len(row_symbols)
-            label.append(modulo)
-        if len(label) > 1:
-            label[-1] -= 1
-
-    return ''.join(map(lambda v: row_symbols[v], reversed(label)))
-
-
-def get_col_label(col_index):
-    return str(col_index)
-
-
 class LayoutField(Field):
     """
         Represents dynamic layout field used by room.
