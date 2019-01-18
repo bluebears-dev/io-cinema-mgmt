@@ -4,7 +4,7 @@ webpack-stats.json
 !/**/.gitkeep
 /dist/
 /media/
-# /static/
+/static/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
