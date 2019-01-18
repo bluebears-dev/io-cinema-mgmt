@@ -85,12 +85,12 @@
           })
       }
     },
-    // created () {
-    //   this.init(this.bookingId, this.token)
-    // },
-    // beforeRouteUpdate (to, from, next) {
-    //   this.init(to.params.bookingId, to.params.token)
-    // }
+    created () {
+      this.init(this.bookingId, this.token)
+    },
+    beforeRouteUpdate (to, from, next) {
+      this.init(to.params.bookingId, to.params.token)
+    }
   }
 </script>
 

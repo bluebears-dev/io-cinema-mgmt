@@ -5,7 +5,7 @@ import datetime
 import json
 
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -125,8 +125,14 @@ class Room(models.Model):
     """
     name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
     cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
-    rows = models.IntegerField()
-    cols = models.IntegerField()
+    rows = models.IntegerField(validators=[
+        MaxValueValidator(26),
+        MinValueValidator(1)
+    ])
+    cols = models.IntegerField(validators=[
+        MaxValueValidator(70),
+        MinValueValidator(1)
+    ])
     json_layout = models.TextField()
 
     @property

@@ -437,7 +437,7 @@
         }
       },
       validatePhone () {
-        if (this.customerPhone == null || this.customerPhone === '' || this.customerPhone.match(/^[0-9]+$/) == null) {
+        if (this.customerPhone == null || this.customerPhone === '' || this.customerPhone.match(/^(\d{2} ?\d{3}(?: ?\d{2}){2})|(\d{3}(?: \d{3}){2})$/) == null) {
           return 'Proszę wprowadzić poprawne dane'
         } else {
           return true

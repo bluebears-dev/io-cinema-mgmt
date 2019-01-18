@@ -31,7 +31,7 @@ class LayoutWidget(Input):
             Checks if its value after failed validation of from model.
         """
         # Check if value comes after validation failure (value_from_datadict format)
-        if value and isinstance(value, list) and isinstance(value[0], list):
+        if value and isinstance(value, tuple) and isinstance(value[0], list):
             return value[0]
         # Return model value or empty list if creating new one (value == None)
         return value or []
