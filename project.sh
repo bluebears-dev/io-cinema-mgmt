@@ -13,6 +13,7 @@ case $1 in
         then
             docker-compose exec django coverage run ./manage.py test
             docker-compose exec django coverage xml
+            npm run test
             echo "You can now run sonar-scanner."
         fi
     ;;
