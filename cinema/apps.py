@@ -12,4 +12,4 @@ class CinemaConfig(AppConfig):
         from .views.booking import worker
         task = Thread(target=worker)
 
-        task.start()
+#         task.start() # causes some problems, it should be done as separate service
