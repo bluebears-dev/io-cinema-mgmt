@@ -61,9 +61,14 @@ const actions = {
     return axios.post(`showings/${showingId}/book/`)
   },
   cancelBooking ({state, commit}, {bookingId, token}) {
-    return axios.delete(`bookings/${bookingId}`, {
-      token: token
-    })
+    return axios.delete(
+      `bookings/${bookingId}`,
+      {
+        params: {
+          token: token
+        }
+      }
+    )
   },
   bookTickets ({state, commit}, {bookingId, token, tickets}) {
     return axios.put(`bookings/${bookingId}/tickets`, {

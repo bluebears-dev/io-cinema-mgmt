@@ -95,7 +95,7 @@ def book_showing(request, showing_id, format=None):
     coreapi.Field(
         name='token',
         required=True,
-        location='form',
+        location='query',
         schema=coreschema.String(
             description='Temporary authorization token assigned during booking'
         )
@@ -106,7 +106,7 @@ def book_showing(request, showing_id, format=None):
 def cancel_booking(request, booking_id, format=None):
     try:
         booking = Booking.objects.get(pk=booking_id)
-        check_booking_token(booking, request.data.get('token'))
+        check_booking_token(booking, request.query_params.get('token'))
         events = [event for event in booking_scheduler.queue if event.kwargs.get('booking_id') == booking_id]
         if len(events):
             booking_scheduler.cancel(events[0])
