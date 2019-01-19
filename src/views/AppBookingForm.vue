@@ -580,7 +580,7 @@
             bookingId: this.bookingId,
             token: this.token
           }).then(() => {
-            this.$router.push({name: 'MovieList'})
+            this.$router.push({name: 'Movies'})
           })
         }
       }
