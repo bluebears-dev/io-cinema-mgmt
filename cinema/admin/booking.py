@@ -10,13 +10,4 @@ class TicketTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'price')
 
 
-class BookingAdmin(admin.ModelAdmin):
-    """
-        Booking list display and filtering
-    """
-    list_display = ('showing', 'user', 'state')
-    list_filter = ('showing', 'user', 'state')
-
-
 admin.site.register(TicketType, TicketTypeAdmin)
-admin.site.register(Booking, BookingAdmin)

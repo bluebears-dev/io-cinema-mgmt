@@ -1,40 +1,40 @@
 <template>
   <v-layout
-      align-center
-      class="ticket--layout"
-      justify-center
+    align-center
+    class="ticket--layout"
+    justify-center
   >
     <v-flex :class="hide" class="background" lg5 md7 sm10 xs12>
       <div class="alegreya-sc--regular ticket--text text-xs-center" v-if="finalized">Pobierz swój bilet</div>
       <div class="alegreya-sc--regular ticket--text text-xs-center" v-else>Transakcja została anulowana</div>
       <v-flex class="text-xs-center" v-if="finalized" xs12>
         <v-btn
-            class="alegreya--light download--button"
-            color="gold"
-            large
-            :href="ticketLink"
-            target="_blank"
+          class="alegreya--light download--button"
+          color="gold"
+          large
+          :href="ticketLink"
+          target="_blank"
         >
           Pobierz bilet
         </v-btn>
       </v-flex>
       <v-flex class="text-xs-center" xs12>
         <v-btn
-            class="alegreya--light home--button"
-            flat
-            large
-            :to="{name: 'Movies'}"
+          class="alegreya--light home--button"
+          flat
+          large
+          :to="{name: 'Movies'}"
         >
           Strona Główna
         </v-btn>
       </v-flex>
     </v-flex>
     <v-progress-circular
-        :size="80"
-        class="loading"
-        color="gold"
-        indeterminate
-        v-if="!loaded"
+      :size="80"
+      class="loading"
+      color="gold"
+      indeterminate
+      v-if="!loaded"
     ></v-progress-circular>
   </v-layout>
 </template>
@@ -80,7 +80,7 @@
                 this.finalized = false
               }
             }).catch(() => {
-              this.$router.push({name: 'NotFound'})
+              this.$router.push({ name: 'NotFound' })
             })
           })
       }
