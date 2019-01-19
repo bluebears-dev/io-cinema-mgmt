@@ -1,5 +1,7 @@
 import datetime
 
+driver_name = "chromedriver"
+
 password = "okon1234"
 username = "root"
 admin_address = "http://192.168.99.100/admin"
@@ -38,8 +40,13 @@ movie_description = "Elemelek is just a little elemelek. One day he faces great 
 
 movie_cover_suffix = "/test/static/blood.jpeg"
 
-showing_date = datetime.datetime.now().day.__str__() + "." + datetime.datetime.now().month.__str__()\
+showing_date = "{:02d}".format(datetime.datetime.now().day) + "." + "{:02d}".format(datetime.datetime.now().month)\
                + "." + datetime.datetime.now().year.__str__()
 showing_hour = "23:59:55"
 showing_sound = "Napisy"
 showing_picture = "2D"
+
+reservation_name = "Ash"
+reservation_surname = "Ketchum"
+reservation_email = "pikachu@choose.you"
+reservation_phone = "908876543"

@@ -1,4 +1,4 @@
-from test.selenium_dir.base.selenium_base import SeleniumTest
+from test.selenium_dir.base.selenium_base import SeleniumAdminTest
 from test.selenium_dir.locators.admin_main_locators import *
 from test.selenium_dir.base.settings import *
 from test.selenium_dir.locators.cinema_modify_locators import *
@@ -6,7 +6,7 @@ from app.settings import BASE_DIR
 from time import sleep
 
 
-class test_admin_creation_of_models(SeleniumTest):
+class test_admin_creation_of_models(SeleniumAdminTest):
 
 
   def test_b_adding_models(self):
