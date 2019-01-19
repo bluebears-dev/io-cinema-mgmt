@@ -112,7 +112,7 @@ def create_order(request, booking_id, format=None):
             raise PermissionError
         payu_data = {
             'continueUrl': 'http://{}/#/bilet/{}/{}'.format(os.environ.get('HOST'), booking.id, booking.token),
-            'customerIp': os.environ.get('HOST'),
+            'customerIp': '1.1.1.1', # in real environment it should be changed
             'merchantPosId': '348348',
             'description': 'Kinio KAPPA',
             'currencyCode': 'PLN',
