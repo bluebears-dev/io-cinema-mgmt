@@ -9,10 +9,11 @@ case $1 in
     ;;
     "test")
         docker-compose exec django true
-        if [[ $? -ne 0 ]]
+        if [[ $? -eq 0 ]]
         then
             docker-compose exec django coverage run ./manage.py test
             docker-compose exec django coverage xml
+            npm run test
             echo "You can now run sonar-scanner."
         fi
     ;;

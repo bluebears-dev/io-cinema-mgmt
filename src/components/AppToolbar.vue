@@ -31,8 +31,8 @@
     </ToolbarWrapper>
     <v-slide-y-transition>
       <menu
-        v-if="dropdownMenu && !toggleOnBreakpoint"
-        class="menu--mobile border--gold"
+          class="toolbar__mobile-layout border--gold"
+          v-if="dropdownMenu && !toggleOnBreakpoint"
       >
         <v-layout column>
           <v-flex
@@ -100,7 +100,7 @@
       &:active
         @extends .toolbar__desktop-layout .button--main
 
-  .menu--mobile
+  .toolbar__mobile-layout
     background-color: var(--v-black-base)
     position: fixed
     top: 55px

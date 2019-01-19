@@ -14,8 +14,8 @@ from django.core.files import File
 from django.test import TransactionTestCase
 
 from app.settings import BASE_DIR, MEDIA_ROOT, os
-from cinema.models.booking import TicketType, Ticket, Booking
-from cinema.models.cinema import Showing, Cinema, Room, Seat
+from cinema.models.booking import TicketType
+from cinema.models.cinema import Showing, Cinema, Room
 from cinema.models.movies import Movie, MovieGenre
 from cinema.models.user import ClientProfile, User, EmployeeProfile
 
@@ -38,7 +38,9 @@ class CinemaModelTest(TransactionTestCase):
       MovieGenre.objects.create(name="Horror")
       MovieGenre.objects.create(name="Anime")
       self.horro = MovieGenre.objects.get(name="Horror")
+      self.horro.save()
       self.anime = MovieGenre.objects.get(name="Anime")
+      self.anime.save()
 
       # create cinemas
       Cinema.objects.create(name='Wiosna', city='Kraków', address='ul. Budryka 2', postal_code='32-300',
@@ -52,39 +54,34 @@ class CinemaModelTest(TransactionTestCase):
                                          postal_code='34-001', phone_number='880 591 333')
 
       # create some rooms
-      Room.objects.create(name='Kinder sponsored', cinema=self.cinema_wiosna)
+      Room.objects.create(name='Kinder', cinema=self.cinema_wiosna, rows=3, cols=3, json_layout="[[1, 1], [1, 2], [1, 3],"
+                                                                                                " [2, 1], [2, 2], [2, 3],"
+                                                                                                " [3, 1], [3, 2], [3, 3]]")
 
-      self.room_kinder = Room.objects.get(name='Kinder sponsored', cinema=self.cinema_wiosna)
-
-      # create some seats
-      Seat.objects.create(room=self.room_kinder, realRow='A', realColumn=2)
-      Seat.objects.create(room=self.room_kinder, realRow='A', realColumn=3)
-
-      self.seat_a2 = Seat.objects.get(room=self.room_kinder, realRow='A', realColumn=2)
-      self.seat_a3 = Seat.objects.get(room=self.room_kinder, realRow='A', realColumn=3)
+      self.room_kinder = Room.objects.get(name='Kinder', cinema=self.cinema_wiosna)
 
       # create some movie
-      Movie.objects.create(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
+      self.movie_wizard = Movie(title='Harry Potter', releaseDate='2017-02-12', length='123', producer='J. K. Rowling',
                            description='You\'re a wizard, Harry',
                            cover=File(open(BASE_DIR + '/test/static/wspawielkanocna.jpg', 'rb')))
 
-      self.movie_wizard = Movie.objects.get(title='Harry Potter', releaseDate='2017-02-12', length='123',
-                                       producer='J. K. Rowling', description='You\'re a wizard, Harry')
+      self.movie_wizard.save()
+      self.movie_wizard.genre.add(self.horro)
 
       # create a showing
-      Showing.objects.create(date='2018-12-23', hour='12:54', room=self.room_kinder,
+      Showing.objects.create(date='2018-12-23', hour='12:54:00', room=self.room_kinder,
                              movie=self.movie_wizard, audio_type=Showing.ORIGINAL, picture_type=Showing.TWO_DIM)
 
       self.showing_wizard1 = Showing.objects.get(date='2018-12-23', hour='12:54', room=self.room_kinder,
                              movie=self.movie_wizard, audio_type=Showing.ORIGINAL, picture_type=Showing.TWO_DIM)
 
       # create ticket types
-      TicketType.objects.create(ticketType='Ulgowy', price=12.59, description='Children below 18 years old and disabled')
-      TicketType.objects.create(ticketType='Normalny', price=59.12, description='Everyone else')
+      TicketType.objects.create(name='Ulgowy', price=12.59, description='Children below 18 years old and disabled')
+      TicketType.objects.create(name='Normalny', price=59.12, description='Everyone else')
 
-      self.ticket_type_ulgowy = TicketType.objects.get(ticketType='Ulgowy', price=12.59,
+      self.ticket_type_ulgowy = TicketType.objects.get(name='Ulgowy', price=12.59,
                                                   description='Children below 18 years old and disabled')
-      self.ticket_type_normalny = TicketType.objects.get(ticketType='Normalny', price=59.12, description='Everyone else')
+      self.ticket_type_normalny = TicketType.objects.get(name='Normalny', price=59.12, description='Everyone else')
 
       # create some users and their profiles
       User.objects.create(username="elemelek", password='ulala')
@@ -99,19 +96,9 @@ class CinemaModelTest(TransactionTestCase):
       EmployeeProfile.objects.create(user=self.user_tabaluga, cinema=self.cinema_lato)
       self.user_profile_tabaluga = EmployeeProfile.objects.get(user=self.user_tabaluga, cinema=self.cinema_lato)
 
-      # create a booking
-      Booking.objects.create(user=self.user_elemelek, state=Booking.INITIATED, showing=self.showing_wizard1)
-      self.booking_wizard1_elemelek = Booking.objects.get(user=self.user_elemelek, state=Booking.INITIATED,
-                                                          showing=self.showing_wizard1)
-
-
-      # create a ticket
-      Ticket.objects.create(booking=self.booking_wizard1_elemelek, seat=self.seat_a2, ticketType=self.ticket_type_ulgowy)
-      self.ticket_one = Ticket.objects.get(booking=self.booking_wizard1_elemelek, seat=self.seat_a2,
-                                           ticketType=self.ticket_type_ulgowy)
-
     # in case something goes wrong in setUp() the covers of movies are not deleted
     except Exception as ee:
+      print(ee)
       try:
         self.movie_wizard.delete()
       finally:
@@ -152,10 +139,17 @@ def check_adding_model_instance_with_wrong_fields(classname, error_message="", *
   """Function used to run model creation for models that shouldn't be allowed
   in order to check if they are indeed not allowed"""
   try:
+    if classname != Movie:
+      classname.objects.create(**kwargs)
 
-    classname.objects.create(**kwargs)
+      raise NoTestOccuredException()
+    else:
+      f = classname(title=kwargs['title'], releaseDate=kwargs['Title'], length=kwargs['length'],
+                    producer=kwargs['producer'], description=kwargs['description'],
+                    cover=kwargs['cover'])
 
-    raise NoTestOccuredException()
+      f.save()
+      f.genre.add(kwargs['genre'])
   except NoTestOccuredException as e:
     print(error_message)
     raise e

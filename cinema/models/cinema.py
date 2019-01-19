@@ -4,7 +4,8 @@
 import datetime
 import json
 
-from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -82,7 +83,6 @@ class Showing(models.Model):
         :param new_show: show added by user
         :return:
         """
-        from django.core.exceptions import ValidationError
         new_show_start = datetime.datetime.combine(datetime.date.today(), new_show.hour)
         show_start = datetime.datetime.combine(datetime.date.today(), self.hour)
 
@@ -92,7 +92,7 @@ class Showing(models.Model):
 
     def clean(self):
         if hasattr(self, 'room') and hasattr(self, 'date') and hasattr(self, 'movie'):
-            showings = Showing.objects.filter(room=self.room, date=self.date)
+            showings = Showing.objects.filter(room=self.room, date=self.date).exclude(id=self.id)
             for show in showings:
                 self._check_collision(show)
         super().clean()
@@ -125,8 +125,14 @@ class Room(models.Model):
     """
     name = models.CharField(verbose_name=_('Nazwa'), max_length=20)
     cinema = models.ForeignKey(verbose_name=_('Kino'), to='Cinema', on_delete=models.CASCADE)
-    rows = models.IntegerField()
-    cols = models.IntegerField()
+    rows = models.IntegerField(validators=[
+        MaxValueValidator(26),
+        MinValueValidator(1)
+    ])
+    cols = models.IntegerField(validators=[
+        MaxValueValidator(70),
+        MinValueValidator(1)
+    ])
     json_layout = models.TextField()
 
     @property
@@ -159,16 +165,3 @@ class Room(models.Model):
 
     def __str__(self):
         return _('{1} ({0})'.format(self.cinema, self.name))
-
-
-class Seat(models.Model):  # details unknown yet
-    room = models.ForeignKey(verbose_name=_('Sala'), to='Room', on_delete=models.CASCADE)
-    realRow = models.CharField(verbose_name=_('Numer rzędu'), max_length=2)
-    realColumn = models.SmallIntegerField(verbose_name=_('Numer kolumny'))
-
-    class Meta:
-        verbose_name = _('Miejsce')
-        verbose_name_plural = _('Miejsca')
-
-    def __str__(self):
-        return _('Rząd {0}, kolumna {1}'.format(self.realRow, self.realColumn))

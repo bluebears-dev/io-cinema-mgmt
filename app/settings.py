@@ -58,7 +58,12 @@ ROOT_URLCONF = 'app.urls'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
+    ],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser'
+    )
 }
 
 TEMPLATES = [
@@ -153,6 +158,7 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 26 * 70 + 6
 # Webpack integration
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -160,6 +166,9 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+# Time after the booking automatically timeouts when its not finished
+BOOKING_CANCELLATION_TIMEOUT = 15 * 60
 
 if os.environ.get('PRODUCTION'):
     django_heroku.settings(locals(), staticfiles=False)

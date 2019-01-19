@@ -5,28 +5,6 @@ from django.utils.translation import gettext as _
 from cinema.widgets import LayoutWidget
 
 
-def get_row_label(row_index):
-    row_symbols = "ABCDEFGHIJKLMNOPQRSTUWVXYZ"
-    label = []
-    number = row_index - 1
-
-    if number == 0:
-        label.append(0)
-    else:
-        while number > 0:
-            modulo = number % len(row_symbols)
-            number = (number - modulo) // len(row_symbols)
-            label.append(modulo)
-        if len(label) > 1:
-            label[-1] -= 1
-
-    return ''.join(map(lambda v: row_symbols[v], reversed(label)))
-
-
-def get_col_label(col_index):
-    return str(col_index)
-
-
 class LayoutField(Field):
     """
         Represents dynamic layout field used by room.
@@ -43,8 +21,6 @@ class LayoutField(Field):
             Check if list contains only numbers and is not none.
         """
         try:
-            if len(value) == 0:
-                raise ValidationError(_('Sala musi posiadać siedzenia'))
             for num in value:
                 if num[0] > self.rows or num[1] > self.cols or num[0] < 0 or num[1] < 0:
                     raise ValidationError(_('Zaznaczono miejsce nie objemowane przez rozkład sali'))
@@ -62,7 +38,9 @@ class LayoutField(Field):
         self.rows = int(value[1])
         self.cols = int(value[2])
         if len(raw_layout) == 0:
-            return None
+            raise ValidationError(_('Sala nie może być pusta.'))
+        if self.rows <= 0 or self.cols <= 0:
+            raise ValidationError(_('Niepoprawny rozmiar sali. Ilość rzędów i kolumn musi być większa od zera.'))
 
         # Get minimal values to remove the offset
         min_row_index = min(map(lambda v: int(v) // self.cols, raw_layout))
@@ -79,7 +57,6 @@ class LayoutField(Field):
                 # Create dict with real indices and labels
                 layout.append((row, col))
             except ValueError or TypeError:
-                layout.append(None)
+                raise ValidationError(_('Niepoprawne wartości.'))
 
-        layout = super(LayoutField, self).to_python(layout)
         return layout

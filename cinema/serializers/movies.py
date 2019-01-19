@@ -30,6 +30,6 @@ class MovieDetailsSerializer(serializers.ModelSerializer):
         """
             Takes every object of genre and returns list of names
         :param obj:
-        :return: list of strings
+        :return: list of genres
         """
         return [genre.name for genre in obj.genre.all()]
